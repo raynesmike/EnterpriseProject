@@ -1,4 +1,4 @@
-package javafx;
+package javafx.controller;
 
 import java.io.IOException;
 import java.net.URL;
@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javafx.ViewType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -34,8 +35,8 @@ public class MainController implements Initializable {
 	// eclipse used the wrong import: import java.awt.event.ActionEvent;
 	// void onBeer(ActionEvent event) {
 	@FXML
-    void onBeer(ActionEvent event) {
-		logger.info("Clicked on Beer");
+    void onBook(ActionEvent event) {
+		logger.info("Clicked on Book");
 		
 		showView(ViewType.DETAIL2);
     }
@@ -45,23 +46,29 @@ public class MainController implements Initializable {
 		FXMLLoader loader = null;
 		Parent viewNode;
 		MyController controller = null;
+
 		switch(viewType) {
 			case DETAIL1 : 
-				loader = new FXMLLoader(this.getClass().getResource("detail1.fxml"));
+				loader = new FXMLLoader(this.getClass().getResource("../detail1.fxml"));
 				controller = new Detail1Controller();
 				break;
 			case DETAIL2 : 
-				loader = new FXMLLoader(this.getClass().getResource("detail2.fxml"));
+				loader = new FXMLLoader(this.getClass().getResource("../detail2.fxml"));
 				controller = new Detail2Controller();
 				break;
 		}
+
 		viewNode = null;
 		loader.setController(controller);
+
 		try {
+			
 			viewNode = loader.load();
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 		rootPane.setCenter(viewNode);
 	}
 			

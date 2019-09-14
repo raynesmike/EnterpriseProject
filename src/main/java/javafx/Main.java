@@ -6,13 +6,16 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javafx.application.Application;
+import javafx.controller.MainController;
 import javafx.fxml.FXMLLoader;
+import javafx.model.BookStore;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 	private static Logger logger = LogManager.getLogger();
+	public static BookStore firstBookStore;
 	
 	public static void main(String[] args) {
 		System.out.println("hello world!");
@@ -32,7 +35,7 @@ public class Main extends Application {
 		MainController controller = MainController.getInstance();
 		loader.setController(controller);
 
-		Parent rootNode = null;
+		Parent rootNode = null; 
 		try {
 			rootNode = loader.load();
 		} catch (IOException e) {
@@ -40,9 +43,14 @@ public class Main extends Application {
 			e.printStackTrace();
 		}
 		stage.setScene(new Scene(rootNode));
-		stage.setTitle("Demo");
-
+		stage.setTitle("Books");
+		
 		stage.show();
+		
+		firstBookStore = new BookStore();
+		firstBookStore.loadBooks();
+		System.out.println(firstBookStore.toString());
+		
 		
 		controller.showView(ViewType.DETAIL1);
 	}

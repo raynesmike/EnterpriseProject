@@ -1,4 +1,4 @@
-package javafx;
+package javafx.controller;
 
 public interface MyController {
 

@@ -13,9 +13,9 @@
               <MenuItem mnemonicParsing="false" text="Close" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Beer">
+          <Menu mnemonicParsing="false" text="Book">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#onBeer" text="List of Beers" />
+              <MenuItem mnemonicParsing="false" onAction="#onBook" text="Book List" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
@@ -23,6 +23,11 @@
               <MenuItem mnemonicParsing="false" text="About" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Quit">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Action 1" />
+              </items>
+            </Menu>
         </menus>
       </MenuBar>
    </top>
