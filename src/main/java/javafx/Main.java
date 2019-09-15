@@ -18,7 +18,8 @@ public class Main extends Application {
 	public static BookStore firstBookStore;
 	
 	public static void main(String[] args) {
-		System.out.println("hello world!");
+		//System.out.println("hello world!");
+		logger.info("Hello world!");
 		
 //		logger.error("hello error");
 //		

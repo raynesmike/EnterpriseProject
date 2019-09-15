@@ -1,7 +1,15 @@
 package javafx.model;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -11,6 +19,7 @@ import java.util.stream.Collectors;
 public class BookStore {
 	
 	private ArrayList<Book> bookList;
+	private static Logger logger = LogManager.getLogger();
 	
 	
 	public BookStore() {
@@ -20,8 +29,17 @@ public class BookStore {
 	public void loadBooks(){
 		Scanner scanner = null;
 		try {
-			scanner = new Scanner (new File("Books.csv"));
-		} catch (FileNotFoundException e) {
+			//scanner = new Scanner (new File("Books.csv"));
+			//URL resource = this.getClass().getResource("Books.csv");
+			//logger.debug(resource.toString());
+			//logger.debug(resource);
+			InputStream resource = this.getClass().getResourceAsStream("Books.csv");
+
+			//File file = new File(resource.);
+			//logger.debug(file);
+
+			scanner = new Scanner(resource);
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
