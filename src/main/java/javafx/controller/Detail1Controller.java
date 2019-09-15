@@ -3,6 +3,9 @@ package javafx.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javafx.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,6 +25,7 @@ public class Detail1Controller implements Initializable, MyController {
     @FXML
     private TextField labelISBN; // UniqueID(UID)
     
+    private static Logger logger = LogManager.getLogger();
     
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -40,8 +44,11 @@ public class Detail1Controller implements Initializable, MyController {
     	if(d=="") {
     		d = "0";
     	}
-    	System.out.println(Main.firstBookStore.searchBook(a, b, c, Integer.parseInt(d)) );
-    	
+    	try {
+    		System.out.println(Main.firstBookStore.searchBook(a, b, c, Integer.parseInt(d)) );
+    	}catch(Exception e){
+    		logger.error("Search Error");
+    	}
     }
 
 }

@@ -3,7 +3,10 @@ package javafx.model;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class BookStore {
 	
@@ -33,11 +36,19 @@ public class BookStore {
 //	}
 	public boolean searchBook(String title, String author, String genre, int isbn){
 		System.out.println("inside searchBook");
-	    boolean foundTitle = bookList.stream().filter(o -> o.getBookTitle().equals(title)).findFirst().isPresent();
-	    boolean foundAuthor = bookList.stream().filter(o -> o.getBookAuthor().equals(author)).findFirst().isPresent();
-	    boolean foundGenre= bookList.stream().filter(o -> o.getBookGenre().equals(genre)).findFirst().isPresent();
-	    boolean foundISBN = bookList.stream().filter(o -> o.getBookISBN() == (isbn)).findFirst().isPresent();
-	    if(foundTitle || foundAuthor || foundGenre || foundISBN) {
+		ArrayList<Book> newArrayList = new ArrayList<Book>();
+	    newArrayList = (ArrayList<Book>) bookList.stream().filter(o -> o.getBookTitle().equals(title)).collect(Collectors.toList());
+	    newArrayList = (ArrayList<Book>) bookList.stream().filter(o -> o.getBookAuthor().equals(author)).collect(Collectors.toList());
+	    newArrayList = (ArrayList<Book>) bookList.stream().filter(o -> o.getBookGenre().equals(genre)).collect(Collectors.toList());
+	    newArrayList = (ArrayList<Book>) bookList.stream().filter(o -> o.getBookISBN() == (isbn)).collect(Collectors.toList());
+	    
+	    //	    boolean foundAuthor = bookList.stream().filter(o -> o.getBookAuthor().equals(author)).findFirst().isPresent();
+//	    boolean foundGenre= bookList.stream().filter(o -> o.getBookGenre().equals(genre)).findFirst().isPresent();
+//	    boolean foundISBN = bookList.stream().filter(o -> o.getBookISBN() == (isbn)).findFirst().isPresent();
+	    if(!newArrayList.isEmpty()) {
+	    	for(Book book: newArrayList) {
+	    		System.out.println(book);
+	    	}
 	    	return true;
 	    }else {
 	    	return false;
