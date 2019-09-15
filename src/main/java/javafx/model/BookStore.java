@@ -36,7 +36,7 @@ public class BookStore {
 				String line = scanner.nextLine();
 				logger.debug(line);
 				String[] bookData = line.split(", ");
-				bookList.add(new Book(bookData[0], bookData[1], bookData[2], Integer.parseInt(bookData[3]), Integer.parseInt(bookData[4]), bookData[5]));
+				bookList.add(new Book(bookData[0], bookData[1], bookData[2], Integer.parseInt(bookData[3].trim()), Integer.parseInt(bookData[4].trim()), bookData[5]));
 			} catch (Exception e) {
 				logger.error(e);
 			}
