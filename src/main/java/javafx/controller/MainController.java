@@ -57,11 +57,11 @@ public class MainController implements Initializable {
 		switch(viewType) {
 			case DETAIL1 : 
 				loader = new FXMLLoader(this.getClass().getResource("../BookSearchView.fxml"));
-				controller = new Detail1Controller();
+				controller = new BookSearchController();
 				break;
 			case DETAIL2 : 
 				loader = new FXMLLoader(this.getClass().getResource("../BookListView.fxml"));
-				controller = new Detail2Controller();
+				controller = new BookListController();
 				break;
 		}
 

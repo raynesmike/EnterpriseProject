@@ -12,7 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 
-public class Detail1Controller implements Initializable, MyController {
+public class BookSearchController implements Initializable, MyController {
     @FXML
     private TextField labelAuthor;
 

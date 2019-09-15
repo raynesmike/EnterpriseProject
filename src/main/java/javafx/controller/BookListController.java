@@ -21,14 +21,14 @@ import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 
-public class Detail2Controller implements Initializable, MyController {
+public class BookListController implements Initializable, MyController {
 	private static final Logger logger = LogManager.getLogger();
 	@FXML
 	private ListView<Book> bookListView;
 	
 	ObservableList<Book> books;
 	
-//	public Detail2Controller(List<Book> beers) {
+//	public BookListController(List<Book> beers) {
 //		this.books = beers;
 //	}
 	
