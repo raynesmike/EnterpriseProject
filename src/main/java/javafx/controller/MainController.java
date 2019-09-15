@@ -56,15 +56,15 @@ public class MainController implements Initializable {
 		
 		switch(viewType) {
 			case DETAIL1 : 
-				loader = new FXMLLoader(this.getClass().getResource("../BookSearchView.fxml"));
+				loader = new FXMLLoader(this.getClass().getResource("BookSearchView.fxml"));
 				controller = new BookSearchController();
 				break;
 			case DETAIL2 : 
-				loader = new FXMLLoader(this.getClass().getResource("../BookListView.fxml"));
+				loader = new FXMLLoader(this.getClass().getResource("BookListView.fxml"));
 				controller = new BookListController();
 				break;
 			case DETAIL3 : 
-				loader = new FXMLLoader(this.getClass().getResource("../BookDetailView.fxml"));
+				loader = new FXMLLoader(this.getClass().getResource("BookDetailView.fxml"));
 				controller = new BookListController();
 				break;
 		}

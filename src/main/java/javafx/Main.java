@@ -50,8 +50,8 @@ public class Main extends Application {
 		firstBookStore = new BookStore();
 		firstBookStore.loadBooks();
 		System.out.println(firstBookStore.toString());
-		
-		
+
+		logger.debug("HERE");
 		controller.showView(ViewType.DETAIL1);
 	}
 
