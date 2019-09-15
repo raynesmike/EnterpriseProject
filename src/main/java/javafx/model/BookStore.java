@@ -50,7 +50,8 @@ public class BookStore {
 
 	    if(!newArrayList.isEmpty()) {
 	    	for(Book book: newArrayList) {
-	    		System.out.println(book);
+	    		//System.out.println(book);
+				logger.debug(book);
 	    	}
 	    	return true;
 	    }else { 

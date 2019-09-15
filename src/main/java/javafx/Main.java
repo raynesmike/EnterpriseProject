@@ -36,7 +36,8 @@ public class Main extends Application {
 			rootNode = loader.load();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+			logger.error(e);
 		}
 		stage.setScene(new Scene(rootNode));
 		stage.setTitle("Books");
@@ -60,7 +61,7 @@ public class Main extends Application {
 	public void stop() throws Exception {
 		super.stop();
 		
-		logger.error("ERROR: @Main stop");
+		logger.info("@Main stop");
 
 		// strange, but app hangs when executing from command line
 		// Maven may be waiting on an explicit error signal

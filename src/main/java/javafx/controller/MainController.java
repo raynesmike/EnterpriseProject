@@ -80,7 +80,8 @@ public class MainController implements Initializable {
 			viewNode = loader.load();
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			logger.error(e);
 		}
 
 		rootPane.setCenter(viewNode);

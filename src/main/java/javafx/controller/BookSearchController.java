@@ -45,9 +45,10 @@ public class BookSearchController implements Initializable, MyController {
     		d = "0";
     	}
     	try {
-    		System.out.println(Main.firstBookStore.searchBook(a, b, c, Integer.parseInt(d)) );
+    		//System.out.println(Main.firstBookStore.searchBook(a, b, c, Integer.parseInt(d)) );
+			logger.info(Main.firstBookStore.searchBook(a, b, c, Integer.parseInt(d)));
     	}catch(Exception e){
-    		logger.error("ERROR: @BookSearchController onSearch");
+    		logger.error("ERROR: @BookSearchController onSearch" + e.toString());
     	}
     }
    
