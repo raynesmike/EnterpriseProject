@@ -16,7 +16,7 @@ public class BookStore {
 	public BookStore() {
 		this.bookList = new ArrayList<Book>();
 	}
-	
+
 	public void loadBooks(){
 		Scanner scanner = null;
 		try {
@@ -27,7 +27,7 @@ public class BookStore {
 		}
 		while(scanner.hasNextLine()) {
 			String[] bookData= scanner.nextLine().split(", ");
-			bookList.add(new Book(bookData[0], bookData[1], bookData[2], Integer.parseInt(bookData[3]) , Integer.parseInt(bookData[4]) ));
+			bookList.add(new Book(bookData[0], bookData[1], bookData[2], Integer.parseInt(bookData[3]) , Integer.parseInt(bookData[4]), bookData[5] ));
 		}
 		
 	}
@@ -51,7 +51,7 @@ public class BookStore {
 	    		System.out.println(book);
 	    	}
 	    	return true;
-	    }else {
+	    }else { 
 	    	return false;
 	    }
 	}

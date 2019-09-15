@@ -13,6 +13,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.model.Book;
 import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
 
@@ -39,7 +40,7 @@ public class MainController implements Initializable {
     void onBook(ActionEvent event) {
 		logger.info("Clicked on Book");
 		
-		showView(ViewType.DETAIL2);
+		showView(ViewType.DETAIL2, null);
     }
 	
 	@FXML
@@ -48,7 +49,7 @@ public class MainController implements Initializable {
 		Platform.exit();
     }
 	
-	public void showView(ViewType viewType) {
+	public void showView(ViewType viewType, Book book) {
 		// load view according to viewType and plug into center of rootPane
 		FXMLLoader loader = null;
 		Parent viewNode;
@@ -65,10 +66,10 @@ public class MainController implements Initializable {
 				break;
 			case DETAIL3 : 
 				loader = new FXMLLoader(this.getClass().getResource("BookDetailView.fxml"));
-				controller = new BookListController();
+				controller = new BookDetailController(book);
 				break;
 		}
-
+		
 		viewNode = null;
 		loader.setController(controller);
 

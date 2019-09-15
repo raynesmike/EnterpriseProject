@@ -26,7 +26,7 @@ public class Main extends Application {
 
 		launch(args);
 	}
-
+	 
 	@Override
 	public void start(Stage stage) {
 		logger.info("in start method");
@@ -52,7 +52,7 @@ public class Main extends Application {
 		System.out.println(firstBookStore.toString());
 
 		logger.debug("HERE");
-		controller.showView(ViewType.DETAIL1);
+		controller.showView(ViewType.DETAIL1, null);
 	}
 
 	@Override
