@@ -9,6 +9,6 @@
       <ListView fx:id="bookListView" maxHeight="-Infinity" maxWidth="-Infinity" onMouseClicked="#onListClick" prefHeight="300.0" prefWidth="300.0" BorderPane.alignment="CENTER" />
    </center>
    <bottom>
-      <Button mnemonicParsing="false" onAction="#doButton" text="Button" BorderPane.alignment="CENTER" />
+      <Button mnemonicParsing="false" onAction="#doButton" text="Search" BorderPane.alignment="CENTER" />
    </bottom>
 </BorderPane>
