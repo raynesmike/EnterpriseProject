@@ -24,8 +24,8 @@ public class BookSearchController implements Initializable, MyController {
 
     @FXML
     private TextField labelISBN; // UniqueID(UID)
-    
-    private static Logger logger = LogManager.getLogger();
+
+	private static final Logger logger = LogManager.getLogger();
     
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -33,11 +33,11 @@ public class BookSearchController implements Initializable, MyController {
 
 	}
 	
-
     @FXML
     void onSearch(ActionEvent event) {
-    	//TODO: check database if ISBN exist first and match the rest in BookStore
-    	String a = labelTitle.getText();
+    	logger.info("@BookSearchController onSearch()");
+    	
+		String a = labelTitle.getText();
     	String b = labelAuthor.getText();
     	String c = labelGenre.getText();
     	String d = labelISBN.getText();
@@ -47,7 +47,7 @@ public class BookSearchController implements Initializable, MyController {
     	try {
     		System.out.println(Main.firstBookStore.searchBook(a, b, c, Integer.parseInt(d)) );
     	}catch(Exception e){
-    		logger.error("Search Error");
+    		logger.error("ERROR: @BookSearchController onSearch");
     	}
     }
    

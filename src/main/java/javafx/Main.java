@@ -18,19 +18,14 @@ public class Main extends Application {
 	public static BookStore firstBookStore;
 	
 	public static void main(String[] args) {
-		//System.out.println("hello world!");
-		logger.info("Hello world!");
+		logger.info("@Main Starts Here()");
 		
-//		logger.error("hello error");
-//		
-//		logger.info("hello debug");
-
 		launch(args);
 	}
 	 
 	@Override
 	public void start(Stage stage) {
-		logger.info("in start method");
+		logger.info("@Main start()");
 		
 		FXMLLoader loader = new FXMLLoader(this.getClass().getResource("main_view.fxml"));
 		MainController controller = MainController.getInstance();
@@ -45,12 +40,10 @@ public class Main extends Application {
 		}
 		stage.setScene(new Scene(rootNode));
 		stage.setTitle("Books");
-		
 		stage.show();
 		
 		firstBookStore = new BookStore();
 		firstBookStore.loadBooks();
-		System.out.println(firstBookStore.toString());
 
 		logger.debug("HERE");
 		controller.showView(ViewType.DETAIL1, null);
@@ -60,14 +53,14 @@ public class Main extends Application {
 	public void init() throws Exception {
 		super.init();
 		
-		logger.info("calling init...");
+		logger.error(": @Main init");
 	}
 
 	@Override
 	public void stop() throws Exception {
 		super.stop();
 		
-		logger.info("calling stop...");
+		logger.error("ERROR: @Main stop");
 
 		// strange, but app hangs when executing from command line
 		// Maven may be waiting on an explicit error signal

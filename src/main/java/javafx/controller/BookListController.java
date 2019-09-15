@@ -1,8 +1,6 @@
 package javafx.controller;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import org.apache.logging.log4j.LogManager;
@@ -16,10 +14,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.model.Book;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
-import javafx.util.Callback;
 
 public class BookListController implements Initializable, MyController {
 	private static final Logger logger = LogManager.getLogger();
@@ -28,12 +24,10 @@ public class BookListController implements Initializable, MyController {
 	
 	ObservableList<Book> books;
 	
-//	public BookListController(List<Book> beers) {
-//		this.books = beers;
-//	}
-	
 	@FXML
     void onListClick(MouseEvent event) {
+		logger.info("@BookListController onListClick()");
+		
 		if(event.getClickCount() == 2) {
 			Book selectedBook = bookListView.getSelectionModel().getSelectedItem();
 			if(selectedBook != null) {
@@ -46,21 +40,16 @@ public class BookListController implements Initializable, MyController {
 	
 	@FXML
     void doButton(ActionEvent event) {
-		 logger.error("switch to view 3");
-
-		 System.out.println(bookListView.getSelectionModel().getSelectedItem());
+		logger.info("@BookListController onListClick()");
+		
 		 MainController.getInstance().showView(ViewType.DETAIL3, bookListView.getSelectionModel().getSelectedItem());
-		 
 	}
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		// TODO Auto-generated method stub
+		logger.info("@BookListController onListClick()");
 		
 		books = FXCollections.observableArrayList();
-//    	for(Book book: Main.firstBookStore.getBookList()) {
-//    		books.add(book);
-//    	}
 		books.addAll(Main.firstBookStore.getBookList());
     	bookListView.setItems(books);
     	

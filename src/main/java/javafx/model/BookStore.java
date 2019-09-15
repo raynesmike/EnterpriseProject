@@ -3,17 +3,9 @@ package javafx.model;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class BookStore {
@@ -27,47 +19,35 @@ public class BookStore {
 	}
 
 	public void loadBooks(){
+		logger.info("@BookStore loading Books()");
+		
 		Scanner scanner = null;
 		try {
-			//scanner = new Scanner (new File("Books.csv"));
-			//URL resource = this.getClass().getResource("Books.csv");
-			//logger.debug(resource.toString());
-			//logger.debug(resource);
 			InputStream resource = this.getClass().getResourceAsStream("Books.csv");
-
-			//File file = new File(resource.);
-			//logger.debug(file);
 
 			scanner = new Scanner(resource);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
+
 			logger.error(e);
 		}
 		while(scanner.hasNextLine()) {
 			String line = scanner.nextLine();
 			logger.debug(line);
-			//String[] bookData= scanner.nextLine().split(", ");
 			String[] bookData = line.split(", ");
 			bookList.add(new Book(bookData[0], bookData[1], bookData[2], Integer.parseInt(bookData[3]) , Integer.parseInt(bookData[4]), bookData[5] ));
 		}
-		
 	}
 	
-//	public void searchBook(String title, String author, String genre, int isbn) {
-//		
-//	}
+
 	public boolean searchBook(String title, String author, String genre, int isbn){
-		System.out.println("inside searchBook");
+
+		logger.info("@BookStore searchBook()");
 		ArrayList<Book> newArrayList = new ArrayList<Book>();
 	    newArrayList = (ArrayList<Book>) bookList.stream().filter(o -> o.getBookTitle().equals(title)).collect(Collectors.toList());
 	    newArrayList = (ArrayList<Book>) bookList.stream().filter(o -> o.getBookAuthor().equals(author)).collect(Collectors.toList());
 	    newArrayList = (ArrayList<Book>) bookList.stream().filter(o -> o.getBookGenre().equals(genre)).collect(Collectors.toList());
 	    newArrayList = (ArrayList<Book>) bookList.stream().filter(o -> o.getBookISBN() == (isbn)).collect(Collectors.toList());
-	    
-	    //	    boolean foundAuthor = bookList.stream().filter(o -> o.getBookAuthor().equals(author)).findFirst().isPresent();
-//	    boolean foundGenre= bookList.stream().filter(o -> o.getBookGenre().equals(genre)).findFirst().isPresent();
-//	    boolean foundISBN = bookList.stream().filter(o -> o.getBookISBN() == (isbn)).findFirst().isPresent();
+
 	    if(!newArrayList.isEmpty()) {
 	    	for(Book book: newArrayList) {
 	    		System.out.println(book);

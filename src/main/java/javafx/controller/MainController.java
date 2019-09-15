@@ -24,7 +24,7 @@ public class MainController implements Initializable {
 	
 	private MainController() {
 	}
-	
+
 	public static MainController getInstance() {
 		if(instance == null)
 			instance = new MainController();
@@ -38,19 +38,21 @@ public class MainController implements Initializable {
 	// void onBeer(ActionEvent event) {
 	@FXML
     void onBook(ActionEvent event) {
-		logger.info("Clicked on Book");
+    	logger.info("@MainController onBook()");
 		
 		showView(ViewType.DETAIL2, null);
     }
 	
 	@FXML
     void quitYes(ActionEvent event) {
-		logger.info("Clicked on QUIT YES");
+    	logger.info("@MainController Quit()");
+    	
 		Platform.exit();
     }
 	
 	public void showView(ViewType viewType, Book book) {
-		// load view according to viewType and plug into center of rootPane
+    	logger.info("@MainController showView()");
+    	
 		FXMLLoader loader = null;
 		Parent viewNode;
 		MyController controller = null;
@@ -83,7 +85,6 @@ public class MainController implements Initializable {
 
 		rootPane.setCenter(viewNode);
 	}
-
 			
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
