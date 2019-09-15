@@ -45,12 +45,9 @@ public class BookListController implements Initializable, MyController {
 	
 	@FXML
     void doButton(ActionEvent event) {
-		// logger.error("switch to view 1");
-//		for(Book book: Main.firstBookStore.getBookList()) {
-//			bookListView.(Main.firstBookStore.getBookList());
-//		}
+		 logger.error("switch to view 3");
 
-//		MainController.getInstance().showView(ViewType.DETAIL1);
+//		MainController.getInstance().showView(ViewType.DETAIL3);
     }
 	
 	@Override

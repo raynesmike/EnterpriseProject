@@ -63,6 +63,10 @@ public class MainController implements Initializable {
 				loader = new FXMLLoader(this.getClass().getResource("../BookListView.fxml"));
 				controller = new BookListController();
 				break;
+			case DETAIL3 : 
+				loader = new FXMLLoader(this.getClass().getResource("../BookDetailView.fxml"));
+				controller = new BookListController();
+				break;
 		}
 
 		viewNode = null;
