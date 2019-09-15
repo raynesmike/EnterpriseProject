@@ -6,8 +6,9 @@ public class Book {
 	private String bookGenre;
 	private int bookISBN;		//Unique ID - new 13 digits, old 10 digits
 	private int bookPublished;
+	private String bookSummary;
 	
-	public Book(String bookTitle, String bookAuthor, String bookGenre, int bookISBN, int bookPublished) {
+	public Book(String bookTitle, String bookAuthor, String bookGenre, int bookISBN, int bookPublished, String bookSummary) {
 		
 		//TODO: Check if data is valid
 		this.bookTitle = bookTitle;
@@ -15,6 +16,7 @@ public class Book {
 		this.bookGenre = bookGenre;
 		this.bookISBN = bookISBN;
 		this.bookPublished = bookPublished;
+		this.bookSummary = bookSummary; 
 	}
 	
 
@@ -75,6 +77,18 @@ public class Book {
 
 	public void setBookPublished(int bookPublished) {
 		this.bookPublished = bookPublished;
+	}
+
+
+
+	public String getBookSummary() {
+		return bookSummary;
+	}
+
+
+
+	public void setBookSummary(String bookSummary) {
+		this.bookSummary = bookSummary;
 	}
 
 

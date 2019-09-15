@@ -47,8 +47,10 @@ public class BookListController implements Initializable, MyController {
     void doButton(ActionEvent event) {
 		 logger.error("switch to view 3");
 
-//		MainController.getInstance().showView(ViewType.DETAIL3);
-    }
+		 System.out.println(bookListView.getSelectionModel().getSelectedItem());
+		 MainController.getInstance().showView(ViewType.DETAIL3, bookListView.getSelectionModel().getSelectedItem());
+		 
+	}
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
