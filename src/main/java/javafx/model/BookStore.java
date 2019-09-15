@@ -31,10 +31,15 @@ public class BookStore {
 			logger.error(e);
 		}
 		while(scanner.hasNextLine()) {
-			String line = scanner.nextLine();
-			logger.debug(line);
-			String[] bookData = line.split(", ");
-			bookList.add(new Book(bookData[0], bookData[1], bookData[2], Integer.parseInt(bookData[3]) , Integer.parseInt(bookData[4]), bookData[5] ));
+			//Shouldn't need a try-catch block here but it's working so I dunno
+			try {
+				String line = scanner.nextLine();
+				logger.debug(line);
+				String[] bookData = line.split(", ");
+				bookList.add(new Book(bookData[0], bookData[1], bookData[2], Integer.parseInt(bookData[3]), Integer.parseInt(bookData[4]), bookData[5]));
+			} catch (Exception e) {
+				logger.error(e);
+			}
 		}
 	}
 	
