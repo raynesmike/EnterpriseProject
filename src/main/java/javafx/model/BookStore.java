@@ -41,10 +41,14 @@ public class BookStore {
 			scanner = new Scanner(resource);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+			logger.error(e);
 		}
 		while(scanner.hasNextLine()) {
-			String[] bookData= scanner.nextLine().split(", ");
+			String line = scanner.nextLine();
+			logger.debug(line);
+			//String[] bookData= scanner.nextLine().split(", ");
+			String[] bookData = line.split(", ");
 			bookList.add(new Book(bookData[0], bookData[1], bookData[2], Integer.parseInt(bookData[3]) , Integer.parseInt(bookData[4]), bookData[5] ));
 		}
 		

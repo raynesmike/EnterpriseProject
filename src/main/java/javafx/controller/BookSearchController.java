@@ -41,7 +41,7 @@ public class BookSearchController implements Initializable, MyController {
     	String b = labelAuthor.getText();
     	String c = labelGenre.getText();
     	String d = labelISBN.getText();
-    	if(d=="") {
+    	if(d.equals("")) {
     		d = "0";
     	}
     	try {

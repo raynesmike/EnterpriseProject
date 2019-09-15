@@ -38,7 +38,8 @@ public class BookListController implements Initializable, MyController {
 			Book selectedBook = bookListView.getSelectionModel().getSelectedItem();
 			if(selectedBook != null) {
 //				MainController.getInstance().showView(ViewType.DETAIL1);
-				logger.info("Click");
+				logger.info("Clicked on " + selectedBook);
+				MainController.getInstance().showView(ViewType.DETAIL3, selectedBook);
 			}
 		}
     }
@@ -57,9 +58,10 @@ public class BookListController implements Initializable, MyController {
 		// TODO Auto-generated method stub
 		
 		books = FXCollections.observableArrayList();
-    	for(Book book: Main.firstBookStore.getBookList()) {
-    		books.add(book);
-    	}		
+//    	for(Book book: Main.firstBookStore.getBookList()) {
+//    		books.add(book);
+//    	}
+		books.addAll(Main.firstBookStore.getBookList());
     	bookListView.setItems(books);
     	
 	}
