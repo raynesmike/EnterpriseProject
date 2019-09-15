@@ -29,7 +29,7 @@ public class Detail1Controller implements Initializable, MyController {
     
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		// TODO Auto-generated method stub
+		// TODO print all the book title here
 
 	}
 	
@@ -50,5 +50,6 @@ public class Detail1Controller implements Initializable, MyController {
     		logger.error("Search Error");
     	}
     }
+   
 
 }

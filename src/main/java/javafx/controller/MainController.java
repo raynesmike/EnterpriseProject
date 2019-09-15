@@ -53,14 +53,14 @@ public class MainController implements Initializable {
 		FXMLLoader loader = null;
 		Parent viewNode;
 		MyController controller = null;
-
+		
 		switch(viewType) {
 			case DETAIL1 : 
-				loader = new FXMLLoader(this.getClass().getResource("../detail1.fxml"));
+				loader = new FXMLLoader(this.getClass().getResource("../BookSearchView.fxml"));
 				controller = new Detail1Controller();
 				break;
 			case DETAIL2 : 
-				loader = new FXMLLoader(this.getClass().getResource("../detail2.fxml"));
+				loader = new FXMLLoader(this.getClass().getResource("../BookListView.fxml"));
 				controller = new Detail2Controller();
 				break;
 		}

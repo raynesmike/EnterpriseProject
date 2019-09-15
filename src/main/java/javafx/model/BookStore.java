@@ -12,6 +12,7 @@ public class BookStore {
 	
 	private ArrayList<Book> bookList;
 	
+	
 	public BookStore() {
 		this.bookList = new ArrayList<Book>();
 	}
@@ -62,4 +63,14 @@ public class BookStore {
 		}
 		return newString;
 	}
+
+	public ArrayList<Book> getBookList() {
+		return bookList;
+	}
+
+	public void setBookList(ArrayList<Book> bookList) {
+		this.bookList = bookList;
+	}
+	
+	
 }

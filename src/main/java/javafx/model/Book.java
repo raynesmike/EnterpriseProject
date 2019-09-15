@@ -80,6 +80,6 @@ public class Book {
 
 
 	public String toString() {
-		return bookTitle + " by "+ bookAuthor +"\n" + bookGenre + "\n" +bookISBN + "-" + bookPublished;
+		return bookTitle;
 	}
 }
