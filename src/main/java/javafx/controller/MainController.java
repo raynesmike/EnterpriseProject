@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javafx.ViewType;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -41,6 +42,12 @@ public class MainController implements Initializable {
 		showView(ViewType.DETAIL2);
     }
 	
+	@FXML
+    void quitYes(ActionEvent event) {
+		logger.info("Clicked on QUIT YES");
+		Platform.exit();
+    }
+	
 	public void showView(ViewType viewType) {
 		// load view according to viewType and plug into center of rootPane
 		FXMLLoader loader = null;
@@ -71,6 +78,7 @@ public class MainController implements Initializable {
 
 		rootPane.setCenter(viewNode);
 	}
+
 			
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {

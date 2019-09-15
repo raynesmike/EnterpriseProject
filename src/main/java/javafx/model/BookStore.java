@@ -23,13 +23,25 @@ public class BookStore {
 		}
 		while(scanner.hasNextLine()) {
 			String[] bookData= scanner.nextLine().split(", ");
-			bookList.add(new Book(bookData[0], bookData[1], bookData[2], bookData[3], Integer.parseInt(bookData[4]) ));
+			bookList.add(new Book(bookData[0], bookData[1], bookData[2], Integer.parseInt(bookData[3]) , Integer.parseInt(bookData[4]) ));
 		}
 		
 	}
 	
-	public void searchBook(String title, String author, String genre, String isbn) {
-		
+//	public void searchBook(String title, String author, String genre, int isbn) {
+//		
+//	}
+	public boolean searchBook(String title, String author, String genre, int isbn){
+		System.out.println("inside searchBook");
+	    boolean foundTitle = bookList.stream().filter(o -> o.getBookTitle().equals(title)).findFirst().isPresent();
+	    boolean foundAuthor = bookList.stream().filter(o -> o.getBookAuthor().equals(author)).findFirst().isPresent();
+	    boolean foundGenre= bookList.stream().filter(o -> o.getBookGenre().equals(genre)).findFirst().isPresent();
+	    boolean foundISBN = bookList.stream().filter(o -> o.getBookISBN() == (isbn)).findFirst().isPresent();
+	    if(foundTitle || foundAuthor || foundGenre || foundISBN) {
+	    	return true;
+	    }else {
+	    	return false;
+	    }
 	}
 	
 	public String toString() {

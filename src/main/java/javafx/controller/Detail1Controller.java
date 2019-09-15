@@ -33,12 +33,14 @@ public class Detail1Controller implements Initializable, MyController {
     @FXML
     void onSearch(ActionEvent event) {
     	//TODO: check database if ISBN exist first and match the rest in BookStore
-    	String a =labelTitle.getText();
+    	String a = labelTitle.getText();
     	String b = labelAuthor.getText();
     	String c = labelGenre.getText();
-    	String d =labelISBN.getText();
-    	
-    	Main.firstBookStore.searchBook(a, b,c , d);
+    	String d = labelISBN.getText();
+    	if(d=="") {
+    		d = "0";
+    	}
+    	System.out.println(Main.firstBookStore.searchBook(a, b, c, Integer.parseInt(d)) );
     	
     }
 

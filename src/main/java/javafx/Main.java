@@ -20,9 +20,9 @@ public class Main extends Application {
 	public static void main(String[] args) {
 		System.out.println("hello world!");
 		
-		logger.error("hello error");
-		
-		logger.info("hello debug");
+//		logger.error("hello error");
+//		
+//		logger.info("hello debug");
 
 		launch(args);
 	}
