@@ -11,7 +11,7 @@ public interface BookGateway {
 	
 	public List<Book> getBooks();
 	//public List<Make> getMakes();
-	public void createBook(Book book);
+	public void createBook(String title, int isbn, int yearPublished, String summary);
 	public void readBook();
 	public void updateBook(Book Book) throws GatewayException;
 	public void deleteBook();

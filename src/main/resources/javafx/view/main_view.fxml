@@ -19,6 +19,7 @@
               <MenuItem fx:id="bookRead" mnemonicParsing="false" onAction="#handleBook" text="Read" />
                   <MenuItem fx:id="bookUpdate" mnemonicParsing="false" onAction="#handleBook" text="Update" />
                   <MenuItem fx:id="bookDelete" mnemonicParsing="false" onAction="#handleBook" text="Delete" />
+                <MenuItem fx:id="quitYes" mnemonicParsing="false" onAction="#handleBook" text="Yes" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
@@ -28,7 +29,6 @@
           </Menu>
             <Menu mnemonicParsing="false" text="Quit">
               <items>
-                <MenuItem fx:id="quitYes" mnemonicParsing="false" text="Yes" />
                   <MenuItem mnemonicParsing="false" text="No" />
               </items>
             </Menu>

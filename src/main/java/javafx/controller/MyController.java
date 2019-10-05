@@ -23,6 +23,7 @@ public class MyController {
 
     @FXML
     private MenuItem bookCreate, bookRead, bookDelete, bookUpdate;
+    @FXML
     private MenuItem quitYes;
 	
 	public MyController() {
@@ -31,9 +32,10 @@ public class MyController {
 	@FXML
 	private void handleBook(ActionEvent action) throws Exception {
 		Object source = action.getSource();
-//		if(source == quitYes) {
-//			Platform.exit();
-//		}
+		if(source == quitYes) {
+			Platform.exit();
+			
+		}
 		if(source == bookCreate) {
 			//get a collection of books from the gateway
 			MainController.showView(ViewType.BOOK_CREATE, null);

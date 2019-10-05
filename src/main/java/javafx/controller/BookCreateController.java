@@ -7,10 +7,12 @@ import java.util.ResourceBundle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.model.Book;
 import javafx.model.BookGateway;
+import javafx.model.BookTableGatewayMySQL;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
@@ -36,18 +38,20 @@ public class BookCreateController {
     private Button buttonCreate;
 	private static BookGateway bookGateway;
 
-    
-
 	private static final Logger logger = LogManager.getLogger();
-	private Book book;
 	
 	public BookCreateController() {
-		this.book = null;
 	}
 	
-	public void initialize() {
-		// TODO print all the book title here
-
+	public static void initBookGateway() {
+		//create gateways
+		try {
+			bookGateway = new BookTableGatewayMySQL();
+			
+		} catch (javafx.model.GatewayException e) {
+			e.printStackTrace();
+			Platform.exit();
+		}
 	}
 	@FXML public void handleButtonAction(ActionEvent action) throws IOException {
 		
@@ -61,14 +65,15 @@ public class BookCreateController {
     	logger.info("@BookCreateController onSearch()");
     	
     	try {	
-    	book.setBookTitle(labelTitle.getText());
-    	book.setBookISBN(Integer.parseInt(labelISBN.getText().trim()));
-    	book.setBookPublished(Integer.parseInt(labelYearPublished.getText()));
-    	book.setBookSummary(labelSummary.getText());
+
     	
-    	bookGateway.createBook(book);
+    	bookGateway.createBook(labelTitle.getText(), Integer.parseInt(labelISBN.getText())
+    			,Integer.parseInt(labelYearPublished.getText()),labelSummary.getText());
+    	
     	}catch(Exception e){
-    		logger.error("ERROR: @BookCreateController onSearch" + e.toString());
+    		System.out.println(labelTitle.getText()+Integer.parseInt(labelISBN.getText().trim())
+			+Integer.parseInt(labelYearPublished.getText())+labelSummary.getText());
+    		logger.error("ERROR: @BookCreateController handleButtonAction" + e.toString());
     	}
     }
    

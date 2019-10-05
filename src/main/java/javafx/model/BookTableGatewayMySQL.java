@@ -79,9 +79,17 @@ public class BookTableGatewayMySQL implements BookGateway {
 		return books;
 	}
 	
-	public void createBook(Book book) {
+	public void createBook(String title, int isbn, int yearPublished, String summary) {
 		PreparedStatement st = null;
 		
+		try {
+			st = conn.prepareStatement("INSERT INTO Book(title, summary, year_published, isbn) VALUES (title,summary,yearPublished,isbn))");
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			//4. cleanup
+		}
 	}
 	
 	public void readBook() {
