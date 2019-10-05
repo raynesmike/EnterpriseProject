@@ -17,14 +17,14 @@
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Button mnemonicParsing="false" onAction="#onSearch" text="Search" GridPane.rowIndex="4" />
-      <Label text="Genre" GridPane.rowIndex="2" />
-      <Label text="ISBN" GridPane.rowIndex="3" />
-      <TextField fx:id="labelGenre" promptText="Book Genre" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-      <TextField fx:id="labelISBN" promptText="Book ISBN" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      <Button fx:id="buttonCreate" mnemonicParsing="false" onAction="#handleButtonAction" text="Create" GridPane.rowIndex="4" />
+      <Label text="Year Published" GridPane.rowIndex="2" />
+      <Label text="Summary" GridPane.rowIndex="3" />
+      <TextField fx:id="labelYearPublished" promptText="Year Published" GridPane.columnIndex="1" GridPane.rowIndex="2" />
       <Label text="Title" />
-      <Label text="Author" GridPane.rowIndex="1" />
+      <Label text="ISBN" GridPane.rowIndex="1" />
       <TextField fx:id="labelTitle" promptText="Book Title" GridPane.columnIndex="1" />
-      <TextField fx:id="labelAuthor" promptText="Book Author" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <TextField fx:id="labelISBN" promptText="ISBN" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <TextArea fx:id="labelSummary" prefHeight="200.0" prefWidth="200.0" promptText="Summary" GridPane.columnIndex="1" GridPane.rowIndex="3" />
    </children>
 </GridPane>

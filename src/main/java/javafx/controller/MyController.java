@@ -36,7 +36,7 @@ public class MyController {
 //		}
 		if(source == bookCreate) {
 			//get a collection of books from the gateway
-			MainController.showView(null, null);
+			MainController.showView(ViewType.BOOK_CREATE, null);
 			return;
 		}
 		if(source == bookRead) {
@@ -44,16 +44,16 @@ public class MyController {
 			MainController.showView(ViewType.BOOK_LIST, null);
 			return;
 		}
-		if(source == bookDelete) {
+		if(source == bookUpdate) {
 			Book book = new Book();
 			book.setGateway(MainController.getBookGateway());
-			MainController.showView(ViewType.BOOK_LIST, null);
+			MainController.showView(ViewType.BOOK_DETAIL, null);
 			return;
 		}
 		if(source == bookDelete) {
 			Book book = new Book();
 			book.setGateway(MainController.getBookGateway());
-			MainController.showView(ViewType.BOOK_LIST, null);
+			MainController.showView(ViewType.BOOK_DETAIL, null);
 			return;
 		}
 	}

@@ -4,89 +4,82 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class Book {
-	private String bookTitle;
-	private String bookAuthor;
-	private String bookGenre;
-	private int bookISBN;		//Unique ID - new 13 digits, old 10 digits
-	private int bookPublished;
-	private String bookSummary;
-	
+	private int id;
+	private String title;
+	private String summary;
+	private int isbn;		//Unique ID - new 13 digits, old 10 digits
+	private int yearpublished;
 	private BookGateway gateway;
 
+//	private String bookAuthor;
 
 	
 	public Book() {
-		
-		this.bookTitle = "";
-		this.bookAuthor = "";
-		this.bookGenre = "";
-		this.bookISBN = 0;
-		this.bookPublished = 0;
-		this.bookSummary = ""; 
+		this.id = 0;
+		this.title = "";
+		this.summary = ""; 
+		this.isbn = 0;
+		this.yearpublished = 0;
 		this.gateway= null;
+
+//		this.bookAuthor = "";
 	}
 	
 	public Book(String bookTitle, String bookAuthor, String bookGenre, int bookISBN, int bookPublished, String bookSummary) {
 		
-		this.bookTitle = bookTitle;
-		this.bookAuthor = bookAuthor;
-		this.bookGenre = bookGenre;
-		this.bookISBN = bookISBN;
-		this.bookPublished = bookPublished;
-		this.bookSummary = bookSummary; 
+		this.title = bookTitle;
+		this.isbn = bookISBN;
+		this.yearpublished = bookPublished;
+		this.summary = bookSummary; 
 		this.gateway = null;
+		
+
+//		this.bookAuthor = bookAuthor;
 	}
 	
 	public String getBookTitle() {
-		return bookTitle;
+		return title;
 	}
 
 	public void setBookTitle(String bookTitle) {
-		this.bookTitle = bookTitle;
+		this.title = bookTitle;
 	}
 
-	public String getBookAuthor() {
-		return bookAuthor;
-	}
+//	public String getBookAuthor() {
+//		return bookAuthor;
+//	}
+//
+//	public void setBookAuthor(String bookAuthor) {
+//		this.bookAuthor = bookAuthor;
+//	}
 
-	public void setBookAuthor(String bookAuthor) {
-		this.bookAuthor = bookAuthor;
-	}
-
-	public String getBookGenre() {
-		return bookGenre;
-	}
-
-	public void setBookGenre(String bookGenre) {
-		this.bookGenre = bookGenre;
-	}
 
 	public int getBookISBN() {
-		return bookISBN;
+		return isbn;
 	}
 
 	public void setBookISBN(int bookISBN) {
-		this.bookISBN = bookISBN;
+		this.isbn = bookISBN;
 	}
 
 	public int getBookPublished() {
-		return bookPublished;
+		return yearpublished;
 	}
 
 	public void setBookPublished(int bookPublished) {
-		this.bookPublished = bookPublished;
+		this.yearpublished = bookPublished;
 	}
 
 	public String getBookSummary() {
-		return bookSummary;
+		return summary;
 	}
 
 	public void setBookSummary(String bookSummary) {
-		this.bookSummary = bookSummary;
+		this.summary = bookSummary;
 	}
 
 	public String toString() {
-		return bookTitle;
+		return title;
 	}
 
 	public BookGateway getGateway() {

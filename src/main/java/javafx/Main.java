@@ -13,17 +13,19 @@ import javafx.model.BookTableGatewayMySQL;
 import javafx.model.GatewayException;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 	private static Logger logger = LogManager.getLogger();
-	public static BookTableGatewayMySQL firstBookStore;
+	//public static BookTableGatewayMySQL firstBookStore;
 	
 	@Override
 	public void init() throws Exception {
 		super.init();
 		
 		logger.error(": @Main init");
+		MainController.initBookGateway();
 	}
 
 	@Override
@@ -32,6 +34,7 @@ public class Main extends Application {
 		
 		logger.info("@Main stop");
 
+		MainController.close();
 		// strange, but app hangs when executing from command line
 		// Maven may be waiting on an explicit error signal
 		
@@ -42,7 +45,7 @@ public class Main extends Application {
 
 	 
 	@Override
-	public void start(Stage stage) throws GatewayException {
+	public void start(Stage stage) throws Exception {
 		logger.info("@Main start()");
 		//init the view
 		FXMLLoader loader = new FXMLLoader(this.getClass().getResource("view/main_view.fxml"));
@@ -53,14 +56,10 @@ public class Main extends Application {
 		//assign to loader
 		loader.setController(controller);
 
-		Parent rootNode = null; 
-		try {
-			rootNode = loader.load();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			logger.error(e);
-		}
+		Parent rootNode = loader.load(); 
+	
+		MainController.setRootPane((BorderPane) rootNode);
+		
 		stage.setScene(new Scene(rootNode));
 		stage.setTitle("Books");
 		stage.show();
@@ -69,7 +68,7 @@ public class Main extends Application {
 //		firstBookStore.loadBooks();
 
 		logger.debug("HERE");
-//		controller.showView(ViewType.BOOK_SEARCH, null);
+//		controller.showView(ViewType.BOOK_CREATE, null);
 	}
 
 	public static void main(String[] args) {

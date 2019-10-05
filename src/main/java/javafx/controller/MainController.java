@@ -48,21 +48,24 @@ public class MainController{
     	
 		FXMLLoader loader = null;
 		System.out.println(viewType);
-		if(viewType == ViewType.BOOK_LIST) {
+		
+		//CREATE
+		if(viewType == ViewType.BOOK_CREATE) { 
+			loader = new FXMLLoader(MainController.class.getResource("../view/BookCreateView.fxml"));
+			loader.setController(new BookCreateController());
+		
+		//READ
+		} else if(viewType == ViewType.BOOK_LIST) {
 			List<Book> books = bookGateway.getBooks();
 			
-			loader = new FXMLLoader(MainController.class.getResource("view/BookListView.fxml"));
+			loader = new FXMLLoader(MainController.class.getResource("../view/BookListView.fxml"));
 			loader.setController(new BookListController(books));
 		
-		}else if(viewType == ViewType.BOOK_LIST) { 
-				
-			loader = new FXMLLoader(MainController.class.getResource("view/BookDetailView.fxml"));
-//			loader.setController(new BookDetailController((Book) book));
+		//UPDATE AND DELETE
+		} else if(viewType == ViewType.BOOK_DETAIL) { 
+			loader = new FXMLLoader(MainController.class.getResource("../view/BookDetailView.fxml"));
+			loader.setController(new BookDetailController((Book) book));
 			
-//		}else if(viewType == ViewType.BOOK_LIST) { 
-			//	loader = new FXMLLoader(MainController.class.getResource("BookSearchView.fxml"));
-//				controller = new BookSearchController();
-//				break;
 		}
 		
 		Parent viewNode = null;

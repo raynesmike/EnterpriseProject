@@ -1,5 +1,5 @@
 package javafx;
 
 public enum ViewType {
-	BOOK_SEARCH, BOOK_LIST, BOOK_DETAIL
+	BOOK_CREATE, BOOK_LIST, BOOK_DETAIL
 }

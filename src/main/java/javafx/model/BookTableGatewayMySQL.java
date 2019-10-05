@@ -53,7 +53,6 @@ public class BookTableGatewayMySQL implements BookGateway {
 		
 		
 	}
-	
 	public List<Book> getBooks(){
 		List<Book> books = new ArrayList<Book>();
 		PreparedStatement st = null;
@@ -61,7 +60,7 @@ public class BookTableGatewayMySQL implements BookGateway {
 		
 		//1. prepare the statement
 		try {
-			st = conn.prepareStatement("select * from users");
+			st = conn.prepareStatement("select * from Book");
 			
 			//2. execute the query
 			rs = st.executeQuery();
@@ -80,14 +79,21 @@ public class BookTableGatewayMySQL implements BookGateway {
 		return books;
 	}
 	
+	public void createBook(Book book) {
+		PreparedStatement st = null;
+		
+	}
+	
+	public void readBook() {
+		
+	}
+	
 
 	public void updateBook(Book book) throws GatewayException{
 		PreparedStatement st = null;
 		
 		try{
 			conn.setAutoCommit(false);
-			
-			
 			
 			conn.commit();
 			
@@ -109,6 +115,10 @@ public class BookTableGatewayMySQL implements BookGateway {
 		}
 	}
 
+	public void deleteBook() {
+		
+	}
+	
 //	public void loadBooks(){
 //		logger.info("@BookTableGatewayMySQL loading Books()");
 //		

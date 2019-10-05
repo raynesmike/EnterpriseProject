@@ -11,7 +11,8 @@
             <TextField fx:id="fieldTitle" prefHeight="30.0" prefWidth="170.0" promptText="Title" style="-fx-border-color: gray;" />
             <TextField fx:id="fieldYear" layoutY="40.0" prefHeight="30.0" prefWidth="170.0" promptText="Year Published" style="-fx-border-color: gray;" />
             <TextField fx:id="fieldISBN" layoutY="80.0" prefHeight="30.0" prefWidth="170.0" promptText="ISBN" style="-fx-border-color: gray;" />
-            <Button layoutX="50.0" layoutY="335.0" mnemonicParsing="false" onAction="#onSave" text="Save" />
+            <Button layoutX="17.0" layoutY="335.0" mnemonicParsing="false" text="Save" />
+            <Button layoutX="96.0" layoutY="335.0" mnemonicParsing="false" text="Delete" />
          </children></AnchorPane>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
          <children>

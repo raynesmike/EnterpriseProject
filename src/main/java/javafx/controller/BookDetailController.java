@@ -33,10 +33,10 @@ public class BookDetailController{
 	public void initialize() {
 		logger.info("@BookDetailController initialize()");
 		
-		fieldTitle.setText(book.getBookTitle());
-		fieldYear.setText(Integer.toString(book.getBookPublished()));
-		fieldISBN.setText(Integer.toString(book.getBookISBN()));
-		areaSummary.setText(book.getBookSummary());
+//		fieldTitle.setText(book.getBookTitle());
+//		fieldYear.setText(Integer.toString(book.getBookPublished()));
+//		fieldISBN.setText(Integer.toString(book.getBookISBN()));
+//		areaSummary.setText(book.getBookSummary());
 	}
 	
 	@FXML

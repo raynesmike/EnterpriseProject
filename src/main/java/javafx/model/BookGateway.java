@@ -8,9 +8,13 @@ import java.util.List;
  *
  */
 public interface BookGateway {
+	
 	public List<Book> getBooks();
 	//public List<Make> getMakes();
+	public void createBook(Book book);
+	public void readBook();
 	public void updateBook(Book Book) throws GatewayException;
+	public void deleteBook();
 	public void close();
 	
 	public void insertBook(Book Book);

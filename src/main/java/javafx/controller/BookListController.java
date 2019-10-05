@@ -25,18 +25,11 @@ public class BookListController {
 		this.books = books;
 	}
 	
-//	@FXML
-//    void doButton(ActionEvent event) {
-//		logger.info("@BookListController onListClick()");
-//		
-//		 MainController.getInstance().showView(ViewType.BOOK_DETAIL, bookListView.getSelectionModel().getSelectedItem());
-//	}
-	
 	public void initialize() {
 		ObservableList<Book> items = bookListView.getItems();
 		
 		
-		//items.addAll(books);
+		items.addAll(books);
 		
 		bookListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
