@@ -10,7 +10,21 @@ public class Book {
 	private int bookISBN;		//Unique ID - new 13 digits, old 10 digits
 	private int bookPublished;
 	private String bookSummary;
+	
+	private BookGateway gateway;
 
+
+	
+	public Book() {
+		
+		this.bookTitle = "";
+		this.bookAuthor = "";
+		this.bookGenre = "";
+		this.bookISBN = 0;
+		this.bookPublished = 0;
+		this.bookSummary = ""; 
+		this.gateway= null;
+	}
 	
 	public Book(String bookTitle, String bookAuthor, String bookGenre, int bookISBN, int bookPublished, String bookSummary) {
 		
@@ -20,6 +34,7 @@ public class Book {
 		this.bookISBN = bookISBN;
 		this.bookPublished = bookPublished;
 		this.bookSummary = bookSummary; 
+		this.gateway = null;
 	}
 	
 	public String getBookTitle() {
@@ -72,5 +87,13 @@ public class Book {
 
 	public String toString() {
 		return bookTitle;
+	}
+
+	public BookGateway getGateway() {
+		return gateway;
+	}
+
+	public void setGateway(BookGateway gateway) {
+		this.gateway = gateway;
 	}
 }

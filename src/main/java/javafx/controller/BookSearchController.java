@@ -12,7 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 
-public class BookSearchController implements Initializable, MyController {
+public class BookSearchController {
     @FXML
     private TextField labelAuthor;
 
@@ -26,9 +26,8 @@ public class BookSearchController implements Initializable, MyController {
     private TextField labelISBN; // UniqueID(UID)
 
 	private static final Logger logger = LogManager.getLogger();
-    
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
+	
+	public void initialize() {
 		// TODO print all the book title here
 
 	}
@@ -46,7 +45,7 @@ public class BookSearchController implements Initializable, MyController {
     	}
     	try {
     		//System.out.println(Main.firstBookStore.searchBook(a, b, c, Integer.parseInt(d)) );
-			logger.info(Main.firstBookStore.searchBook(a, b, c, Integer.parseInt(d)));
+//			logger.info(Main.firstBookStore.searchBook(a, b, c, Integer.parseInt(d)));
     	}catch(Exception e){
     		logger.error("ERROR: @BookSearchController onSearch" + e.toString());
     	}

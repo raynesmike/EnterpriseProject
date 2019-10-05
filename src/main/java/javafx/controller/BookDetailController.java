@@ -13,25 +13,24 @@ import javafx.model.Book;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
-public class BookDetailController implements Initializable, MyController{
+public class BookDetailController{
+	private static Logger logger = LogManager.getLogger();
 
     @FXML
-    private TextField fieldISBN;
-
+    private TextField fieldISBN, fieldTitle, fieldYear;
     @FXML
     private TextArea areaSummary;
 
-    @FXML
-    private TextField fieldTitle;
-
-    @FXML
-    private TextField fieldYear;
-
+    //mode member reference
     private Book book;
-	private static Logger logger = LogManager.getLogger();
     
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
+    public BookDetailController(Book book) {
+    	this.book = book;
+    }
+    
+    
+    
+	public void initialize() {
 		logger.info("@BookDetailController initialize()");
 		
 		fieldTitle.setText(book.getBookTitle());
@@ -49,7 +48,5 @@ public class BookDetailController implements Initializable, MyController{
 		book.setBookSummary(areaSummary.getText());
 		
 	}
-	public BookDetailController(Book book) {
-		this.book = book;
-	}
+
 }
