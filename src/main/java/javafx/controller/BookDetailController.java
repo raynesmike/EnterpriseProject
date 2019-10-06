@@ -11,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.model.Book;
+import javafx.model.GatewayException;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -23,7 +24,7 @@ public class BookDetailController{
     @FXML
     private TextArea areaSummary;
     @FXML
-    private Button buttonDelete, buttonSave;
+    private Button buttonDelete, buttonUpdate;
 
     //mode member reference
     private Book book;
@@ -43,11 +44,9 @@ public class BookDetailController{
 	@FXML public void handleButtonAction(ActionEvent action) throws IOException {
 		
 		Object source = action.getSource();
-		if(source == buttonSave) {
-			onSave();
-		} else if(source == buttonSave) {
-			onSave();
-		}else if(source == buttonDelete) {
+		if(source == buttonUpdate) {
+			onUpdate();
+		} else if(source == buttonDelete) {
 			onDelete();
 		}
 	}
@@ -63,14 +62,21 @@ public class BookDetailController{
 	}
 	
 	@FXML
-	public void onSave() {
+	public void onUpdate() {
 		logger.info("@BookDetailController save()");
+		
 
-//		book.setBookTitle(fieldTitle.getText());
-//		book.setBookPublished(Integer.parseInt(fieldYear.getText()));
-//		book.setBookISBN(Integer.parseInt(fieldISBN.getText()));
-//		book.setBookSummary(areaSummary.getText());
-//		MainController.showView(ViewType.BOOK_LIST, null);
+		try {
+			this.book.setBookTitle(fieldTitle.getText());
+			this.book.setYearPublished(Integer.parseInt(fieldYear.getText()));
+			this.book.setBookISBN(fieldISBN.getText());
+			this.book.setBookSummary(areaSummary.getText());
+	
+			MainController.getBookGateway().updateBook(book);
+		} catch (GatewayException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	@FXML

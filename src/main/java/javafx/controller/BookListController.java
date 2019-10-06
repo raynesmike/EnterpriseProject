@@ -25,8 +25,13 @@ public class BookListController {
 	
 	private List<Book> books;
 	
+	private Book selectedBook;
+	
 	public BookListController(List <Book> books) {
 		this.books = books;
+	}
+	public BookListController(Book book) {
+		this.selectedBook = book;
 	}
 	
 	
@@ -41,17 +46,18 @@ public class BookListController {
 			onDelete();
 		}
 	}
-   
+
+	// get the book and send it to BOOK_DETAIL view
 	public void onUpdate() {
-		// get the book and send it to BOOK_DETAIL view
 
 		//Use ListView's getSelected Item
     	Book selected = bookListView.getSelectionModel().getSelectedItem();
 		MainController.showView(ViewType.BOOK_DETAIL, selected);
 	}
 	
+
+	// DELETE the book and refresh the pages
 	public void onDelete() {
-		// DELETE the book and refresh the pages
 
     	Book selected = bookListView.getSelectionModel().getSelectedItem();
 		MainController.getBookGateway().deleteBook(selected);
@@ -79,11 +85,6 @@ public class BookListController {
 			
 		});
 		
-		
-//		books = FXCollections.observableArrayList();
-//		books.addAll(Main.firstBookStore.getBookList());
-//    	bookListView.setItems(books);
-//    	
 	}
 }
 

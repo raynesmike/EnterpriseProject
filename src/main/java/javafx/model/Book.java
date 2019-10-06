@@ -42,8 +42,14 @@ public class Book {
 		return title;
 	}
 
-	public void setBookTitle(String bookTitle) {
+
+	//    	a. title must be between 1 and 255 chars
+	public Boolean setBookTitle(String bookTitle) {
+		if(bookTitle.length() < 1 || bookTitle.length() > 255) {
+			return false;
+		}
 		this.title = bookTitle;
+		return true;
 	}
 
 //	public String getBookAuthor() {
@@ -54,29 +60,47 @@ public class Book {
 //		this.bookAuthor = bookAuthor;
 //	}
 
+	
+
+
 
 	public String getBookISBN() {
 		return isbn;
 	}
-
-	public void setBookISBN(String bookISBN) {
+	
+	//	d. isbn cannot be > 13 characters. can be blank Implement these business rules as validation methods
+	public Boolean setBookISBN(String bookISBN) {
+		if(bookISBN.length() > 13) {
+			return false;
+		}
 		this.isbn = bookISBN;
+		return true;
 	}
 
 	public int getYearPublished() {
 		return yearPublished;
 	}
-
-	public void setYearPublished(int bookPublished) {
+	
+	//	c. year_published must be between 1455 and the current year (inclusive)
+	public Boolean setYearPublished(int bookPublished) {	
+		if(bookPublished < 1455  || bookPublished > 2019) {
+			return false;
+		}
 		this.yearPublished = bookPublished;
+		return true;
 	}
 
 	public String getBookSummary() {
 		return summary;
 	}
 
-	public void setBookSummary(String bookSummary) {
+	//	b. summary must be < 65536 characters. can be blank
+	public Boolean setBookSummary(String bookSummary) {
+		if(bookSummary.length() > 65536) {
+			return false;
+		}
 		this.summary = bookSummary;
+		return true;
 	}
 
 	public String toString() {

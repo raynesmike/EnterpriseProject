@@ -75,47 +75,14 @@ public class BookCreateController {
     	try {
 	    	String title = labelTitle.getText();
 	    	String isbn = labelISBN.getText();
-	    	String yearText = labelYearPublished.getText();
 	    	String summary = labelSummary.getText();
-	
-	    	Boolean isValid = true;
-	    	
-	    	alertTitle.setText("");
-	//    	a. title must be between 1 and 255 chars
-	    	if(title.length() < 1 || title.length() > 255) {
-	    		alertTitle.setText("title must be between 1 and 255 chars");
-	    		isValid = false;
-	    	}
-	
-			alertSummary.setText("");
-	//    	b. summary must be < 65536 characters. can be blank
-	    	if(summary.length() > 65536) {
-	    		alertSummary.setText("summary must be < 65536 characters. can be blank");
-	    		isValid = false;
-	    	}
-	    	alertYear.setText("");
 	    	int yearPublished = Integer.parseInt(labelYearPublished.getText());
-	//    	c. year_published must be between 1455 and the current year (inclusive)
-	    	if(yearPublished < 1455  || yearPublished > 2019) {
-	    		alertYear.setText("1455 up to current year");
-	    		isValid = false;
-	    	}
-	    	//yearText = Integer.toString(yearPublished);
 	    	
-	//    	d. isbn cannot be > 13 characters. can be blank Implement these business rules as validation methods
-	    	alertISBN.setText("");
-	    	if(isbn.length() > 13) {
-	    		alertISBN.setText("Cannot be > 13 characters.");
-	    		isValid = false;
-	    	}
-	
-			// Check if all fields are valid
-			if (!isValid){
+	    	if (!validate(title, summary, isbn, yearPublished)){
 				//Exit function, feedback sent and nothing more to do here.
 				logger.info("Exiting onCreate");
 				return;
 			}
-	
 			//If we made it this far, check for an initialized book
 	
 			// Book doesn't exist for this session, create a new book!
@@ -134,7 +101,7 @@ public class BookCreateController {
 	                // Not a new book, simply update it.
 	                MainController.getBookGateway().updateBook(bookToAdd);
 	//
-	//                alertCreateStatus.setText("Updated the new Book");
+	                alertCreateStatus.setText("Updated the new Book");
 	            }
 	
 			} catch (Exception e) {
@@ -150,6 +117,34 @@ public class BookCreateController {
 		} catch(Exception last) {
 			logger.error("ERROR: @BookCreateController" + last.toString());
 		}
+	}
+	
+	private Boolean validate(String title, String summary, String isbn, int yearPublished) {
+		Boolean isValid = true;
+    	alertTitle.setText("");
+    	if(!bookToAdd.setBookTitle(title)) {
+    		alertTitle.setText("title must be between 1 and 255 chars");
+    		isValid = false;
+    	}
+
+		alertSummary.setText("");
+    	if(!bookToAdd.setBookSummary(summary)) {
+    		alertSummary.setText("summary must be < 65536 characters. can be blank");
+    		isValid = false;
+    	}
+    	
+    	alertYear.setText("");
+    	if(!bookToAdd.setYearPublished(yearPublished)) {
+    		alertYear.setText("1455 up to current year");
+    		isValid = false;
+    	}
+    	
+    	alertISBN.setText("");
+    	if(!bookToAdd.setBookISBN(isbn)) {
+    		alertISBN.setText("Cannot be > 13 characters.");
+    		isValid = false;
+    	}
+    	return isValid;
 	}
 
 }

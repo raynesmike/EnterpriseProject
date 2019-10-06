@@ -157,9 +157,12 @@ public class BookTableGatewayMySQL implements BookGateway {
 			st.setString(4, book.getBookISBN());
 			st.setInt(5, book.getId());	// THIS is the primary key to be updated
 
+			st.executeUpdate();	//This executes the query!
+			System.out.println("BEFORE COMMIT");
 			logger.debug(st);
 			
 			conn.commit();
+			System.out.println("AFTER COMMIT");
 			
 		} catch (SQLException e){
 			logger.error(e);
@@ -187,8 +190,6 @@ public class BookTableGatewayMySQL implements BookGateway {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 
-		int returnKey = -1;
-		System.out.println(book.getId());
 		try {
 			//st = conn.prepareStatement("INSERT INTO Book(title, summary, year_published, isbn) VALUES (title,summary,yearPublished,isbn))");
 			String query = "DELETE from Book " 
