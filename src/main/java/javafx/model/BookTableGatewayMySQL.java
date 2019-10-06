@@ -91,9 +91,11 @@ public class BookTableGatewayMySQL implements BookGateway {
 		return books;
 	}
 	
-	public void createBook(String title, String isbn, int yearPublished, String summary) {
+	public int createBook(String title, String isbn, int yearPublished, String summary) {
 		PreparedStatement st = null;
 		ResultSet rs = null;
+
+		int returnKey = -1;
 		
 		try {
 			//st = conn.prepareStatement("INSERT INTO Book(title, summary, year_published, isbn) VALUES (title,summary,yearPublished,isbn))");
@@ -113,7 +115,8 @@ public class BookTableGatewayMySQL implements BookGateway {
 			// rs has the ability to be null for some reason
 			if (rs != null && rs.next()){
 				// THIS is where the key would be!
-				logger.debug("Record inserted and returned key: " + rs.getInt(1));
+				returnKey = rs.getInt(1);
+				logger.debug("Record inserted and returned key: " + returnKey);
 			}
 			
 		} catch(SQLException e) {
@@ -125,6 +128,9 @@ public class BookTableGatewayMySQL implements BookGateway {
 			//4. cleanup
 			//TODO This needs to close the connection
 		}
+
+		//RETURN THE GENERATED KEY
+		return returnKey;
 	}
 	
 	public void readBook() {

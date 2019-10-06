@@ -42,9 +42,13 @@ public class BookCreateController {
     private Button buttonCreate;
 	private static BookGateway bookGateway;
 
+	private Book bookToAdd;
+
 	private static final Logger logger = LogManager.getLogger();
 	
 	public BookCreateController() {
+		//Initialize the dummy book
+		this.bookToAdd = new Book();	// Will start with id = 0
 	}
 	
 	public static void initBookGateway() {
@@ -53,7 +57,8 @@ public class BookCreateController {
 			bookGateway = new BookTableGatewayMySQL();
 			
 		} catch (javafx.model.GatewayException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			logger.error(e);
 			Platform.exit();
 		}
 	}
@@ -72,41 +77,64 @@ public class BookCreateController {
     	String isbn = labelISBN.getText();
     	String yearText = labelYearPublished.getText();
     	String summary = labelSummary.getText();
+
+    	Boolean isValid = true;
     	
 
 //    	a. title must be between 1 and 255 chars
     	if(title.length() < 1 || title.length() > 255) {
     		alertTitle.setText("title must be between 1 and 255 chars");
+    		isValid = false;
     	}
 
 //    	b. summary must be < 65536 characters. can be blank
     	if(summary.length() > 65536) {
     		alertSummary.setText("summary must be < 65536 characters. can be blank");
+    		isValid = false;
     	}
     	
     	int yearPublished = Integer.parseInt(labelYearPublished.getText());
 //    	c. year_published must be between 1455 and the current year (inclusive)
     	if(yearPublished < 1455  || yearPublished > 2019) {
-    		alertYear.setText("Cannot be > 13 characters.");
+    		alertYear.setText("1455 up to current year");
+    		isValid = false;
     	}
+    	//yearText = Integer.toString(yearPublished);
     	
 
 //    	int isbn = Integer.parseInt(labelISBN.getText());
-//    	d. isbn cannot be > 13 characters. can be blank Implement these business rules as validation methods 
+//    	d. isbn cannot be > 13 characters. can be blank Implement these business rules as validation methods
     	if(isbn.length() > 13) {
-    		alertISBN.setText("1455 up to current year");
+    		alertISBN.setText("Cannot be > 13 characters.");
+    		isValid = false;
     	}
-    	
-    	try {	
 
-    	
-//    	MainController.getBookGateway().createBook(title, isbn, yearPublished, summary);
-    	
-    	}catch(Exception e){
-    		System.out.println(labelTitle.getText()+Integer.parseInt(labelISBN.getText().trim())
-			+Integer.parseInt(labelYearPublished.getText())+labelSummary.getText());
-    		logger.error("ERROR: @BookCreateController handleButtonAction" + e.toString());
-    	}
+		// Check if all fields are valid
+		if (!isValid){
+			//Exit function, feedback sent and nothing more to do here.
+			logger.info("Exiting onCreate");
+			return;
+		}
+
+		//If we made it this far, check for an initialized book
+
+		// Book doesn't exist for this session, create a new book!
+
+		try {
+
+			if (this.bookToAdd.getId() == 0)
+				bookToAdd.setId( MainController.getBookGateway().createBook(title, isbn, yearPublished, summary) );
+
+		} catch (Exception e) {
+			//System.out.println(labelTitle.getText() + Integer.parseInt(labelISBN.getText().trim())
+			//		+ Integer.parseInt(labelYearPublished.getText()) + labelSummary.getText());
+			logger.debug(labelTitle.getText() + Integer.parseInt(labelISBN.getText().trim())
+					+ Integer.parseInt(labelYearPublished.getText()) + labelSummary.getText());
+			logger.error("ERROR: @BookCreateController handleButtonAction" + e.toString());
+			logger.error(e);
+		}
+
+		logger.info("Made it to end of onCreate()");
     }
    
 
