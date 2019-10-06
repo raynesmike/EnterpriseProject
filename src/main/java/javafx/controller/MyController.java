@@ -1,18 +1,12 @@
 package javafx.controller;
 
-import java.io.IOException;
-import java.util.List;
-
+import javafx.application.Platform;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javafx.ViewType;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.model.Book;
-import javafx.scene.Parent;
 import javafx.scene.control.MenuItem;
 
 

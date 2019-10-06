@@ -20,11 +20,13 @@ import java.util.stream.Collectors;
 public class BookTableGatewayMySQL implements BookGateway {
 	private Connection conn;
 //	private ArrayList<Book> bookList;
-//	private static Logger logger = LogManager.getLogger();
+	private static Logger logger = LogManager.getLogger();
 //	
 	
 	public BookTableGatewayMySQL() throws GatewayException {
 		conn = null;
+
+		logger.info("DB Connection Begin");
 		
 		//connect to data source and create a connection instance
 		//read db credentials from properties file
@@ -44,10 +46,12 @@ public class BookTableGatewayMySQL implements BookGateway {
 		
 			//create the connection
 			conn = ds.getConnection();
+			logger.info("DB Connection Finish");
 		
 		}catch (IOException | SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+			logger.error(e);
 			throw new GatewayException(e);
 		}
 		
@@ -81,14 +85,37 @@ public class BookTableGatewayMySQL implements BookGateway {
 	
 	public void createBook(String title, int isbn, int yearPublished, String summary) {
 		PreparedStatement st = null;
+		ResultSet rs = null;
 		
 		try {
-			st = conn.prepareStatement("INSERT INTO Book(title, summary, year_published, isbn) VALUES (title,summary,yearPublished,isbn))");
+			//st = conn.prepareStatement("INSERT INTO Book(title, summary, year_published, isbn) VALUES (title,summary,yearPublished,isbn))");
+			String query = "INSERT INTO Book "
+					+ "(title, summary, year_published, isbn) "
+					+ "values(?, ?, ?, ?)";
+			st = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+			// PLUG IN THE VALUES
+			st.setString(1, title);
+			st.setString(2, summary);
+			st.setInt(3, yearPublished);
+			st.setInt(4, isbn);
+			st.executeUpdate();	//This executes the query!
+
+			//We asked for a return of the key generated, so get it back
+			rs = st.getGeneratedKeys();
+			// rs has the ability to be null for some reason
+			if (rs != null && rs.next()){
+				// THIS is where the key would be!
+				logger.debug("Record inserted and returned key: " + rs.getInt(1));
+			}
 			
 		} catch(SQLException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			//TODO MAKE GATEWAYEXCEPTION WORK
+			//throw new GatewayException(e);
+			logger.error(e);
 		} finally {
 			//4. cleanup
+			//TODO This needs to close the connection
 		}
 	}
 	
