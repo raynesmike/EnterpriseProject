@@ -73,6 +73,10 @@ public class BookTableGatewayMySQL implements BookGateway {
 			
 			while(rs.next()) {
 				System.out.println(rs.getInt("id") + rs.getString("title") + rs.getString("summary") +  rs.getInt("year_published") + rs.getString("isbn") );
+				// Create new Book object
+				Book newBook = new Book(rs.getInt("id"), rs.getString("title"), rs.getString("summary"), rs.getInt("year_published"), rs.getInt("isbn"));
+				//Push this to collection
+				books.add(newBook);
 			}
 			
 		} catch(SQLException e) {
@@ -156,7 +160,7 @@ public class BookTableGatewayMySQL implements BookGateway {
 	
 //	public void loadBooks(){
 //		logger.info("@BookTableGatewayMySQL loading Books()");
-//		
+//
 //		Scanner scanner = null;
 //		try {
 //			InputStream resource = this.getClass().getResourceAsStream("Books.csv");
