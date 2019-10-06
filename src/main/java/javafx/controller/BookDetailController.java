@@ -55,7 +55,7 @@ public class BookDetailController{
 		logger.info("@BookDetailController initialize()");
 
 		fieldYear.setText(Integer.toString(this.book.getBookPublished()));
-		fieldISBN.setText(Integer.toString(this.book.getBookISBN()));
+		fieldISBN.setText(this.book.getBookISBN());
 		areaSummary.setText(this.book.getBookSummary());
 		fieldTitle.setText(this.book.getBookTitle());
 

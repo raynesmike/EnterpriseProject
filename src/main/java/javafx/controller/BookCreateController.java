@@ -87,14 +87,14 @@ public class BookCreateController {
     	int yearPublished = Integer.parseInt(labelYearPublished.getText());
 //    	c. year_published must be between 1455 and the current year (inclusive)
     	if(yearPublished < 1455  || yearPublished > 2019) {
-    		alertISBN.setText("1455 up to current year");
+    		alertYear.setText("Cannot be > 13 characters.");
     	}
     	
 
 //    	int isbn = Integer.parseInt(labelISBN.getText());
 //    	d. isbn cannot be > 13 characters. can be blank Implement these business rules as validation methods 
     	if(isbn.length() > 13) {
-    		alertYear.setText("Cannot be > 13 characters.");
+    		alertISBN.setText("1455 up to current year");
     	}
     	
     	try {	

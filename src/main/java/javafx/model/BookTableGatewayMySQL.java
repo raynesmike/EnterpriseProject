@@ -78,7 +78,7 @@ public class BookTableGatewayMySQL implements BookGateway {
 			while(rs.next()) {
 				System.out.println(rs.getInt("id") + rs.getString("title") + rs.getString("summary") +  rs.getInt("year_published") + rs.getString("isbn") );
 				// Create new Book object
-				Book newBook = new Book(rs.getInt("id"), rs.getString("title"), rs.getString("summary"), rs.getInt("year_published"), rs.getInt("isbn"));
+				Book newBook = new Book(rs.getInt("id"), rs.getString("title"), rs.getString("summary"), rs.getInt("year_published"), rs.getString("isbn"));
 				//Push this to collection
 				books.add(newBook);
 			}
@@ -91,7 +91,7 @@ public class BookTableGatewayMySQL implements BookGateway {
 		return books;
 	}
 	
-	public void createBook(String title, int isbn, int yearPublished, String summary) {
+	public void createBook(String title, String isbn, int yearPublished, String summary) {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		
@@ -105,7 +105,7 @@ public class BookTableGatewayMySQL implements BookGateway {
 			st.setString(1, title);
 			st.setString(2, summary);
 			st.setInt(3, yearPublished);
-			st.setInt(4, isbn);
+			st.setString(4, isbn);
 			st.executeUpdate();	//This executes the query!
 
 			//We asked for a return of the key generated, so get it back
