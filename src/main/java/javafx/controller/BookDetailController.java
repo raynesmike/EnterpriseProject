@@ -29,7 +29,14 @@ public class BookDetailController{
     private Book book;
     
     public BookDetailController(Book book) {
-    	this.book = book;
+    	//Instructions say to create a copy, so we're creating a copy manually
+		//This is a shallow copy but whatever, it'll work fine.
+		this.book = new Book();
+		this.book.setId(book.getId());
+		this.book.setBookTitle(book.getBookTitle());
+		this.book.setBookISBN(book.getBookISBN());
+		this.book.setBookSummary(book.getBookSummary());
+    	//this.book = book;
     }
     
 	@FXML public void handleButtonAction(ActionEvent action) throws IOException {
@@ -46,16 +53,18 @@ public class BookDetailController{
     
 	public void initialize() {
 		logger.info("@BookDetailController initialize()");
-		
-//		fieldTitle.setText(book.getBookTitle());
-//		fieldYear.setText(Integer.toString(book.getBookPublished()));
-//		fieldISBN.setText(Integer.toString(book.getBookISBN()));
-//		areaSummary.setText(book.getBookSummary());
+
+		fieldYear.setText(Integer.toString(this.book.getBookPublished()));
+		fieldISBN.setText(Integer.toString(this.book.getBookISBN()));
+		areaSummary.setText(this.book.getBookSummary());
+		fieldTitle.setText(this.book.getBookTitle());
+
 	}
 	
 	@FXML
 	public void onSave() {
 		logger.info("@BookDetailController save()");
+
 //		book.setBookTitle(fieldTitle.getText());
 //		book.setBookPublished(Integer.parseInt(fieldYear.getText()));
 //		book.setBookISBN(Integer.parseInt(fieldISBN.getText()));

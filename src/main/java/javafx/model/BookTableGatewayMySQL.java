@@ -64,7 +64,11 @@ public class BookTableGatewayMySQL implements BookGateway {
 		
 		//1. prepare the statement
 		try {
-			st = conn.prepareStatement("select * from Book");
+			//Parameterized because I HAVE TO
+			String query = "select * "
+					+ " from Book";
+			//st = conn.prepareStatement("select * from Book");
+			st = conn.prepareStatement(query);
 			
 			//2. execute the query
 			rs = st.executeQuery();

@@ -44,6 +44,10 @@ public class Book {
 		this.yearpublished = bookPublished;
 		this.summary = bookSummary;
 	}
+
+	public void setId(int id) { this.id = id;}
+
+	public int getId() { return this.id; }
 	
 	public String getBookTitle() {
 		return title;
