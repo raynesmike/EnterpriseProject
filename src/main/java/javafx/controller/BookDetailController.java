@@ -39,6 +39,8 @@ public class BookDetailController{
 			onSave();
 		} else if(source == buttonSave) {
 			onDelete();
+		}else if(source == buttonDelete) {
+			onDelete();
 		}
 	}
     
