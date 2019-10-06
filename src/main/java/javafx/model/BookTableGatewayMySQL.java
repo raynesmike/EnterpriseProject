@@ -185,69 +185,6 @@ public class BookTableGatewayMySQL implements BookGateway {
 	public void deleteBook() {
 		
 	}
-	
-//	public void loadBooks(){
-//		logger.info("@BookTableGatewayMySQL loading Books()");
-//
-//		Scanner scanner = null;
-//		try {
-//			InputStream resource = this.getClass().getResourceAsStream("Books.csv");
-//
-//			scanner = new Scanner(resource);
-//		} catch (Exception e) {
-//
-//			logger.error(e);
-//		}
-//		while(scanner.hasNextLine()) {
-//			//Shouldn't need a try-catch block here but it's working so I dunno
-//			try {
-//				String line = scanner.nextLine();
-//				logger.debug(line);
-//				String[] bookData = line.split(", ");
-//				bookList.add(new Book(bookData[0], bookData[1], bookData[2], Integer.parseInt(bookData[3].trim()), Integer.parseInt(bookData[4].trim()), bookData[5]));
-//			} catch (Exception e) {
-//				logger.error(e);
-//			}
-//		}
-//	}
-	
-
-//	public boolean searchBook(String title, String author, String genre, int isbn){
-//
-//		logger.info("@BookTableGatewayMySQL searchBook()");
-//		ArrayList<Book> newArrayList = new ArrayList<Book>();
-//	    newArrayList = (ArrayList<Book>) bookList.stream().filter(o -> o.getBookTitle().equals(title)).collect(Collectors.toList());
-//	    newArrayList = (ArrayList<Book>) bookList.stream().filter(o -> o.getBookAuthor().equals(author)).collect(Collectors.toList());
-//	    newArrayList = (ArrayList<Book>) bookList.stream().filter(o -> o.getBookGenre().equals(genre)).collect(Collectors.toList());
-//	    newArrayList = (ArrayList<Book>) bookList.stream().filter(o -> o.getBookISBN() == (isbn)).collect(Collectors.toList());
-//
-//	    if(!newArrayList.isEmpty()) {
-//	    	for(Book book: newArrayList) {
-//	    		//System.out.println(book);
-//				logger.debug(book);
-//	    	}
-//	    	return true;
-//	    }else { 
-//	    	return false;
-//	    }
-//	}
-//	
-//	public String toString() {
-//		String newString = "";
-//		for(Book book: bookList) {
-//			newString += book.toString() + "\n------------------\n";
-//		}
-//		return newString;
-//	}
-//
-//	public ArrayList<Book> getBookList() {
-//		return bookList;
-//	}
-//
-//	public void setBookList(ArrayList<Book> bookList) {
-//		this.bookList = bookList;
-//	}
-
 
 	@Override
 	public void close() {

@@ -36,7 +36,7 @@ public class BookCreateController {
     private TextArea labelSummary;
 
     @FXML
-    private Text alertISBN, alertYear, alertTitle, alertSummary;
+    private Text alertISBN, alertYear, alertTitle, alertSummary, alertCreateStatus;
 
     @FXML
     private Button buttonCreate;
@@ -80,19 +80,20 @@ public class BookCreateController {
 
     	Boolean isValid = true;
     	
-
+    	alertTitle.setText("");
 //    	a. title must be between 1 and 255 chars
     	if(title.length() < 1 || title.length() > 255) {
     		alertTitle.setText("title must be between 1 and 255 chars");
     		isValid = false;
     	}
 
+		alertSummary.setText("");
 //    	b. summary must be < 65536 characters. can be blank
     	if(summary.length() > 65536) {
     		alertSummary.setText("summary must be < 65536 characters. can be blank");
     		isValid = false;
     	}
-    	
+    	alertYear.setText("");
     	int yearPublished = Integer.parseInt(labelYearPublished.getText());
 //    	c. year_published must be between 1455 and the current year (inclusive)
     	if(yearPublished < 1455  || yearPublished > 2019) {
@@ -101,9 +102,8 @@ public class BookCreateController {
     	}
     	//yearText = Integer.toString(yearPublished);
     	
-
-//    	int isbn = Integer.parseInt(labelISBN.getText());
 //    	d. isbn cannot be > 13 characters. can be blank Implement these business rules as validation methods
+    	alertISBN.setText("");
     	if(isbn.length() > 13) {
     		alertISBN.setText("Cannot be > 13 characters.");
     		isValid = false;
@@ -119,7 +119,6 @@ public class BookCreateController {
 		//If we made it this far, check for an initialized book
 
 		// Book doesn't exist for this session, create a new book!
-
 		try {
 
 			if (this.bookToAdd.getId() == 0) {
@@ -129,10 +128,13 @@ public class BookCreateController {
                 bookToAdd.setBookISBN(isbn);
                 bookToAdd.setBookPublished(yearPublished);
                 bookToAdd.setBookSummary(summary);
+                alertCreateStatus.setText("Create Success");
             }
 			else {
                 // Not a new book, simply update it.
                 MainController.getBookGateway().updateBook(bookToAdd);
+
+                alertCreateStatus.setText("Updated the new Book");
             }
 
 		} catch (Exception e) {
