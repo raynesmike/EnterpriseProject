@@ -32,10 +32,10 @@ public class BookDetailController{
     	//Instructions say to create a copy, so we're creating a copy manually
 		//This is a shallow copy but whatever, it'll work fine.
 		this.book = new Book();
-		this.book.setId(book.getId());
-		this.book.setBookTitle(book.getBookTitle());
-		this.book.setBookISBN(book.getBookISBN());
-		this.book.setBookSummary(book.getBookSummary());
+//		this.book.setId(book.getId());
+//		this.book.setBookTitle(book.getBookTitle());
+//		this.book.setBookISBN(book.getBookISBN());
+//		this.book.setBookSummary(book.getBookSummary());
     	//this.book = book;
     }
     

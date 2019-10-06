@@ -8,7 +8,10 @@
    <center>
       <ListView fx:id="bookListView" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="300.0" prefWidth="300.0" BorderPane.alignment="CENTER" />
    </center>
-   <bottom>
-      <Button mnemonicParsing="false" text="Search" BorderPane.alignment="CENTER" />
-   </bottom>
+   <left>
+      <Button fx:id="buttonUpdate" mnemonicParsing="false" onAction="#handleListButton" text="Update" BorderPane.alignment="CENTER" />
+   </left>
+   <right>
+      <Button fx:id="buttonDelete" mnemonicParsing="false" onAction="#handleListButton" text="Delete" BorderPane.alignment="CENTER" />
+   </right>
 </BorderPane>

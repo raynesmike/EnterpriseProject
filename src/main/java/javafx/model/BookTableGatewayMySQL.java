@@ -74,9 +74,8 @@ public class BookTableGatewayMySQL implements BookGateway {
 			rs = st.executeQuery();
 			
 			//3 transform db data into objects
-			
 			while(rs.next()) {
-				System.out.println(rs.getInt("id") + rs.getString("title") + rs.getString("summary") +  rs.getInt("year_published") + rs.getString("isbn") );
+//				System.out.println(rs.getInt("id") + rs.getString("title") + rs.getString("summary") +  rs.getInt("year_published") + rs.getString("isbn") );
 				// Create new Book object
 				Book newBook = new Book(rs.getInt("id"), rs.getString("title"), rs.getString("summary"), rs.getInt("year_published"), rs.getString("isbn"));
 				//Push this to collection

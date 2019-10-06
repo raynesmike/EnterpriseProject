@@ -41,15 +41,13 @@ public class MyController {
 			return;
 		}
 		if(source == bookUpdate) {
-			Book book = new Book();
-			book.setGateway(MainController.getBookGateway());
-			MainController.showView(ViewType.BOOK_DETAIL, null);
+			// List the book to be able to Update a specific book
+			MainController.showView(ViewType.BOOK_LIST, null);
 			return;
 		}
 		if(source == bookDelete) {
-			Book book = new Book();
-			book.setGateway(MainController.getBookGateway());
-			MainController.showView(ViewType.BOOK_DETAIL, null);
+			// List the book to be able to Delete a specific book
+			MainController.showView(ViewType.BOOK_LIST, null);
 			return;
 		}
 	}

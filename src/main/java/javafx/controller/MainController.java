@@ -59,7 +59,7 @@ public class MainController{
 		//UPDATE AND DELETE
 		} else if(viewType == ViewType.BOOK_DETAIL) { 
 			loader = new FXMLLoader(MainController.class.getResource("../view/BookDetailView.fxml"));
-			loader.setController(new BookDetailController((Book) book));
+			loader.setController(new BookDetailController(book));
 			
 		}
 		

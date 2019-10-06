@@ -133,8 +133,8 @@ public class BookCreateController {
 			else {
                 // Not a new book, simply update it.
                 MainController.getBookGateway().updateBook(bookToAdd);
-
-                alertCreateStatus.setText("Updated the new Book");
+//
+//                alertCreateStatus.setText("Updated the new Book");
             }
 
 		} catch (Exception e) {
