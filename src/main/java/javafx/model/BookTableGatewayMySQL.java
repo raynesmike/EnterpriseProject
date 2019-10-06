@@ -132,8 +132,8 @@ public class BookTableGatewayMySQL implements BookGateway {
 		return returnKey;
 	}
 	
-	public void readBook() {
-		
+	public Book readBook(String title) {
+		return null;
 	}
 	
 
@@ -153,7 +153,7 @@ public class BookTableGatewayMySQL implements BookGateway {
 			st = conn.prepareStatement(query);
 			st.setString(1, book.getBookTitle());
 			st.setString(2, book.getBookSummary());
-			st.setInt(3, book.getBookPublished());
+			st.setInt(3, book.getYearPublished());
 			st.setString(4, book.getBookISBN());
 			st.setInt(5, book.getId());	// THIS is the primary key to be updated
 
@@ -181,8 +181,39 @@ public class BookTableGatewayMySQL implements BookGateway {
 		}
 	}
 
-	public void deleteBook() {
+	public void deleteBook(Book book) {
+		logger.info("@DeleteBook()");
 		
+		PreparedStatement st = null;
+		ResultSet rs = null;
+
+		int returnKey = -1;
+		System.out.println(book.getId());
+		try {
+			//st = conn.prepareStatement("INSERT INTO Book(title, summary, year_published, isbn) VALUES (title,summary,yearPublished,isbn))");
+			String query = "DELETE from Book " 
+						+ "WHERE id = ?";
+
+			st = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+			st.setInt(1, book.getId());
+			
+			// PLUG IN THE VALUES
+			
+			st.executeUpdate();	//This executes the query!
+
+			//We asked for a return of the key generated, so get it back
+			rs = st.getGeneratedKeys();
+		
+			
+		} catch(SQLException e) {
+			//e.printStackTrace();
+			//TODO MAKE GATEWAYEXCEPTION WORK
+			//throw new GatewayException(e);
+			logger.error(e);
+		} finally {
+			//4. cleanup
+			//TODO This needs to close the connection
+		}
 	}
 
 	@Override

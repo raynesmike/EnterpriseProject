@@ -8,7 +8,7 @@ public class Book {
 	private String title;
 	private String summary;
 	private String isbn;		//Unique ID - new 13 digits, old 10 digits
-	private int yearpublished;
+	private int yearPublished;
 	private BookGateway gateway;
 
 //	private String bookAuthor;
@@ -19,29 +19,18 @@ public class Book {
 		this.title = "";
 		this.summary = ""; 
 		this.isbn = "";
-		this.yearpublished = 0;
+		this.yearPublished = 0;
 		this.gateway= null;
 
 //		this.bookAuthor = "";
 	}
 	
-	public Book(String bookTitle, String bookAuthor, String bookGenre, String bookISBN, int bookPublished, String bookSummary) {
-		
-		this.title = bookTitle;
-		this.isbn = bookISBN;
-		this.yearpublished = bookPublished;
-		this.summary = bookSummary; 
-		this.gateway = null;
-		
 
-//		this.bookAuthor = bookAuthor;
-	}
-
-	public Book(int id, String bookTitle, String bookSummary, int bookPublished, String bookISBN){
+	public Book(int id, String bookTitle, String bookSummary, int yearPublished, String bookISBN){
 		this.id = id;
 		this.isbn = bookISBN;
 		this.title = bookTitle;
-		this.yearpublished = bookPublished;
+		this.yearPublished = yearPublished;
 		this.summary = bookSummary;
 	}
 
@@ -74,12 +63,12 @@ public class Book {
 		this.isbn = bookISBN;
 	}
 
-	public int getBookPublished() {
-		return yearpublished;
+	public int getYearPublished() {
+		return yearPublished;
 	}
 
-	public void setBookPublished(int bookPublished) {
-		this.yearpublished = bookPublished;
+	public void setYearPublished(int bookPublished) {
+		this.yearPublished = bookPublished;
 	}
 
 	public String getBookSummary() {

@@ -72,82 +72,84 @@ public class BookCreateController {
 	
 	@FXML public void onCreate() {
     	logger.info("@BookCreateController onSearch()");
-    	
-    	String title = labelTitle.getText();
-    	String isbn = labelISBN.getText();
-    	String yearText = labelYearPublished.getText();
-    	String summary = labelSummary.getText();
-
-    	Boolean isValid = true;
-    	
-    	alertTitle.setText("");
-//    	a. title must be between 1 and 255 chars
-    	if(title.length() < 1 || title.length() > 255) {
-    		alertTitle.setText("title must be between 1 and 255 chars");
-    		isValid = false;
-    	}
-
-		alertSummary.setText("");
-//    	b. summary must be < 65536 characters. can be blank
-    	if(summary.length() > 65536) {
-    		alertSummary.setText("summary must be < 65536 characters. can be blank");
-    		isValid = false;
-    	}
-    	alertYear.setText("");
-    	int yearPublished = Integer.parseInt(labelYearPublished.getText());
-//    	c. year_published must be between 1455 and the current year (inclusive)
-    	if(yearPublished < 1455  || yearPublished > 2019) {
-    		alertYear.setText("1455 up to current year");
-    		isValid = false;
-    	}
-    	//yearText = Integer.toString(yearPublished);
-    	
-//    	d. isbn cannot be > 13 characters. can be blank Implement these business rules as validation methods
-    	alertISBN.setText("");
-    	if(isbn.length() > 13) {
-    		alertISBN.setText("Cannot be > 13 characters.");
-    		isValid = false;
-    	}
-
-		// Check if all fields are valid
-		if (!isValid){
-			//Exit function, feedback sent and nothing more to do here.
-			logger.info("Exiting onCreate");
-			return;
+    	try {
+	    	String title = labelTitle.getText();
+	    	String isbn = labelISBN.getText();
+	    	String yearText = labelYearPublished.getText();
+	    	String summary = labelSummary.getText();
+	
+	    	Boolean isValid = true;
+	    	
+	    	alertTitle.setText("");
+	//    	a. title must be between 1 and 255 chars
+	    	if(title.length() < 1 || title.length() > 255) {
+	    		alertTitle.setText("title must be between 1 and 255 chars");
+	    		isValid = false;
+	    	}
+	
+			alertSummary.setText("");
+	//    	b. summary must be < 65536 characters. can be blank
+	    	if(summary.length() > 65536) {
+	    		alertSummary.setText("summary must be < 65536 characters. can be blank");
+	    		isValid = false;
+	    	}
+	    	alertYear.setText("");
+	    	int yearPublished = Integer.parseInt(labelYearPublished.getText());
+	//    	c. year_published must be between 1455 and the current year (inclusive)
+	    	if(yearPublished < 1455  || yearPublished > 2019) {
+	    		alertYear.setText("1455 up to current year");
+	    		isValid = false;
+	    	}
+	    	//yearText = Integer.toString(yearPublished);
+	    	
+	//    	d. isbn cannot be > 13 characters. can be blank Implement these business rules as validation methods
+	    	alertISBN.setText("");
+	    	if(isbn.length() > 13) {
+	    		alertISBN.setText("Cannot be > 13 characters.");
+	    		isValid = false;
+	    	}
+	
+			// Check if all fields are valid
+			if (!isValid){
+				//Exit function, feedback sent and nothing more to do here.
+				logger.info("Exiting onCreate");
+				return;
+			}
+	
+			//If we made it this far, check for an initialized book
+	
+			// Book doesn't exist for this session, create a new book!
+			try {
+	
+				if (this.bookToAdd.getId() == 0) {
+				    // New book, populate the internal values
+	                bookToAdd.setId(MainController.getBookGateway().createBook(title, isbn, yearPublished, summary));
+	                bookToAdd.setBookTitle(title);
+	                bookToAdd.setBookISBN(isbn);
+	                bookToAdd.setYearPublished(yearPublished);
+	                bookToAdd.setBookSummary(summary);
+	                alertCreateStatus.setText("Create Success");
+	            }
+				else {
+	                // Not a new book, simply update it.
+	                MainController.getBookGateway().updateBook(bookToAdd);
+	//
+	//                alertCreateStatus.setText("Updated the new Book");
+	            }
+	
+			} catch (Exception e) {
+				//System.out.println(labelTitle.getText() + Integer.parseInt(labelISBN.getText().trim())
+				//		+ Integer.parseInt(labelYearPublished.getText()) + labelSummary.getText());
+				logger.debug(labelTitle.getText() + Integer.parseInt(labelISBN.getText().trim())
+						+ Integer.parseInt(labelYearPublished.getText()) + labelSummary.getText());
+				logger.error("ERROR: @BookCreateController handleButtonAction" + e.toString());
+				logger.error(e);
+			}
+	
+			logger.info("Made it to end of onCreate()");
+		} catch(Exception last) {
+			logger.error("ERROR: @BookCreateController" + last.toString());
 		}
-
-		//If we made it this far, check for an initialized book
-
-		// Book doesn't exist for this session, create a new book!
-		try {
-
-			if (this.bookToAdd.getId() == 0) {
-			    // New book, populate the internal values
-                bookToAdd.setId(MainController.getBookGateway().createBook(title, isbn, yearPublished, summary));
-                bookToAdd.setBookTitle(title);
-                bookToAdd.setBookISBN(isbn);
-                bookToAdd.setBookPublished(yearPublished);
-                bookToAdd.setBookSummary(summary);
-                alertCreateStatus.setText("Create Success");
-            }
-			else {
-                // Not a new book, simply update it.
-                MainController.getBookGateway().updateBook(bookToAdd);
-//
-//                alertCreateStatus.setText("Updated the new Book");
-            }
-
-		} catch (Exception e) {
-			//System.out.println(labelTitle.getText() + Integer.parseInt(labelISBN.getText().trim())
-			//		+ Integer.parseInt(labelYearPublished.getText()) + labelSummary.getText());
-			logger.debug(labelTitle.getText() + Integer.parseInt(labelISBN.getText().trim())
-					+ Integer.parseInt(labelYearPublished.getText()) + labelSummary.getText());
-			logger.error("ERROR: @BookCreateController handleButtonAction" + e.toString());
-			logger.error(e);
-		}
-
-		logger.info("Made it to end of onCreate()");
-    }
-   
+	}
 
 }

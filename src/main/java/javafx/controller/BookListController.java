@@ -45,13 +45,17 @@ public class BookListController {
 	public void onUpdate() {
 		// get the book and send it to BOOK_DETAIL view
 
-		MainController.showView(ViewType.BOOK_DETAIL, null);
+		//Use ListView's getSelected Item
+    	Book selected = bookListView.getSelectionModel().getSelectedItem();
+		MainController.showView(ViewType.BOOK_DETAIL, selected);
 	}
 	
 	public void onDelete() {
 		// DELETE the book and refresh the pages
-		
-		
+
+    	Book selected = bookListView.getSelectionModel().getSelectedItem();
+		MainController.getBookGateway().deleteBook(selected);
+		MainController.showView(ViewType.BOOK_LIST, null);
 	}
 	
 	
@@ -69,9 +73,9 @@ public class BookListController {
                 	Book selected = bookListView.getSelectionModel().getSelectedItem();
                    
                 	logger.info("double-clicked " + selected);
-						MainController.showView(ViewType.BOOK_DETAIL, selected);
-					}
+					MainController.showView(ViewType.BOOK_DETAIL, selected);
 				}
+			}
 			
 		});
 		
