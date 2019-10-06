@@ -122,8 +122,18 @@ public class BookCreateController {
 
 		try {
 
-			if (this.bookToAdd.getId() == 0)
-				bookToAdd.setId( MainController.getBookGateway().createBook(title, isbn, yearPublished, summary) );
+			if (this.bookToAdd.getId() == 0) {
+			    // New book, populate the internal values
+                bookToAdd.setId(MainController.getBookGateway().createBook(title, isbn, yearPublished, summary));
+                bookToAdd.setBookTitle(title);
+                bookToAdd.setBookISBN(isbn);
+                bookToAdd.setBookPublished(yearPublished);
+                bookToAdd.setBookSummary(summary);
+            }
+			else {
+                // Not a new book, simply update it.
+                MainController.getBookGateway().updateBook(bookToAdd);
+            }
 
 		} catch (Exception e) {
 			//System.out.println(labelTitle.getText() + Integer.parseInt(labelISBN.getText().trim())

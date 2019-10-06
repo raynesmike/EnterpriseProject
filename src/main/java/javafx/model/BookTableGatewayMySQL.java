@@ -140,17 +140,35 @@ public class BookTableGatewayMySQL implements BookGateway {
 
 	public void updateBook(Book book) throws GatewayException{
 		PreparedStatement st = null;
+		logger.info("@updateBook()");
 		
 		try{
+			// Oh this is good! Check to see if this book ID has since been modified!
+			// Eh, for now just update the thing
 			conn.setAutoCommit(false);
+
+			//Write SQL query to update the book entry - book object contains the primary key!
+			String query = "UPDATE Book "
+					+ "SET title = ?, summary = ?, year_published = ?, isbn = ? "
+					+ "WHERE id = ?";
+			st = conn.prepareStatement(query);
+			st.setString(1, book.getBookTitle());
+			st.setString(2, book.getBookSummary());
+			st.setInt(3, book.getBookPublished());
+			st.setString(4, book.getBookISBN());
+			st.setInt(5, book.getId());	// THIS is the primary key to be updated
+
+			logger.debug(st);
 			
 			conn.commit();
 			
 		} catch (SQLException e){
+			logger.error(e);
 			try {
 				conn.rollback();
 			} catch (SQLException e1) {
-				e1.printStackTrace();
+				//e1.printStackTrace();
+				logger.error(e);
 			}
 		} finally{
 			//clean up
