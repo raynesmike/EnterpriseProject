@@ -67,7 +67,7 @@ public class BookCreateController {
     	try {	
 
     	
-    	bookGateway.createBook(labelTitle.getText(), Integer.parseInt(labelISBN.getText())
+    	MainController.getBookGateway().createBook(labelTitle.getText(), Integer.parseInt(labelISBN.getText())
     			,Integer.parseInt(labelYearPublished.getText()),labelSummary.getText());
     	
     	}catch(Exception e){
