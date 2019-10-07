@@ -15,10 +15,10 @@
             <Button fx:id="buttonUpdate" layoutX="12.0" layoutY="343.0" mnemonicParsing="false" onAction="#handleButtonAction" text="Update" />
             <Button fx:id="buttonDelete" layoutX="94.0" layoutY="344.0" mnemonicParsing="false" onAction="#handleButtonAction" text="Delete" />
             <Button fx:id="buttonCreate" layoutX="57.0" layoutY="263.0" mnemonicParsing="false" onAction="#handleButtonAction" text="Add" />
-            <Text fx:id="alertTitle" layoutX="4.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <Text fx:id="alertYear" layoutX="4.0" layoutY="126.0" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <Text fx:id="alertISBN" layoutX="4.0" layoutY="196.0" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <Text fx:id="alertStatus" layoutX="67.0" layoutY="320.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+            <Text fx:id="alertTitle" fill="RED" layoutX="4.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="162.0" />
+            <Text fx:id="alertYear" fill="RED" layoutX="4.0" layoutY="120.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="162.0" />
+            <Text fx:id="alertISBN" fill="RED" layoutX="4.0" layoutY="190.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="162.0" />
+            <Text fx:id="alertStatus" layoutX="2.0" layoutY="322.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="170.0" />
          </children></AnchorPane>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
          <children>

@@ -91,8 +91,7 @@ public class BookDetailController{
 	                book.setYearPublished(yearPublished);
 	                book.setBookSummary(summary);
 	                alertStatus.setText("Create Success");
-	            }
-				else {
+	            } else {
 	                // Not a new book, simply update it.
 	                MainController.getBookGateway().updateBook(book);
 	//
@@ -100,8 +99,6 @@ public class BookDetailController{
 	            }
 	
 			} catch (Exception e) {
-				//System.out.println(labelTitle.getText() + Integer.parseInt(labelISBN.getText().trim())
-				//		+ Integer.parseInt(labelYearPublished.getText()) + labelSummary.getText());
 				logger.debug(fieldTitle.getText() + Integer.parseInt(fieldISBN.getText().trim())
 						+ Integer.parseInt(fieldYear.getText()) + areaSummary.getText());
 				logger.error("ERROR: @BookCreateController handleButtonAction" + e.toString());

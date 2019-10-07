@@ -10,9 +10,6 @@ public class Book {
 	private String isbn;		//Unique ID - new 13 digits, old 10 digits
 	private int yearPublished;
 	private BookGateway gateway;
-
-//	private String bookAuthor;
-
 	
 	public Book() {
 		this.id = 0;
@@ -22,10 +19,8 @@ public class Book {
 		this.yearPublished = 0;
 		this.gateway= null;
 
-//		this.bookAuthor = "";
 	}
 	
-
 	public Book(int id, String bookTitle, String bookSummary, int yearPublished, String bookISBN){
 		this.id = id;
 		this.isbn = bookISBN;
@@ -42,7 +37,6 @@ public class Book {
 		return title;
 	}
 
-
 	//    	a. title must be between 1 and 255 chars
 	public Boolean setBookTitle(String bookTitle) {
 		if(bookTitle.length() < 1 || bookTitle.length() > 255) {
@@ -51,18 +45,6 @@ public class Book {
 		this.title = bookTitle;
 		return true;
 	}
-
-//	public String getBookAuthor() {
-//		return bookAuthor;
-//	}
-//
-//	public void setBookAuthor(String bookAuthor) {
-//		this.bookAuthor = bookAuthor;
-//	}
-
-	
-
-
 
 	public String getBookISBN() {
 		return isbn;

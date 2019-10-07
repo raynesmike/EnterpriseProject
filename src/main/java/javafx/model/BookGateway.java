@@ -18,5 +18,4 @@ public interface BookGateway {
 	public void close();
 	
 	public void insertBook(Book Book);
-	//public void deleteBook(Book Book);
 }

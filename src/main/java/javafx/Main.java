@@ -1,7 +1,5 @@
 package javafx;
 
-import java.io.IOException;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -9,8 +7,6 @@ import javafx.application.Application;
 import javafx.controller.MainController;
 import javafx.controller.MyController;
 import javafx.fxml.FXMLLoader;
-import javafx.model.BookTableGatewayMySQL;
-import javafx.model.GatewayException;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -33,14 +29,8 @@ public class Main extends Application {
 		logger.info("@Main stop");
 
 		MainController.close();
-		// strange, but app hangs when executing from command line
-		// Maven may be waiting on an explicit error signal
-		
-		// note: 0 indicates normal shutdown as per oracle API docs
 		System.exit(0);
 	}
-	
-
 	 
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -61,12 +51,8 @@ public class Main extends Application {
 		stage.setScene(new Scene(rootNode));
 		stage.setTitle("Books");
 		stage.show();
-		
-//		firstBookStore = new BookTableGatewayMySQL();
-//		firstBookStore.loadBooks();
 
 		logger.debug("HERE");
-//		controller.showView(ViewType.BOOK_CREATE, null);
 	}
 
 	public static void main(String[] args) {

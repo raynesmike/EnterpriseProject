@@ -44,19 +44,14 @@ public class MainController{
 		FXMLLoader loader = null;
 		System.out.println(viewType);
 		
-		//CREATE
-		if(viewType == ViewType.BOOK_CREATE) { 
-			loader = new FXMLLoader(MainController.class.getResource("../view/BookCreateView.fxml"));
-			loader.setController(new BookCreateController());
-		
-		//READ
-		} else if(viewType == ViewType.BOOK_LIST) {
+
+		if(viewType == ViewType.BOOK_LIST) {
 			List<Book> books = bookGateway.getBooks();
 			
 			loader = new FXMLLoader(MainController.class.getResource("../view/BookListView.fxml"));
 			loader.setController(new BookListController(books));
 		
-		//UPDATE AND DELETE
+		// CREATE UPDATE AND DELETE
 		} else if(viewType == ViewType.BOOK_DETAIL) { 
 			loader = new FXMLLoader(MainController.class.getResource("../view/BookDetailView.fxml"));
 			loader.setController(new BookDetailController(book));
@@ -74,35 +69,7 @@ public class MainController{
 		rootPane.setCenter(viewNode);
 		return true;
 	}
-//	
-//	public static MainController getInstance() {
-//		if(instance == null)
-//			instance = new MainController();
-//		return instance;
-//	}
-
-	// eclipse used the wrong import: import java.awt.event.ActionEvent;
-	// void onBeer(ActionEvent event) {
-//	@FXML
-//    void onBook(ActionEvent event) {
-//    	logger.info("@MainController onBook()");
-//		
-//		showView(ViewType.BOOK_LIST, null);
-//    }
-//	
-//	@FXML
-//    void quitYes(ActionEvent event) {
-//    	logger.info("@MainController Quit()");
-//    	
-//		Platform.exit();
-//    }
-			
-//	@Override
-//	public void initialize(URL location, ResourceBundle resources) {
-//		// TODO Auto-generated method stub
-//
-//	}
-
+	
 	public static BookGateway getBookGateway() {
 		return bookGateway;
 	}
@@ -122,7 +89,4 @@ public class MainController{
 	public static void setRootPane(BorderPane rPane) {
 		rootPane = rPane;
 	}
-
-	
-
 }

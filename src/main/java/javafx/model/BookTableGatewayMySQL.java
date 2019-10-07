@@ -6,7 +6,6 @@ import org.apache.logging.log4j.Logger;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,8 +13,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class BookTableGatewayMySQL implements BookGateway {
 	private Connection conn;
@@ -97,7 +94,6 @@ public class BookTableGatewayMySQL implements BookGateway {
 		int returnKey = -1;
 		
 		try {
-			//st = conn.prepareStatement("INSERT INTO Book(title, summary, year_published, isbn) VALUES (title,summary,yearPublished,isbn))");
 			String query = "INSERT INTO Book "
 					+ "(title, summary, year_published, isbn) "
 					+ "values(?, ?, ?, ?)";
@@ -191,7 +187,6 @@ public class BookTableGatewayMySQL implements BookGateway {
 		ResultSet rs = null;
 
 		try {
-			//st = conn.prepareStatement("INSERT INTO Book(title, summary, year_published, isbn) VALUES (title,summary,yearPublished,isbn))");
 			String query = "DELETE from Book " 
 						+ "WHERE id = ?";
 
