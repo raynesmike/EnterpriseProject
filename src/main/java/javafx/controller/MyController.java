@@ -32,7 +32,7 @@ public class MyController {
 		}
 		if(source == bookCreate) {
 			//get a collection of books from the gateway
-			MainController.showView(ViewType.BOOK_CREATE, null);
+			MainController.showView(ViewType.BOOK_DETAIL, new Book());
 			return;
 		}
 		if(source == bookRead) {
