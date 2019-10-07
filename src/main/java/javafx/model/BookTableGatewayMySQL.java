@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -28,10 +29,13 @@ public class BookTableGatewayMySQL implements BookGateway {
 		//connect to data source and create a connection instance
 		//read db credentials from properties file
 		Properties props = new Properties();
-		FileInputStream input = null;
+		//FileInputStream input = null;
+		InputStream input = null;
 		
 		try {
-			input = new FileInputStream("db.properties");
+			//input = new FileInputStream("../db.properties");
+			input = this.getClass().getResourceAsStream("db.properties");
+			logger.debug(input);
 			props.load(input);
 			input.close();
 			
@@ -154,11 +158,11 @@ public class BookTableGatewayMySQL implements BookGateway {
 			st.setInt(5, book.getId());	// THIS is the primary key to be updated
 
 			st.executeUpdate();	//This executes the query!
-			System.out.println("BEFORE COMMIT");
+			logger.debug("BEFORE COMMIT");
 			logger.debug(st);
 			
 			conn.commit();
-			System.out.println("AFTER COMMIT");
+			logger.debug("AFTER COMMIT");
 			
 		} catch (SQLException e){
 			logger.error(e);

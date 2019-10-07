@@ -42,18 +42,22 @@ public class MainController{
     	logger.info("@MainController showView()");
     	
 		FXMLLoader loader = null;
-		System.out.println(viewType);
+		logger.debug(viewType);
 		
 
 		if(viewType == ViewType.BOOK_LIST) {
 			List<Book> books = bookGateway.getBooks();
 			
-			loader = new FXMLLoader(MainController.class.getResource("../view/BookListView.fxml"));
+			//loader = new FXMLLoader(MainController.class.getResource("../view/BookListView.fxml"));
+			//loader = new FXMLLoader(MainController.class.getResource("/view/BookListView.fxml"));
+			loader = new FXMLLoader();
+			loader.setLocation(MainController.class.getResource("/javafx/view/BookListView.fxml"));
+			//Parent content = loader.load();
 			loader.setController(new BookListController(books));
 		
 		// CREATE UPDATE AND DELETE
 		} else if(viewType == ViewType.BOOK_DETAIL) { 
-			loader = new FXMLLoader(MainController.class.getResource("../view/BookDetailView.fxml"));
+			loader = new FXMLLoader(MainController.class.getResource("/javafx/view/BookDetailView.fxml"));
 			loader.setController(new BookDetailController(book));
 			
 		}
