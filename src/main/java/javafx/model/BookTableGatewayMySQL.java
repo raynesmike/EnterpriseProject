@@ -138,13 +138,30 @@ public class BookTableGatewayMySQL implements BookGateway {
 	
 
 	public void updateBook(Book book) throws GatewayException{
+		PreparedStatement lock_st = null;
 		PreparedStatement st = null;
 		logger.info("@updateBook()");
 		
 		try{
-			// Oh this is good! Check to see if this book ID has since been modified!
-			// Eh, for now just update the thing
+			// Begin transactional processing
 			conn.setAutoCommit(false);
+			// Set Pessimistic write locking (allows for reads/selects but not writes/updates)
+			conn.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
+
+			// Use a select query using the FOR UPDATE clause to WRITE LOCK the record!
+			String up_query = "SELECT * "
+					+ "FROM Book "
+					+ "WHERE id = ? "
+					+ "FOR UPDATE";
+			lock_st = conn.prepareStatement(up_query);
+			lock_st.setInt(1, book.getId());
+
+			// Set query timeout and make the transaction!
+			lock_st.setQueryTimeout(60);	//TODO MAGIC NUMBERS ARE BAD (60 seconds)
+			lock_st.execute();
+
+
+			// Now it should be locked!
 
 			//Write SQL query to update the book entry - book object contains the primary key!
 			String query = "UPDATE Book "
