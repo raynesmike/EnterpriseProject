@@ -3,6 +3,7 @@ package javafx.controller;
 import java.io.IOException;
 import java.util.List;
 
+import javafx.model.GatewayException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -52,6 +53,17 @@ public class BookListController {
 
 		//Use ListView's getSelected Item
     	Book selected = bookListView.getSelectionModel().getSelectedItem();
+    	try {
+			if (!MainController.getBookGateway().lockBeforeUpdate(selected)){
+				//Never completed.
+				logger.error("Lock returned failure");
+				return;
+			}
+		} catch (GatewayException e) {
+    		logger.error("LockBeforeUpdate threw exception");
+			logger.error(e);
+			return;
+		}
 		MainController.showView(ViewType.BOOK_DETAIL, selected);
 	}
 	
@@ -76,10 +88,13 @@ public class BookListController {
             public void handle(MouseEvent click) {
                 if(click.getClickCount() == 2) {
                 	//Use ListView's getSelected Item
-                	Book selected = bookListView.getSelectionModel().getSelectedItem();
+					onUpdate();
+                	//Book selected = bookListView.getSelectionModel().getSelectedItem();
                    
-                	logger.info("double-clicked " + selected);
-					MainController.showView(ViewType.BOOK_DETAIL, selected);
+                	//logger.info("double-clicked " + selected);
+                	/// BEFORE SHOWING THE VIEW, THE CONTROLLER/MODEL NEEDS TO DO A DATABASE LOCK
+
+					//MainController.showView(ViewType.BOOK_DETAIL, selected);
 				}
 			}
 			

@@ -135,7 +135,37 @@ public class BookTableGatewayMySQL implements BookGateway {
 	public Book readBook(String title) {
 		return null;
 	}
-	
+
+	public boolean lockBeforeUpdate(Book book) throws GatewayException{
+		// Starts a DB Transaction to lock a record in the Book table.
+		PreparedStatement st = null;
+		logger.info("@lockBeforeUpdate()");
+
+		try{
+			conn.setAutoCommit(false);
+
+			// Use a select query using the FOR UPDATE clause to WRITE LOCK the record!
+			String up_query = "SELECT * "
+					+ "FROM Book "
+					+ "WHERE id = ? "
+					+ "FOR UPDATE";
+			st = conn.prepareStatement(up_query);
+			st.setInt(1, book.getId());
+
+			// Execute the query, generate the lock, DO NOT COMMIT.
+			st.execute();
+
+
+		} catch (Exception e){
+			logger.error(e);
+			// If this fails, need to return
+			// This indicates it failed to lock the record
+			return false;
+		}
+
+		// Function completed successfully
+		return true;
+	}
 
 	public void updateBook(Book book) throws GatewayException{
 		PreparedStatement lock_st = null;
@@ -143,23 +173,6 @@ public class BookTableGatewayMySQL implements BookGateway {
 		logger.info("@updateBook()");
 		
 		try{
-			// Begin transactional processing
-			conn.setAutoCommit(false);
-			// Set Pessimistic write locking (allows for reads/selects but not writes/updates)
-			conn.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
-
-			// Use a select query using the FOR UPDATE clause to WRITE LOCK the record!
-			String up_query = "SELECT * "
-					+ "FROM Book "
-					+ "WHERE id = ? "
-					+ "FOR UPDATE";
-			lock_st = conn.prepareStatement(up_query);
-			lock_st.setInt(1, book.getId());
-
-			// Set query timeout and make the transaction!
-			lock_st.setQueryTimeout(60);	//TODO MAGIC NUMBERS ARE BAD (60 seconds)
-			lock_st.execute();
-
 
 			// Now it should be locked!
 
