@@ -123,7 +123,7 @@ public class BookDetailController{
 			this.book.setBookISBN(fieldISBN.getText());
 			this.book.setBookSummary(areaSummary.getText());
 			
-			MainController.getBookGateway().updateBook(book);
+			MainController.getBookGateway().lockBeforeUpdate(book);
 
             alertStatus.setText("Updated SUCCESS");
 		} catch (GatewayException e) {

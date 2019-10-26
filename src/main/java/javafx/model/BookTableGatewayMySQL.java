@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.Random;
 
 public class BookTableGatewayMySQL implements BookGateway {
 	private Connection conn;
@@ -138,28 +139,60 @@ public class BookTableGatewayMySQL implements BookGateway {
 
 	public boolean lockBeforeUpdate(Book book) throws GatewayException{
 		// Starts a DB Transaction to lock a record in the Book table.
+		int QUERY_TIMEOUT = 10;//query timeout threshold in seconds
+		Random roller = new Random();
 		PreparedStatement st = null;
 		logger.info("@lockBeforeUpdate()");
 
 		try{
+			conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+//			conn.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ); //default
 			conn.setAutoCommit(false);
-
+			conn.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
+			
+			System.out.println("locking test record...");
+			
 			// Use a select query using the FOR UPDATE clause to WRITE LOCK the record!
-			String up_query = "SELECT * "
-					+ "FROM Book "
-					+ "WHERE id = ? "
-					+ "FOR UPDATE";
-			st = conn.prepareStatement(up_query);
-			st.setInt(1, book.getId());
-
-			// Execute the query, generate the lock, DO NOT COMMIT.
+			String query = "UPDATE Book "
+					+ "SET title = ?, summary = ?, year_published = ?, isbn = ? "
+					+ "WHERE id = ?";
+			st = conn.prepareStatement(query);
+			st.setString(1, book.getBookTitle());
+			st.setString(2, book.getBookSummary());
+			st.setInt(3, book.getYearPublished());
+			st.setString(4, book.getBookISBN());
+			st.setInt(5, book.getId());	// THIS is the primary key to be updated
+			
 			st.execute();
+			
+			
+			st.setQueryTimeout(QUERY_TIMEOUT);
+			st.execute();
+			System.out.println("pausing for 60 seconds...");
+			
+			//pause for 60 seconds
+			try {
+				Thread.sleep(roller.nextInt(60 * 1000));
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			System.out.println("unlocking...");
+			// Execute the query, generate the lock, DO NOT COMMIT.
+			conn.commit();
+			conn.setAutoCommit(true);
+
+			conn.close();
+			
+			System.out.println("done.");
 
 
 		} catch (Exception e){
 			logger.error(e);
 			// If this fails, need to return
 			// This indicates it failed to lock the record
+			
 			return false;
 		}
 
