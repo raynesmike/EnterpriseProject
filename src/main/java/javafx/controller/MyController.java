@@ -16,7 +16,7 @@ public class MyController {
 	
 
     @FXML
-    private MenuItem bookCreate, bookRead, bookDelete, bookUpdate;
+    private MenuItem bookCreate, bookRead;
     @FXML
     private MenuItem quitYes;
 	
@@ -40,15 +40,6 @@ public class MyController {
 			MainController.showView(ViewType.BOOK_LIST, null);
 			return;
 		}
-		if(source == bookUpdate) {
-			// List the book to be able to Update a specific book
-			MainController.showView(ViewType.BOOK_LIST, null);
-			return;
-		}
-		if(source == bookDelete) {
-			// List the book to be able to Delete a specific book
-			MainController.showView(ViewType.BOOK_LIST, null);
-			return;
-		}
+
 	}
 }

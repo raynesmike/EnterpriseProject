@@ -27,12 +27,15 @@ public class BookListController {
 	private List<Book> books;
 	
 	private Book selectedBook;
+	private AlertBox alert;
 	
 	public BookListController(List <Book> books) {
 		this.books = books;
+		alert = new AlertBox();
 	}
 	public BookListController(Book book) {
 		this.selectedBook = book;
+		alert = new AlertBox();
 	}
 	
 	
@@ -52,11 +55,16 @@ public class BookListController {
 	public void onUpdate() {
 
 		//Use ListView's getSelected Item
+		MainController.showView(ViewType.BOOK_LIST, null);
     	Book selected = bookListView.getSelectionModel().getSelectedItem();
+    	
     	try {
 			if (!MainController.getBookGateway().lockBeforeUpdate(selected)){
-				//Never completed.
-				logger.error("Lock returned failure");
+				alert = AlertBox.display( "Button", 
+						"Someone is updating this record");
+				logger.info("Someone is updating this record");
+				//TODO: need to update the list after the first updater finish we just need to refresh 
+				
 				return;
 			}
 		} catch (GatewayException e) {

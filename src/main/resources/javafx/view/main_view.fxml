@@ -17,8 +17,6 @@
             <items>
                   <MenuItem fx:id="bookCreate" mnemonicParsing="false" onAction="#handleBook" text="Add" />
               <MenuItem fx:id="bookRead" mnemonicParsing="false" onAction="#handleBook" text="Read" />
-                  <MenuItem fx:id="bookUpdate" mnemonicParsing="false" onAction="#handleBook" text="Update" />
-                  <MenuItem fx:id="bookDelete" mnemonicParsing="false" onAction="#handleBook" text="Delete" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">

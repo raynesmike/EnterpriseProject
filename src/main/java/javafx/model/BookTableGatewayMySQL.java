@@ -137,38 +137,57 @@ public class BookTableGatewayMySQL implements BookGateway {
 		return null;
 	}
 
+
 	public boolean lockBeforeUpdate(Book book) throws GatewayException{
 		// Starts a DB Transaction to lock a record in the Book table.
 		PreparedStatement lock_st = null;
 		PreparedStatement st = null;
-		logger.info("@updateBook()");
-		
+		Boolean lock = true;
 		logger.info("@lockBeforeUpdate()");
-
+		
 		try{
+			if(lock==false) {
+				return false;
+			}
 			// Begin transactional processing
 			conn.setAutoCommit(false);
 			// Set Pessimistic write locking (allows for reads/selects but not writes/updates)
 			conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
-
+			
 			// Use a select query using the FOR UPDATE clause to WRITE LOCK the record!
 			String up_query = "SELECT * "
 					+ "FROM Book "
 					+ "WHERE id = ? "
 					+ "FOR UPDATE";
+			lock = false;
 			lock_st = conn.prepareStatement(up_query);
 			lock_st.setInt(1, book.getId());
-			st = conn.prepareStatement(up_query);
-			st.setInt(1, book.getId());
-
 			// Execute the query, generate the lock, DO NOT COMMIT.
-			st.execute();
-
 			// Set query timeout and make the transaction!
-			lock_st.setQueryTimeout(60);	//TODO MAGIC NUMBERS ARE BAD (60 seconds)
+			lock_st.setQueryTimeout(1);	//TODO MAGIC NUMBERS ARE BAD (60 seconds)
 			lock_st.execute();
+			
+			
+			//pause for 60 seconds
+//			try {
+////				Thread.sleep(roller.nextInt(60 * 1000));
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+
+//			System.out.println("unlocking...");
+//			// Execute the query, generate the lock, DO NOT COMMIT.
+//			conn.commit();
+//			conn.setAutoCommit(true);
+//
+//			conn.close();
+//			
+//			System.out.println("done.");
+
 
 		} catch (Exception e){
+			System.out.println("SOMEONE IS LOCKING IT");
 			logger.error(e);
 			// If this fails, need to return
 			// This indicates it failed to lock the record
@@ -205,6 +224,8 @@ public class BookTableGatewayMySQL implements BookGateway {
 			logger.debug(st);
 			
 			conn.commit();
+			
+			conn.setAutoCommit(true);
 			logger.debug("AFTER COMMIT");
 			
 		} catch (SQLException e){

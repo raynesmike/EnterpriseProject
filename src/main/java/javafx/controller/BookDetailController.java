@@ -1,15 +1,12 @@
 package javafx.controller;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.model.Book;
 import javafx.model.GatewayException;
 import javafx.scene.control.Button;
@@ -47,14 +44,27 @@ public class BookDetailController{
 	@FXML public void handleButtonAction(ActionEvent action) throws IOException {
 		
 		Object source = action.getSource();
-		if(source == buttonCreate) {
-			onCreate();
-		} else if(source == buttonUpdate) {
-			onUpdate();
-		} else if(source == buttonDelete) {
-			onDelete();
+		AlertBox alert = new AlertBox();
+
+		alert = AlertBox.display( source.toString()+"Button", 
+				"You are leaving Detail, Do you want to save your changes?");
+		System.out.println("ALERTBOXXXXXXXXX" + alert.getReply());
+		if(alert.getReply().equals("yes")) {
+			if(source == buttonCreate) {
+				onCreate();
+			} else if(source == buttonUpdate) {
+
+				onUpdate();
+			} else if(source == buttonDelete) {
+				onDelete();
+			}
+		} else if(alert.getReply().equals("no")) {
+			//TODO: rollback
+		} else {
+			//TODO: Do Nothing
 		}
 	}
+	
     
 	public void initialize() {
 		logger.info("@BookDetailController initialize()");
@@ -124,8 +134,8 @@ public class BookDetailController{
 			this.book.setBookSummary(areaSummary.getText());
 			
 			MainController.getBookGateway().updateBook(book);
-
-            alertStatus.setText("Updated SUCCESS");
+			MainController.showView(ViewType.BOOK_LIST, null);
+//            alertStatus.setText("Updated SUCCESS");
 		} catch (GatewayException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
