@@ -3,11 +3,10 @@ package javafx.controller;
 import java.io.IOException;
 import java.util.List;
 
-import javafx.model.GatewayException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
+import javafx.Gateway.GatewayException;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -55,9 +54,7 @@ public class BookListController {
 	public void onUpdate() {
 
 		//Use ListView's getSelected Item
-		MainController.showView(ViewType.BOOK_LIST, null);
     	Book selected = bookListView.getSelectionModel().getSelectedItem();
-    	
     	try {
 			if (!MainController.getBookGateway().lockBeforeUpdate(selected)){
 				alert = AlertBox.display( "Button", 

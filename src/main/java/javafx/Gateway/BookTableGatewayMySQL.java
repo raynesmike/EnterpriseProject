@@ -1,9 +1,12 @@
-package javafx.model;
+package javafx.Gateway;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
+
+import javafx.model.Book;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,7 +38,7 @@ public class BookTableGatewayMySQL implements BookGateway {
 		
 		try {
 			//input = new FileInputStream("../db.properties");
-			input = this.getClass().getResourceAsStream("db.properties");
+			input = this.getClass().getResourceAsStream("../db.properties");
 			logger.debug(input);
 			props.load(input);
 			input.close();
@@ -153,13 +156,12 @@ public class BookTableGatewayMySQL implements BookGateway {
 			conn.setAutoCommit(false);
 			// Set Pessimistic write locking (allows for reads/selects but not writes/updates)
 			conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
-			
+			lock = false;
 			// Use a select query using the FOR UPDATE clause to WRITE LOCK the record!
 			String up_query = "SELECT * "
 					+ "FROM Book "
 					+ "WHERE id = ? "
 					+ "FOR UPDATE";
-			lock = false;
 			lock_st = conn.prepareStatement(up_query);
 			lock_st.setInt(1, book.getId());
 			// Execute the query, generate the lock, DO NOT COMMIT.

@@ -1,6 +1,8 @@
-package javafx.model;
+package javafx.Gateway;
 
 import java.util.List;
+
+import javafx.model.Book;
 
 /**
  * interface for Book gateways

@@ -5,11 +5,13 @@ import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javafx.Gateway.GatewayException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.model.AuditTrailEntry;
 import javafx.model.Book;
-import javafx.model.GatewayException;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
@@ -25,6 +27,8 @@ public class BookDetailController{
     private Button buttonDelete, buttonUpdate, buttonCreate;
     @FXML
     private Text alertISBN, alertYear, alertTitle, alertStatus;
+    @FXML
+    private ComboBox<AuditTrailEntry> publisherBox;
 
     //mode member reference
     private Book book;

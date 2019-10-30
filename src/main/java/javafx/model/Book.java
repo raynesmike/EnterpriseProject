@@ -3,6 +3,8 @@ package javafx.model;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javafx.Gateway.BookGateway;
+
 public class Book {
 	private int id;
 	private String title;

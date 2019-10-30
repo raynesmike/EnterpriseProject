@@ -6,12 +6,12 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javafx.Gateway.BookGateway;
+import javafx.Gateway.BookTableGatewayMySQL;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.model.Book;
-import javafx.model.BookGateway;
-import javafx.model.BookTableGatewayMySQL;
 import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
 
@@ -32,7 +32,7 @@ public class MainController{
 		try {
 			bookGateway = new BookTableGatewayMySQL();
 			
-		} catch (javafx.model.GatewayException e) {
+		} catch (javafx.Gateway.GatewayException e) {
 			logger.error(e);
 			Platform.exit();
 		}

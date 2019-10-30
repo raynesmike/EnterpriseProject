@@ -1,4 +1,4 @@
-package javafx.model;
+package javafx.Gateway;
 
 public class GatewayException extends Exception {
 	private static final long serialVersionUID = 1L;
