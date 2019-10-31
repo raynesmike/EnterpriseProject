@@ -151,6 +151,8 @@ public class BookTableGatewayMySQL implements BookGateway {
 					+ "FOR UPDATE";
 			st = conn.prepareStatement(up_query);
 			st.setInt(1, book.getId());
+			// Set short lock timeout
+			st.setQueryTimeout(2); //MAGIC NUMBERS
 
 			// Execute the query, generate the lock, DO NOT COMMIT.
 			st.execute();
