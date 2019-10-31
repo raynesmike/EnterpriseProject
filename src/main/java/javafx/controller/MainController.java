@@ -13,6 +13,7 @@ import javafx.Gateway.PublisherTableGateway;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.model.AuditTrailEntry;
 import javafx.model.Book;
 import javafx.model.Publisher;
 import javafx.scene.Parent;
@@ -49,21 +50,28 @@ public class MainController{
     	
 		FXMLLoader loader = new FXMLLoader();
 		logger.debug(viewType);
-
-
+		List<Book> books;
+		List<Publisher> publishers;
+		AuditTrailEntry audit;
 
 		if(viewType == ViewType.BOOK_LIST) {
-			List<Book> books = bookGateway.getBooks();
+			books = bookGateway.getBooks();
+			
 			loader.setLocation(MainController.class.getResource("/javafx/view/BookListView.fxml"));
 			loader.setController(new BookListController(books));
 		
 		// CREATE UPDATE AND DELETE
 		} else if(viewType == ViewType.BOOK_DETAIL) { 
-
-			List<Publisher> publishers = publisherGateway.fetchPublishers();
+			publishers = publisherGateway.fetchPublishers();
 			
 			loader = new FXMLLoader(MainController.class.getResource("/javafx/view/BookDetailView.fxml"));
 			loader.setController(new BookDetailController(book, publishers));
+			
+		} else if(viewType == ViewType.BOOK_AUDIT) { 
+			audit = new AuditTrailEntry();
+			
+			loader = new FXMLLoader(MainController.class.getResource("/javafx/view/AuditTrailView.fxml"));
+			loader.setController(new AuditTrailController(audit));
 			
 		}
 		

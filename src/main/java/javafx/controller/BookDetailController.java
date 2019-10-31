@@ -27,7 +27,7 @@ public class BookDetailController{
     @FXML
     private TextArea areaSummary;
     @FXML
-    private Button buttonDelete, buttonUpdate, buttonCreate;
+    private Button buttonDelete, buttonUpdate, buttonCreate, buttonAudit;
     @FXML
     private Text alertISBN, alertYear, alertTitle, alertStatus;
     @FXML
@@ -67,6 +67,8 @@ public class BookDetailController{
 				onUpdate();
 			} else if(source == buttonDelete) {
 				onDelete();
+			} else if(source == buttonAudit) {
+				onAudit();
 			}
 		} else if(alert.getReply().equals("no")) {
 			//TODO: rollback
@@ -81,20 +83,7 @@ public class BookDetailController{
 	}
 	
     
-	public void initialize() {
-		logger.info("@BookDetailController initialize()");
-		ObservableList<Publisher> items = publisherBox.getItems();
-		items.addAll(publishers);
-		
-		fieldTitle.setText(this.book.getBookTitle());
-		fieldYear.setText(Integer.toString(this.book.getYearPublished()));
-		fieldISBN.setText(this.book.getBookISBN());
-		areaSummary.setText(this.book.getBookSummary());
-		publisherBox.setValue(items.get(book.getPublisher_id()-1));
-//		System.out.println("@@@@@@@@lllll" +publishers.indexOf(publisherBox.getValue()));
-		
 
-	}
 	@FXML public void onCreate() {
     	logger.info("@BookCreateController onSearch()");
     	try {
@@ -176,6 +165,14 @@ public class BookDetailController{
 		MainController.showView(ViewType.BOOK_LIST, null);
 	}
 	
+	public void onAudit() {
+		logger.info("@BookDetailController Delete()");
+		// DELETE the book and refresh the pages
+		MainController.showView(ViewType.BOOK_AUDIT, null);
+	}
+	
+	
+	
 	private Boolean validate(String title, String summary, String isbn, int yearPublished) {
 		Boolean isValid = true;
     	alertTitle.setText("");
@@ -202,6 +199,21 @@ public class BookDetailController{
     		isValid = false;
     	}
     	return isValid;
+	}
+	
+	public void initialize() {
+		logger.info("@BookDetailController initialize()");
+		ObservableList<Publisher> items = publisherBox.getItems();
+		items.addAll(publishers);
+		
+		fieldTitle.setText(this.book.getBookTitle());
+		fieldYear.setText(Integer.toString(this.book.getYearPublished()));
+		fieldISBN.setText(this.book.getBookISBN());
+		areaSummary.setText(this.book.getBookSummary());
+		publisherBox.setValue(items.get(book.getPublisher_id()-1));
+//		System.out.println("@@@@@@@@lllll" +publishers.indexOf(publisherBox.getValue()));
+		
+
 	}
 
 }
