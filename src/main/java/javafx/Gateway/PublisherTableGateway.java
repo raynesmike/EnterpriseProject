@@ -38,7 +38,7 @@ public class PublisherTableGateway implements PublisherGateway {
 		
 		try {
 			//input = new FileInputStream("../db.properties");
-			input = this.getClass().getResourceAsStream("../db.properties");
+			input = this.getClass().getResourceAsStream("/javafx/db.properties");
 			logger.debug(input);
 			props.load(input);
 			input.close();
