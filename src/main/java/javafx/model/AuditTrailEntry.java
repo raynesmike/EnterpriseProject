@@ -4,20 +4,23 @@ import java.util.Date;
 
 public class AuditTrailEntry {
 	private int id;
+	private int book_id;
 	private String message;
 	private Date dateAdded;
 	
 	
 	public AuditTrailEntry() {
 		this.id = 0;
+		this.book_id = 0;
 		this.message = "";
 		this.dateAdded = null;
 	}
 	
-	public AuditTrailEntry(int id, String message, Date dateAdded) {
+	public AuditTrailEntry(int id, int book_id, Date dateAdded, String message) {
 		this.id = id;
-		this.message = message;
+		this.book_id = book_id;
 		this.dateAdded = dateAdded;
+		this.message = message;
 	}
 	
 	
@@ -38,6 +41,11 @@ public class AuditTrailEntry {
 	}
 	public void setMessage(String message) {
 		this.message = message;
+	}
+	
+	public String toString() {
+		return message + dateAdded;
+		
 	}
 	
 }

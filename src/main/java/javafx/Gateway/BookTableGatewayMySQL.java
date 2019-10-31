@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
 
+import javafx.model.AuditTrailEntry;
 import javafx.model.Book;
 
 import java.io.FileInputStream;
@@ -59,9 +60,43 @@ public class BookTableGatewayMySQL implements BookGateway {
 			logger.error(e);
 			throw new GatewayException(e);
 		}
-		
-		
+			
 	}
+	
+	public List<AuditTrailEntry> getAudits(){
+		List<AuditTrailEntry> audits = new ArrayList<AuditTrailEntry>();
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		//1. prepare the statement
+		try {
+			//Parameterized because I HAVE TO
+			String query = "select * "
+					+ " from book_audit_trail";
+			//st = conn.prepareStatement("select * from Book");
+			st = conn.prepareStatement(query);
+			
+			//2. execute the query
+			rs = st.executeQuery();
+			
+			//3 transform db data into objects
+			while(rs.next()) {
+				// Create new Book object
+				AuditTrailEntry newAudit = new AuditTrailEntry(rs.getInt("id"), rs.getInt("book_id"),
+														rs.getDate("date_added"), rs.getString("entry_msg"));
+				//Push this to collection
+				System.out.println(newAudit.toString());
+				audits.add(newAudit);
+			}
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			//4. cleanup
+		}
+		return audits;
+	}
+	
 	public List<Book> getBooks(){
 		List<Book> books = new ArrayList<Book>();
 		PreparedStatement st = null;
@@ -83,7 +118,7 @@ public class BookTableGatewayMySQL implements BookGateway {
 //				System.out.println(rs.getInt("id") + rs.getString("title") + rs.getString("summary") +  rs.getInt("year_published") + rs.getString("isbn") );
 				// Create new Book object
 				Book newBook = new Book(rs.getInt("id"), rs.getString("title"), rs.getString("summary"), 
-						rs.getInt("year_published"), rs.getString("isbn"), rs.getInt("publisher_id"));
+									rs.getInt("year_published"), rs.getString("isbn"), rs.getInt("publisher_id"));
 				//Push this to collection
 				System.out.println(newBook.toString());
 				books.add(newBook);

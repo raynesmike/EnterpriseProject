@@ -1,9 +1,13 @@
 package javafx.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javafx.Gateway.BookGateway;
+import javafx.controller.MainController;
 
 public class Book {
 	private int id;
@@ -12,8 +16,7 @@ public class Book {
 	private String isbn;		//Unique ID - new 13 digits, old 10 digits
 	private int yearPublished;
 	private int publisher_id;
-
-
+	private List<AuditTrailEntry> audit;
 	private BookGateway gateway;
 	
 	public Book() {
@@ -23,6 +26,7 @@ public class Book {
 		this.isbn = "";
 		this.yearPublished = 0;
 		this.publisher_id = 1;
+		this.audit = new ArrayList<AuditTrailEntry>();
 		this.gateway= null;
 
 	}
@@ -108,6 +112,15 @@ public class Book {
 	public void setGateway(BookGateway gateway) {
 		this.gateway = gateway;
 	}
+	
+	public List<AuditTrailEntry> getAudits() {
+		return MainController.getBookGateway().getAudits();
+	}
+
+	public void setAudit(List<AuditTrailEntry> audit) {
+		this.audit = audit;
+	}
+	
 	public String toString() {
 		return  title;
 //				"Title: " + title + 
@@ -115,4 +128,6 @@ public class Book {
 //				"-ISBN: " + isbn + 
 //				"-publisher_id: " + Integer.toString(publisher_id);
 	}
+
+
 }

@@ -70,8 +70,8 @@ public class MainController{
 		} else if(viewType == ViewType.BOOK_AUDIT) { 
 			audit = new AuditTrailEntry();
 			
-			loader = new FXMLLoader(MainController.class.getResource("/javafx/view/AuditTrailView.fxml"));
-			loader.setController(new AuditTrailController(audit));
+			loader = new FXMLLoader(MainController.class.getResource("/javafx/view/BookAuditView.fxml"));
+			loader.setController(new BookAuditController(audit, book));
 			
 		}
 		

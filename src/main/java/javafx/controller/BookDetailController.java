@@ -166,9 +166,11 @@ public class BookDetailController{
 	}
 	
 	public void onAudit() {
-		logger.info("@BookDetailController Delete()");
+		logger.info("@BookAuditController Delete()");
 		// DELETE the book and refresh the pages
-		MainController.showView(ViewType.BOOK_AUDIT, null);
+		
+//		MainController.getBookGateway().getAudit(book);
+		MainController.showView(ViewType.BOOK_AUDIT, book);
 	}
 	
 	

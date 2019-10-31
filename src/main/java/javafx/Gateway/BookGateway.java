@@ -2,6 +2,7 @@ package javafx.Gateway;
 
 import java.util.List;
 
+import javafx.model.AuditTrailEntry;
 import javafx.model.Book;
 
 /**
@@ -22,4 +23,5 @@ public interface BookGateway {
 	public void close();
 	
 	public void insertBook(Book Book);
+	public List<AuditTrailEntry> getAudits();
 }
