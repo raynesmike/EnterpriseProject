@@ -1,15 +1,18 @@
 package javafx.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javafx.Gateway.GatewayException;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.model.AuditTrailEntry;
 import javafx.model.Book;
+import javafx.model.Publisher;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
@@ -28,12 +31,13 @@ public class BookDetailController{
     @FXML
     private Text alertISBN, alertYear, alertTitle, alertStatus;
     @FXML
-    private ComboBox<AuditTrailEntry> publisherBox;
+    private ComboBox<Publisher> publisherBox;
+    private List<Publisher> publishers;
 
     //mode member reference
     private Book book;
     
-    public BookDetailController(Book book) {
+    public BookDetailController(Book book, List<Publisher> publishers) {
     	//Instructions say to create a copy, so we're creating a copy manually
 		//This is a shallow copy but whatever, it'll work fine.
 		this.book = new Book();
@@ -42,6 +46,7 @@ public class BookDetailController{
 		this.book.setYearPublished(book.getYearPublished());
 		this.book.setBookISBN(book.getBookISBN());
 		this.book.setBookSummary(book.getBookSummary());
+		this.publishers = publishers;
     	//this.book = book;
     }
     
@@ -77,6 +82,12 @@ public class BookDetailController{
 		fieldYear.setText(Integer.toString(this.book.getYearPublished()));
 		fieldISBN.setText(this.book.getBookISBN());
 		areaSummary.setText(this.book.getBookSummary());
+		
+		ObservableList<Publisher> items = publisherBox.getItems();
+		
+		
+		items.addAll(publishers);
+		
 
 	}
 	@FXML public void onCreate() {

@@ -8,10 +8,13 @@ import org.apache.logging.log4j.Logger;
 
 import javafx.Gateway.BookGateway;
 import javafx.Gateway.BookTableGatewayMySQL;
+import javafx.Gateway.PublisherGateway;
+import javafx.Gateway.PublisherTableGateway;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.model.Book;
+import javafx.model.Publisher;
 import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
 
@@ -22,6 +25,8 @@ public class MainController{
     private static BorderPane rootPane;
 
 	private static BookGateway bookGateway;
+	private static PublisherGateway publisherGateway;
+	
 
 	
 	private MainController() {
@@ -31,6 +36,7 @@ public class MainController{
 		//create gateways
 		try {
 			bookGateway = new BookTableGatewayMySQL();
+			publisherGateway = new PublisherTableGateway();
 			
 		} catch (javafx.Gateway.GatewayException e) {
 			logger.error(e);
@@ -41,21 +47,24 @@ public class MainController{
 	public static boolean showView(ViewType viewType, Book book) {
     	logger.info("@MainController showView()");
     	
-		FXMLLoader loader = null;
+		FXMLLoader loader = new FXMLLoader();
 		logger.debug(viewType);
-		
+
+
 
 		if(viewType == ViewType.BOOK_LIST) {
 			List<Book> books = bookGateway.getBooks();
-
-			loader = new FXMLLoader();
 			loader.setLocation(MainController.class.getResource("/javafx/view/BookListView.fxml"));
 			loader.setController(new BookListController(books));
 		
 		// CREATE UPDATE AND DELETE
 		} else if(viewType == ViewType.BOOK_DETAIL) { 
+
+			System.out.println("@@@@@@@@@@@@@@@@@@@@@@@");
+			List<Publisher> publishers = publisherGateway.fetchPublishers();
+			
 			loader = new FXMLLoader(MainController.class.getResource("/javafx/view/BookDetailView.fxml"));
-			loader.setController(new BookDetailController(book));
+			loader.setController(new BookDetailController(book, publishers));
 			
 		}
 		
