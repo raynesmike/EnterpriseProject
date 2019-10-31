@@ -23,5 +23,5 @@ public interface BookGateway {
 	public void close();
 	
 	public void insertBook(Book Book);
-	public List<AuditTrailEntry> getAudits();
+	public List<AuditTrailEntry> getAudits(int book_id);
 }

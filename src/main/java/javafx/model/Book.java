@@ -114,7 +114,7 @@ public class Book {
 	}
 	
 	public List<AuditTrailEntry> getAudits() {
-		return MainController.getBookGateway().getAudits();
+		return MainController.getBookGateway().getAudits(id);
 	}
 
 	public void setAudit(List<AuditTrailEntry> audit) {

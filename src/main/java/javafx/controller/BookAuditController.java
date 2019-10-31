@@ -10,7 +10,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.model.AuditTrailEntry;
 import javafx.model.Book;
-import javafx.model.Publisher;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -42,10 +41,14 @@ public class BookAuditController {
 		logger.info("@BookAuditController initialize()");
 		auditTrailName.setText("Audit Trail for " + book.getBookTitle());
 		audits = book.getAudits();
-		
+		System.out.println("@@@@@@@@@@@@@@@@2");
+		for(AuditTrailEntry a: audits) {
+			System.out.println(a.toString());
+		}
 		ObservableList<AuditTrailEntry> items = tableViewAudits.getItems();
 		items.addAll(audits);
-		timestamp.setCellValueFactory(new PropertyValueFactory<AuditTrailEntry, Date>("timestamp"));
+		
+		timestamp.setCellValueFactory(new PropertyValueFactory<AuditTrailEntry, Date>("dateAdded"));
 		message.setCellValueFactory(new PropertyValueFactory<AuditTrailEntry, String>("message"));
 		
 		

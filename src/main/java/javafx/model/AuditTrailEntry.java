@@ -44,7 +44,7 @@ public class AuditTrailEntry {
 	}
 	
 	public String toString() {
-		return message + dateAdded;
+		return message + " " + dateAdded;
 		
 	}
 	

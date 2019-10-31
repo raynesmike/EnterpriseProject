@@ -63,7 +63,7 @@ public class BookTableGatewayMySQL implements BookGateway {
 			
 	}
 	
-	public List<AuditTrailEntry> getAudits(){
+	public List<AuditTrailEntry> getAudits(int book_id){
 		List<AuditTrailEntry> audits = new ArrayList<AuditTrailEntry>();
 		PreparedStatement st = null;
 		ResultSet rs = null;
@@ -82,11 +82,14 @@ public class BookTableGatewayMySQL implements BookGateway {
 			//3 transform db data into objects
 			while(rs.next()) {
 				// Create new Book object
+				
+				if(rs.getInt("book_id")==book_id) {
 				AuditTrailEntry newAudit = new AuditTrailEntry(rs.getInt("id"), rs.getInt("book_id"),
 														rs.getDate("date_added"), rs.getString("entry_msg"));
 				//Push this to collection
 				System.out.println(newAudit.toString());
 				audits.add(newAudit);
+				}
 			}
 			
 		} catch(SQLException e) {
