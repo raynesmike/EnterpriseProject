@@ -64,6 +64,11 @@ public class BookDetailController{
 			}
 		} else if(alert.getReply().equals("no")) {
 			//TODO: rollback
+			try {
+				MainController.getBookGateway().rollbackPendingTransaction();
+			} catch (GatewayException e) {
+				logger.error(e);
+			}
 		} else {
 			//TODO: Do Nothing
 		}

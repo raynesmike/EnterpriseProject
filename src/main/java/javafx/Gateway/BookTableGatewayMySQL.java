@@ -200,6 +200,22 @@ public class BookTableGatewayMySQL implements BookGateway {
 		return true;
 	}
 
+	/**
+	 * Rolls back a pending transaction and release a lock
+	 * Should be used after lockBeforeUpdate() when you do not want a transaction to go through.
+	 * @throws GatewayException
+	 */
+	public void rollbackPendingTransaction() throws GatewayException {
+
+		try {
+			//TODO Do we need to close the preparedStatement as well?
+			conn.rollback();
+			conn.setAutoCommit(true);
+		} catch (SQLException e) {
+			logger.error(e);
+		}
+	}
+
 
 	public void updateBook(Book book) throws GatewayException{
 		PreparedStatement lock_st = null;

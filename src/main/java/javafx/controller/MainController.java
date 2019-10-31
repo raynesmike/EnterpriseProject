@@ -23,6 +23,11 @@ public class MainController{
 
 	private static BookGateway bookGateway;
 
+	/**
+	 * Keeps track of state transitions.
+	 */
+	private static ViewType previousViewType = ViewType.NONE ;
+
 	
 	private MainController() {
 	}
@@ -61,6 +66,7 @@ public class MainController{
 		
 		Parent viewNode = null;
 		try {
+			previousViewType = viewType;
 			viewNode = loader.load();
 		} catch (IOException e) {
 			//e.printStackTrace();
