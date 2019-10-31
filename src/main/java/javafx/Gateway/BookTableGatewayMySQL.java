@@ -82,8 +82,10 @@ public class BookTableGatewayMySQL implements BookGateway {
 			while(rs.next()) {
 //				System.out.println(rs.getInt("id") + rs.getString("title") + rs.getString("summary") +  rs.getInt("year_published") + rs.getString("isbn") );
 				// Create new Book object
-				Book newBook = new Book(rs.getInt("id"), rs.getString("title"), rs.getString("summary"), rs.getInt("year_published"), rs.getString("isbn"));
+				Book newBook = new Book(rs.getInt("id"), rs.getString("title"), rs.getString("summary"), 
+						rs.getInt("year_published"), rs.getString("isbn"), rs.getInt("publisher_id"));
 				//Push this to collection
+				System.out.println(newBook.toString());
 				books.add(newBook);
 			}
 			
@@ -95,7 +97,7 @@ public class BookTableGatewayMySQL implements BookGateway {
 		return books;
 	}
 	
-	public int createBook(String title, String isbn, int yearPublished, String summary) {
+	public int createBook(String title, String isbn, int yearPublished, String summary, int publisher_id) {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 
@@ -103,14 +105,15 @@ public class BookTableGatewayMySQL implements BookGateway {
 		
 		try {
 			String query = "INSERT INTO Book "
-					+ "(title, summary, year_published, isbn) "
-					+ "values(?, ?, ?, ?)";
+					+ "(title, summary, year_published, isbn, publisher_id) "
+					+ "values(?, ?, ?, ?, ?)";
 			st = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
 			// PLUG IN THE VALUES
 			st.setString(1, title);
 			st.setString(2, summary);
 			st.setInt(3, yearPublished);
 			st.setString(4, isbn);
+			st.setInt(5, publisher_id);
 			st.executeUpdate();	//This executes the query!
 
 			//We asked for a return of the key generated, so get it back
@@ -228,14 +231,15 @@ public class BookTableGatewayMySQL implements BookGateway {
 
 			//Write SQL query to update the book entry - book object contains the primary key!
 			String query = "UPDATE Book "
-					+ "SET title = ?, summary = ?, year_published = ?, isbn = ? "
+					+ "SET title = ?, summary = ?, year_published = ?, isbn = ?, publisher_id = ? "
 					+ "WHERE id = ?";
 			st = conn.prepareStatement(query);
 			st.setString(1, book.getBookTitle());
 			st.setString(2, book.getBookSummary());
 			st.setInt(3, book.getYearPublished());
 			st.setString(4, book.getBookISBN());
-			st.setInt(5, book.getId());	// THIS is the primary key to be updated
+			st.setInt(5, book.getPublisher_id());
+			st.setInt(6, book.getId());	// THIS is the primary key to be updated
 
 			st.executeUpdate();	//This executes the query!
 			logger.debug("BEFORE COMMIT");

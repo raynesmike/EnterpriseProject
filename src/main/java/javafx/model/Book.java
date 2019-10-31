@@ -11,6 +11,9 @@ public class Book {
 	private String summary;
 	private String isbn;		//Unique ID - new 13 digits, old 10 digits
 	private int yearPublished;
+	private int publisher_id;
+
+
 	private BookGateway gateway;
 	
 	public Book() {
@@ -19,16 +22,19 @@ public class Book {
 		this.summary = ""; 
 		this.isbn = "";
 		this.yearPublished = 0;
+		this.publisher_id = 1;
 		this.gateway= null;
 
 	}
 	
-	public Book(int id, String bookTitle, String bookSummary, int yearPublished, String bookISBN){
+	public Book(int id, String bookTitle, String bookSummary, int yearPublished, String bookISBN, int publisher_id){
 		this.id = id;
 		this.isbn = bookISBN;
 		this.title = bookTitle;
 		this.yearPublished = yearPublished;
 		this.summary = bookSummary;
+		this.publisher_id = publisher_id;
+		
 	}
 
 	public void setId(int id) { this.id = id;}
@@ -87,8 +93,12 @@ public class Book {
 		return true;
 	}
 
-	public String toString() {
-		return title;
+	public int getPublisher_id() {
+		return publisher_id;
+	}
+
+	public void setPublisher_id(int publisher_id) {
+		this.publisher_id = publisher_id;
 	}
 
 	public BookGateway getGateway() {
@@ -97,5 +107,12 @@ public class Book {
 
 	public void setGateway(BookGateway gateway) {
 		this.gateway = gateway;
+	}
+	public String toString() {
+		return  title;
+//				"Title: " + title + 
+//				"-Summary: " + summary +
+//				"-ISBN: " + isbn + 
+//				"-publisher_id: " + Integer.toString(publisher_id);
 	}
 }

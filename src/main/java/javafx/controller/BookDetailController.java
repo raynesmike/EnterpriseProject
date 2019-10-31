@@ -46,7 +46,8 @@ public class BookDetailController{
 		this.book.setYearPublished(book.getYearPublished());
 		this.book.setBookISBN(book.getBookISBN());
 		this.book.setBookSummary(book.getBookSummary());
-		this.publishers = publishers;
+		this.book.setPublisher_id(book.getPublisher_id());
+		this.publishers=publishers;
     	//this.book = book;
     }
     
@@ -82,16 +83,15 @@ public class BookDetailController{
     
 	public void initialize() {
 		logger.info("@BookDetailController initialize()");
-
+		ObservableList<Publisher> items = publisherBox.getItems();
+		items.addAll(publishers);
+		
 		fieldTitle.setText(this.book.getBookTitle());
 		fieldYear.setText(Integer.toString(this.book.getYearPublished()));
 		fieldISBN.setText(this.book.getBookISBN());
 		areaSummary.setText(this.book.getBookSummary());
-		
-		ObservableList<Publisher> items = publisherBox.getItems();
-		
-		
-		items.addAll(publishers);
+		publisherBox.setValue(items.get(book.getPublisher_id()-1));
+//		System.out.println("@@@@@@@@lllll" +publishers.indexOf(publisherBox.getValue()));
 		
 
 	}
@@ -102,7 +102,8 @@ public class BookDetailController{
 	    	String isbn = fieldISBN.getText();
 	    	String summary = areaSummary.getText();
 	    	int yearPublished = Integer.parseInt(fieldYear.getText());
-	    	
+	    	int publisher_id = publishers.indexOf(publisherBox.getValue())+1;
+//			this.book.setPublisher_id(publishers.indexOf(publisherBox.getValue())+1);
 	    	if (!validate(title, summary, isbn, yearPublished)){
 				//Exit function, feedback sent and nothing more to do here.
 				logger.info("Exiting onCreate");
@@ -115,11 +116,12 @@ public class BookDetailController{
 	
 				if (this.book.getId() == 0) {
 				    // New book, populate the internal values
-	                book.setId(MainController.getBookGateway().createBook(title, isbn, yearPublished, summary));
+	                book.setId(MainController.getBookGateway().createBook(title, isbn, yearPublished, summary, publisher_id));
 	                book.setBookTitle(title);
 	                book.setBookISBN(isbn);
 	                book.setYearPublished(yearPublished);
 	                book.setBookSummary(summary);
+	                book.setPublisher_id(publisher_id);
 	                alertStatus.setText("Create Success");
 	            } else {
 	                // Not a new book, simply update it.
@@ -152,6 +154,10 @@ public class BookDetailController{
 			this.book.setYearPublished(Integer.parseInt(fieldYear.getText()));
 			this.book.setBookISBN(fieldISBN.getText());
 			this.book.setBookSummary(areaSummary.getText());
+			this.book.setPublisher_id(publishers.indexOf(publisherBox.getValue())+1);
+		
+//			this.book.setPublisher_id(publisher_id);
+//			this.book.setPublisher_id(Integer.parseInt(fieldYear.getText()));
 			
 			MainController.getBookGateway().updateBook(book);
 			MainController.showView(ViewType.BOOK_LIST, null);

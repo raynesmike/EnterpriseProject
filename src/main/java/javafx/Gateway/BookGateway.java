@@ -13,7 +13,7 @@ public interface BookGateway {
 	
 	public List<Book> getBooks();
 	//public List<Make> getMakes();
-	public int createBook(String title, String isbn, int yearPublished, String summary);
+	public int createBook(String title, String isbn, int yearPublished, String summary, int publisher_id);
 	public Book readBook(String title);
 	public boolean lockBeforeUpdate(Book book) throws GatewayException;
 	public void rollbackPendingTransaction() throws GatewayException;

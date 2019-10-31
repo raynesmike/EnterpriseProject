@@ -28,11 +28,6 @@ public class MainController{
 	private static PublisherGateway publisherGateway;
 	
 
-	/**
-	 * Keeps track of state transitions.
-	 */
-	private static ViewType previousViewType = ViewType.NONE ;
-
 	
 	private MainController() {
 	}
@@ -65,7 +60,6 @@ public class MainController{
 		// CREATE UPDATE AND DELETE
 		} else if(viewType == ViewType.BOOK_DETAIL) { 
 
-			System.out.println("@@@@@@@@@@@@@@@@@@@@@@@");
 			List<Publisher> publishers = publisherGateway.fetchPublishers();
 			
 			loader = new FXMLLoader(MainController.class.getResource("/javafx/view/BookDetailView.fxml"));
@@ -75,7 +69,6 @@ public class MainController{
 		
 		Parent viewNode = null;
 		try {
-			previousViewType = viewType;
 			viewNode = loader.load();
 		} catch (IOException e) {
 			//e.printStackTrace();
