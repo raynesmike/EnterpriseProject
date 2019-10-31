@@ -147,7 +147,7 @@ public class BookTableGatewayMySQL implements BookGateway {
 		PreparedStatement st = null;
 		Boolean lock = true;
 		logger.info("@lockBeforeUpdate()");
-		
+
 		try{
 			if(lock==false) {
 				return false;
@@ -168,8 +168,8 @@ public class BookTableGatewayMySQL implements BookGateway {
 			// Set query timeout and make the transaction!
 			lock_st.setQueryTimeout(1);	//TODO MAGIC NUMBERS ARE BAD (60 seconds)
 			lock_st.execute();
-			
-			
+
+
 			//pause for 60 seconds
 //			try {
 ////				Thread.sleep(roller.nextInt(60 * 1000));
@@ -184,7 +184,7 @@ public class BookTableGatewayMySQL implements BookGateway {
 //			conn.setAutoCommit(true);
 //
 //			conn.close();
-//			
+//
 //			System.out.println("done.");
 
 
@@ -198,6 +198,22 @@ public class BookTableGatewayMySQL implements BookGateway {
 
 		// Function completed successfully
 		return true;
+	}
+
+	/**
+	 * Rolls back a pending transaction and release a lock
+	 * Should be used after lockBeforeUpdate() when you do not want a transaction to go through.
+	 * @throws GatewayException
+	 */
+	public void rollbackPendingTransaction() throws GatewayException {
+
+		try {
+			//TODO Do we need to close the preparedStatement as well?
+			conn.rollback();
+			conn.setAutoCommit(true);
+		} catch (SQLException e) {
+			logger.error(e);
+		}
 	}
 
 
@@ -226,7 +242,7 @@ public class BookTableGatewayMySQL implements BookGateway {
 			logger.debug(st);
 			
 			conn.commit();
-			
+
 			conn.setAutoCommit(true);
 			logger.debug("AFTER COMMIT");
 			

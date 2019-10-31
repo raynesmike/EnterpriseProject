@@ -28,6 +28,11 @@ public class MainController{
 	private static PublisherGateway publisherGateway;
 	
 
+	/**
+	 * Keeps track of state transitions.
+	 */
+	private static ViewType previousViewType = ViewType.NONE ;
+
 	
 	private MainController() {
 	}
@@ -70,6 +75,7 @@ public class MainController{
 		
 		Parent viewNode = null;
 		try {
+			previousViewType = viewType;
 			viewNode = loader.load();
 		} catch (IOException e) {
 			//e.printStackTrace();
