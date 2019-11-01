@@ -57,7 +57,7 @@ public class BookListController {
     	Book selected = bookListView.getSelectionModel().getSelectedItem();
     	try {
 			if (!MainController.getBookGateway().lockBeforeUpdate(selected)){
-				alert = AlertBox.display( "Button", 
+				alert = AlertBox.display( false, 
 						"Someone is updating this record");
 				logger.info("Someone is updating this record");
 				//TODO: need to update the list after the first updater finish we just need to refresh 

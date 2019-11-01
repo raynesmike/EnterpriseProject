@@ -56,7 +56,7 @@ public class BookDetailController{
 		Object source = action.getSource();
 		AlertBox alert = new AlertBox();
 
-		alert = AlertBox.display( source.toString()+"Button", 
+		alert = AlertBox.display( true , 
 				"You are leaving Detail, Do you want to save your changes?");
 		System.out.println("ALERTBOXXXXXXXXX" + alert.getReply());
 		if(alert.getReply().equals("yes")) {
