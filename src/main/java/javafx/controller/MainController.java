@@ -27,6 +27,7 @@ public class MainController{
 
 	private static BookGateway bookGateway;
 	private static PublisherGateway publisherGateway;
+	private static ViewType currentView;
 	
 
 	
@@ -53,7 +54,7 @@ public class MainController{
 		List<Book> books;
 		List<Publisher> publishers;
 		AuditTrailEntry audit;
-
+		setCurrentView(viewType);
 		if(viewType == ViewType.BOOK_LIST) {
 			books = bookGateway.getBooks();
 			
@@ -105,5 +106,13 @@ public class MainController{
 
 	public static void setRootPane(BorderPane rPane) {
 		rootPane = rPane;
+	}
+
+	public static ViewType getCurrentView() {
+		return currentView;
+	}
+
+	public static void setCurrentView(ViewType currentView) {
+		MainController.currentView = currentView;
 	}
 }
