@@ -111,6 +111,8 @@ public class BookDetailController{
 	                book.setYearPublished(yearPublished);
 	                book.setBookSummary(summary);
 	                book.setPublisher_id(publisher_id);
+	                // TODO: initiate the audit created and link to this book
+	                MainController.getBookGateway().createAudit(book.getId(), "Book Added");
 	                alertStatus.setText("Create Success");
 	            } else {
 	                // Not a new book, simply update it.
@@ -139,14 +141,36 @@ public class BookDetailController{
 		
 
 		try {
-			this.book.setBookTitle(fieldTitle.getText());
-			this.book.setYearPublished(Integer.parseInt(fieldYear.getText()));
-			this.book.setBookISBN(fieldISBN.getText());
-			this.book.setBookSummary(areaSummary.getText());
-			this.book.setPublisher_id(publishers.indexOf(publisherBox.getValue())+1);
-		
-//			this.book.setPublisher_id(publisher_id);
-//			this.book.setPublisher_id(Integer.parseInt(fieldYear.getText()));
+//			this.book.setBookTitle(fieldTitle.getText());
+//			this.book.setYearPublished(Integer.parseInt(fieldYear.getText()));
+//			this.book.setBookISBN(fieldISBN.getText());
+//			this.book.setBookSummary(areaSummary.getText());
+//			this.book.setPublisher_id(publishers.indexOf(publisherBox.getValue())+1);
+//            
+			if(!this.book.getBookTitle().equals(fieldTitle.getText())) {
+			    MainController.getBookGateway().createAudit(book.getId(),"Title changed from " + book.getBookTitle() + " to " + fieldTitle.getText());
+	            this.book.setBookTitle(fieldTitle.getText());
+			}
+			
+			if(this.book.getYearPublished() != Integer.parseInt(fieldYear.getText())) {
+				MainController.getBookGateway().createAudit(book.getId(),"Year Published changed from " + book.getYearPublished() + " to " + fieldYear.getText());
+				this.book.setYearPublished(Integer.parseInt(fieldYear.getText()));
+			}
+			//TODO: this 3 properties
+			if(!this.book.getBookISBN().equals(fieldISBN.getText())) {
+				MainController.getBookGateway().createAudit(book.getId(),"ISBN changed from " + book.getBookISBN() + " to " + fieldISBN.getText());
+	            this.book.setBookISBN(fieldISBN.getText());
+			}
+			
+			if(!this.book.getBookSummary().equals(areaSummary.getText())) {
+				MainController.getBookGateway().createAudit(book.getId(),"Summary changed from " + book.getBookSummary() + " to " + areaSummary.getText());
+	        	this.book.setBookSummary(areaSummary.getText());
+			}
+			
+			if(this.book.getPublisher_id() != publishers.indexOf(publisherBox.getValue())+1) {
+				MainController.getBookGateway().createAudit(book.getId(),"Publisher changed from " + publishers.get(book.getPublisher_id()-1) + " to " + publisherBox.getValue());
+	        	this.book.setPublisher_id(publishers.indexOf(publisherBox.getValue())+1);
+			}
 			
 			MainController.getBookGateway().updateBook(book);
 			MainController.showView(ViewType.BOOK_LIST, null);

@@ -24,4 +24,5 @@ public interface BookGateway {
 	
 	public void insertBook(Book Book);
 	public List<AuditTrailEntry> getAudits(int book_id);
+	public int createAudit(int book_id, String entry_msg);
 }

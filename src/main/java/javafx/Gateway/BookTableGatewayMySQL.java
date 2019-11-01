@@ -15,7 +15,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
@@ -87,7 +89,7 @@ public class BookTableGatewayMySQL implements BookGateway {
 				AuditTrailEntry newAudit = new AuditTrailEntry(rs.getInt("id"), rs.getInt("book_id"),
 														rs.getDate("date_added"), rs.getString("entry_msg"));
 				//Push this to collection
-				System.out.println(newAudit.toString());
+//				System.out.println(newAudit.toString());
 				audits.add(newAudit);
 				}
 			}
@@ -98,6 +100,50 @@ public class BookTableGatewayMySQL implements BookGateway {
 			//4. cleanup
 		}
 		return audits;
+	}
+	
+	public int createAudit(int book_id, String entry_msg) {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+
+		int returnKey = -1;
+//		int date=0;
+		SimpleDateFormat formatter  = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		java.sql.Date date_added = new java.sql.Date(date.getTime());
+		
+		try {
+			String query = "INSERT INTO book_audit_trail "
+					+ "(book_id, date_added, entry_msg) "
+					+ "values(?, ?, ?)";
+			st = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+			// PLUG IN THE VALUES
+			st.setInt(1, book_id);
+			st.setDate(2, date_added);
+			st.setString(3, entry_msg);
+			st.executeUpdate();	//This executes the query!
+			
+			//We asked for a return of the key generated, so get it back
+			rs = st.getGeneratedKeys();
+			// rs has the ability to be null for some reason
+			if (rs != null && rs.next()){
+				// THIS is where the key would be!
+				returnKey = rs.getInt(1);
+				logger.debug("Audit inserted and returned key: " + returnKey);
+			}
+			
+		} catch(SQLException e) {
+			//e.printStackTrace();
+			//TODO MAKE GATEWAYEXCEPTION WORK
+			//throw new GatewayException(e);
+			logger.error(e);
+		} finally {
+			//4. cleanup
+			//TODO This needs to close the connection
+		}
+
+		//RETURN THE GENERATED KEY
+		return returnKey;
 	}
 	
 	public List<Book> getBooks(){
@@ -123,7 +169,7 @@ public class BookTableGatewayMySQL implements BookGateway {
 				Book newBook = new Book(rs.getInt("id"), rs.getString("title"), rs.getString("summary"), 
 									rs.getInt("year_published"), rs.getString("isbn"), rs.getInt("publisher_id"));
 				//Push this to collection
-				System.out.println(newBook.toString());
+//				System.out.println(newBook.toString());
 				books.add(newBook);
 			}
 			
