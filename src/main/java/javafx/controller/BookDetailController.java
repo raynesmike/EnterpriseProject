@@ -232,6 +232,14 @@ public class BookDetailController{
 		ObservableList<Publisher> items = publisherBox.getItems();
 		items.addAll(publishers);
 		
+		if(book.getId()==0) {
+			buttonDelete.setDisable(true);
+			buttonUpdate.setDisable(true);
+			buttonAudit.setDisable(true);
+		} else {
+			buttonCreate.setDisable(true);
+		}
+		
 		fieldTitle.setText(this.book.getBookTitle());
 		fieldYear.setText(Integer.toString(this.book.getYearPublished()));
 		fieldISBN.setText(this.book.getBookISBN());

@@ -15,8 +15,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -87,7 +89,7 @@ public class BookTableGatewayMySQL implements BookGateway {
 				
 				if(rs.getInt("book_id")==book_id) {
 				AuditTrailEntry newAudit = new AuditTrailEntry(rs.getInt("id"), rs.getInt("book_id"),
-														rs.getDate("date_added"), rs.getString("entry_msg"));
+														rs.getTimestamp("date_added"), rs.getString("entry_msg"));
 				//Push this to collection
 //				System.out.println(newAudit.toString());
 				audits.add(newAudit);
@@ -109,9 +111,10 @@ public class BookTableGatewayMySQL implements BookGateway {
 		int returnKey = -1;
 //		int date=0;
 		SimpleDateFormat formatter  = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date = new Date();
-		java.sql.Date date_added = new java.sql.Date(date.getTime());
+		Date date = Calendar.getInstance().getTime();
 		
+		java.sql.Date date_added = new java.sql.Date(date.getTime());
+		System.out.println("@@@@@@@@@@@"+date);
 		try {
 			String query = "INSERT INTO book_audit_trail "
 					+ "(book_id, date_added, entry_msg) "
@@ -119,7 +122,7 @@ public class BookTableGatewayMySQL implements BookGateway {
 			st = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
 			// PLUG IN THE VALUES
 			st.setInt(1, book_id);
-			st.setDate(2, date_added);
+			st.setTimestamp(2, new Timestamp(date.getTime()));
 			st.setString(3, entry_msg);
 			st.executeUpdate();	//This executes the query!
 			

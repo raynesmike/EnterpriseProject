@@ -13,6 +13,7 @@
           <TableColumn fx:id="message" minWidth="0.0" prefWidth="402.0" text="Message" />
         </columns>
       </TableView>
-      <TextField fx:id="auditTrailName" layoutX="9.0" layoutY="22.0" prefHeight="15.0" prefWidth="582.0" />
+      <TextField fx:id="auditTrailName" layoutX="9.0" layoutY="22.0" prefHeight="31.0" prefWidth="388.0" />
+      <Button fx:id="buttonBack" layoutX="535.0" layoutY="22.0" mnemonicParsing="false" onAction="#handleButtonAction" text="Back" />
    </children>
 </AnchorPane>
