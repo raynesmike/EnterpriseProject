@@ -184,7 +184,7 @@ public class BookTableGatewayMySQL implements BookGateway {
 		return books;
 	}
 	
-	public int createBook(String title, String isbn, int yearPublished, String summary, int publisher_id) {
+	public int createBook(Book book) {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 
@@ -196,11 +196,11 @@ public class BookTableGatewayMySQL implements BookGateway {
 					+ "values(?, ?, ?, ?, ?)";
 			st = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
 			// PLUG IN THE VALUES
-			st.setString(1, title);
-			st.setString(2, summary);
-			st.setInt(3, yearPublished);
-			st.setString(4, isbn);
-			st.setInt(5, publisher_id);
+			st.setString(1, book.getBookTitle());
+			st.setString(2, book.getBookSummary());
+			st.setInt(3, book.getYearPublished());
+			st.setString(4, book.getBookISBN());
+			st.setInt(5, book.getPublisher_id());
 			st.executeUpdate();	//This executes the query!
 
 			//We asked for a return of the key generated, so get it back

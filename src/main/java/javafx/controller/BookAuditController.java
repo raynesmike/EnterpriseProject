@@ -64,7 +64,6 @@ public class BookAuditController {
 		logger.info("@BookAuditController initialize()");
 		auditTrailName.setText("Audit Trail for " + book.getBookTitle());
 		audits = book.getAudits();
-		System.out.println("@@@@@@@@@@@@@@@@2");
 		for(AuditTrailEntry a: audits) {
 			System.out.println(a.toString());
 		}

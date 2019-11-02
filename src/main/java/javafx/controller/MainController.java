@@ -28,9 +28,9 @@ public class MainController{
 	private static BookGateway bookGateway;
 	private static PublisherGateway publisherGateway;
 	private static ViewType currentView;
-	
+	private static BookDetailController bdc;
+	private static Book book;
 
-	
 	private MainController() {
 	}
 	
@@ -54,6 +54,7 @@ public class MainController{
 		List<Book> books;
 		List<Publisher> publishers;
 		AuditTrailEntry audit;
+		
 		setCurrentView(viewType);
 		if(viewType == ViewType.BOOK_LIST) {
 			books = bookGateway.getBooks();
@@ -66,7 +67,7 @@ public class MainController{
 			publishers = publisherGateway.fetchPublishers();
 			
 			loader = new FXMLLoader(MainController.class.getResource("/javafx/view/BookDetailView.fxml"));
-			loader.setController(new BookDetailController(book, publishers));
+			loader.setController(setBdc(new BookDetailController(book, publishers)));
 			
 		} else if(viewType == ViewType.BOOK_AUDIT) { 
 			audit = new AuditTrailEntry();
@@ -114,5 +115,34 @@ public class MainController{
 
 	public static void setCurrentView(ViewType currentView) {
 		MainController.currentView = currentView;
+	}
+
+	/**
+	 * @return the book
+	 */
+	public static Book getBook() {
+		return MainController.book;
+	}
+
+	/**
+	 * @param book the book to set
+	 */
+	public static void setBook(Book book) {
+		MainController.book = book;
+	}
+
+	/**
+	 * @return the bdc
+	 */
+	public static BookDetailController getBdc() {
+		return bdc;
+	}
+
+	/**
+	 * @param bdc the bdc to set
+	 */
+	public static BookDetailController setBdc(BookDetailController bdc) {
+		MainController.bdc = bdc;
+		return bdc;
 	}
 }
