@@ -56,8 +56,7 @@ public class BookDetailController{
 		Object source = action.getSource();
 		AlertBox alert = new AlertBox();
 
-		alert = AlertBox.display( source.toString()+"Button", 
-				"You are leaving Detail, Do you want to save your changes?");
+		alert = AlertBox.display( true, "You are leaving Detail, Do you want to save your changes?");
 		System.out.println("ALERTBOXXXXXXXXX" + alert.getReply());
 		if(alert.getReply().equals("yes")) {
 			if(source == buttonCreate) {
@@ -105,13 +104,21 @@ public class BookDetailController{
 	
 				if (this.book.getId() == 0) {
 				    // New book, populate the internal values
-	                book.setId(MainController.getBookGateway().createBook(title, isbn, yearPublished, summary, publisher_id));
-	                book.setBookTitle(title);
+					book.setBookTitle(title);
 	                book.setBookISBN(isbn);
 	                book.setYearPublished(yearPublished);
 	                book.setBookSummary(summary);
 	                book.setPublisher_id(publisher_id);
+	                book.setId(MainController.getBookGateway().createBook(book));
+	              
+	                // TODO: initiate the audit created and link to this book
+	                MainController.getBookGateway().createAudit(book.getId(), "Book Added");
 	                alertStatus.setText("Create Success");
+	                buttonDelete.setDisable(false);
+        			buttonUpdate.setDisable(false);
+        			buttonAudit.setDisable(false);
+        			buttonCreate.setDisable(true);
+        		
 	            } else {
 	                // Not a new book, simply update it.
 	                MainController.getBookGateway().updateBook(book);
@@ -139,14 +146,36 @@ public class BookDetailController{
 		
 
 		try {
-			this.book.setBookTitle(fieldTitle.getText());
-			this.book.setYearPublished(Integer.parseInt(fieldYear.getText()));
-			this.book.setBookISBN(fieldISBN.getText());
-			this.book.setBookSummary(areaSummary.getText());
-			this.book.setPublisher_id(publishers.indexOf(publisherBox.getValue())+1);
-		
-//			this.book.setPublisher_id(publisher_id);
-//			this.book.setPublisher_id(Integer.parseInt(fieldYear.getText()));
+         
+			if(!this.book.getBookTitle().equals(fieldTitle.getText())) {
+			    MainController.getBookGateway().createAudit(book.getId(),"Title changed from " +
+			    			book.getBookTitle() + " to " + fieldTitle.getText());
+	            this.book.setBookTitle(fieldTitle.getText());
+			}
+			
+			if(this.book.getYearPublished() != Integer.parseInt(fieldYear.getText())) {
+				MainController.getBookGateway().createAudit(book.getId(),"Year Published changed from " + 
+							book.getYearPublished() + " to " + fieldYear.getText());
+				this.book.setYearPublished(Integer.parseInt(fieldYear.getText()));
+			}
+			
+			if(!this.book.getBookISBN().equals(fieldISBN.getText())) {
+				MainController.getBookGateway().createAudit(book.getId(),"ISBN changed from " + 
+							book.getBookISBN() + " to " + fieldISBN.getText());
+	            this.book.setBookISBN(fieldISBN.getText());
+			}
+			
+			if(!this.book.getBookSummary().equals(areaSummary.getText())) {
+				MainController.getBookGateway().createAudit(book.getId(),"Summary changed from " + 
+							book.getBookSummary() + " to " + areaSummary.getText());
+	        	this.book.setBookSummary(areaSummary.getText());
+			}
+			
+			if(this.book.getPublisher_id() != publishers.indexOf(publisherBox.getValue())+1) {
+				MainController.getBookGateway().createAudit(book.getId(),"Publisher changed from " + 
+							publishers.get(book.getPublisher_id()-1) + " to " + publisherBox.getValue());
+	        	this.book.setPublisher_id(publishers.indexOf(publisherBox.getValue())+1);
+			}
 			
 			MainController.getBookGateway().updateBook(book);
 			MainController.showView(ViewType.BOOK_LIST, null);
@@ -160,21 +189,15 @@ public class BookDetailController{
 	@FXML
 	public void onDelete() {
 		logger.info("@BookDetailController Delete()");
-		// DELETE the book and refresh the pages
 		MainController.getBookGateway().deleteBook(book);
 		MainController.showView(ViewType.BOOK_LIST, null);
 	}
 	
 	public void onAudit() {
 		logger.info("@BookAuditController Delete()");
-		// DELETE the book and refresh the pages
-		
-//		MainController.getBookGateway().getAudit(book);
 		MainController.showView(ViewType.BOOK_AUDIT, book);
 	}
-	
-	
-	
+		
 	private Boolean validate(String title, String summary, String isbn, int yearPublished) {
 		Boolean isValid = true;
     	alertTitle.setText("");
@@ -208,12 +231,19 @@ public class BookDetailController{
 		ObservableList<Publisher> items = publisherBox.getItems();
 		items.addAll(publishers);
 		
+		if(book.getId()==0) {
+			buttonDelete.setDisable(true);
+			buttonUpdate.setDisable(true);
+			buttonAudit.setDisable(true);
+		} else {
+			buttonCreate.setDisable(true);
+		}
+		
 		fieldTitle.setText(this.book.getBookTitle());
 		fieldYear.setText(Integer.toString(this.book.getYearPublished()));
 		fieldISBN.setText(this.book.getBookISBN());
 		areaSummary.setText(this.book.getBookSummary());
 		publisherBox.setValue(items.get(book.getPublisher_id()-1));
-//		System.out.println("@@@@@@@@lllll" +publishers.indexOf(publisherBox.getValue()));
 		
 
 	}

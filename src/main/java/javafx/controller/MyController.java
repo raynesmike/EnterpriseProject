@@ -1,5 +1,6 @@
 package javafx.controller;
 
+import javafx.Gateway.GatewayException;
 import javafx.application.Platform;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,6 +20,8 @@ public class MyController {
     private MenuItem bookCreate, bookRead;
     @FXML
     private MenuItem quitYes;
+    private ViewType currentView;
+    private Book book;
 	
 	public MyController() {
 	}
@@ -26,17 +29,37 @@ public class MyController {
 	@FXML
 	private void handleBook(ActionEvent action) throws Exception {
 		Object source = action.getSource();
+		AlertBox alert = new AlertBox();
+		
+		if(((currentView==ViewType.BOOK_DETAIL && source!=bookCreate) || MainController.getCurrentView()== ViewType.BOOK_DETAIL)) {
+			alert = AlertBox.display( true, "You are leaving Detail, Do you want to save your changes?");
+		}
+		if(alert.getReply().equals("yes")) {
+				if(currentView==ViewType.BOOK_DETAIL) {
+					MainController.getBdc().onCreate();
+				}else {
+					MainController.getBdc().onUpdate();
+				}
+		}if(alert.getReply().equals("no")) {
+			try {
+				MainController.getBookGateway().rollbackPendingTransaction();
+			} catch (GatewayException e) {
+				logger.error(e);
+			}
+		} else if(alert.getReply().equals("cancel")) {
+			return;
+		}
 		if(source == quitYes) {
 			Platform.exit();
 			
 		}
 		if(source == bookCreate) {
-			//get a collection of books from the gateway
+			currentView=ViewType.BOOK_DETAIL;
 			MainController.showView(ViewType.BOOK_DETAIL, new Book());
 			return;
 		}
 		if(source == bookRead) {
-			//get a collection of books from the gateway
+			currentView=ViewType.BOOK_LIST;
 			MainController.showView(ViewType.BOOK_LIST, null);
 			return;
 		}
