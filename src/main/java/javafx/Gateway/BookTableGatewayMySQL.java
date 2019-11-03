@@ -76,7 +76,8 @@ public class BookTableGatewayMySQL implements BookGateway {
 		try {
 			//Parameterized because I HAVE TO
 			String query = "select * "
-					+ " from book_audit_trail";
+					+ " from book_audit_trail"
+					+ " ORDER BY date_added ASC";
 			//st = conn.prepareStatement("select * from Book");
 			st = conn.prepareStatement(query);
 			
@@ -117,13 +118,13 @@ public class BookTableGatewayMySQL implements BookGateway {
 		System.out.println("@@@@@@@@@@@"+date);
 		try {
 			String query = "INSERT INTO book_audit_trail "
-					+ "(book_id, date_added, entry_msg) "
-					+ "values(?, ?, ?)";
+					+ "(book_id, entry_msg) "
+					+ "values(?, ?)";
 			st = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
 			// PLUG IN THE VALUES
 			st.setInt(1, book_id);
-			st.setTimestamp(2, new Timestamp(date.getTime()));
-			st.setString(3, entry_msg);
+			//st.setTimestamp(2, new Timestamp(date.getTime()));
+			st.setString(2, entry_msg);
 			st.executeUpdate();	//This executes the query!
 			
 			//We asked for a return of the key generated, so get it back
