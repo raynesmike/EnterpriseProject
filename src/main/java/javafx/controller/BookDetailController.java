@@ -54,11 +54,9 @@ public class BookDetailController{
 	@FXML public void handleButtonAction(ActionEvent action) throws IOException {
 		
 		Object source = action.getSource();
-		AlertBox alert = new AlertBox();
+		//AlertBox alert = new AlertBox();
 
-		alert = AlertBox.display( true, "You are leaving Detail, Do you want to save your changes?");
-		System.out.println("ALERTBOXXXXXXXXX" + alert.getReply());
-		if(alert.getReply().equals("yes")) {
+
 			if(source == buttonCreate) {
 				onCreate();
 			} else if(source == buttonUpdate) {
@@ -69,22 +67,12 @@ public class BookDetailController{
 			} else if(source == buttonAudit) {
 				onAudit();
 			}
-		} else if(alert.getReply().equals("no")) {
-			//TODO: rollback
-			try {
-				MainController.getBookGateway().rollbackPendingTransaction();
-			} catch (GatewayException e) {
-				logger.error(e);
-			}
-		} else {
-			//TODO: Do Nothing
-		}
 	}
 	
     
 
 	@FXML public void onCreate() {
-    	logger.info("@BookCreateController onSearch()");
+    	logger.info("@onCreate");
     	try {
 	    	String title = fieldTitle.getText();
 	    	String isbn = fieldISBN.getText();

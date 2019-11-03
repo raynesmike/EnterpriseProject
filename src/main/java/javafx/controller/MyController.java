@@ -22,6 +22,8 @@ public class MyController {
     private MenuItem quitYes;
     private ViewType currentView;
     private Book book;
+
+    private MainController instance;
 	
 	public MyController() {
 	}
@@ -30,17 +32,23 @@ public class MyController {
 	private void handleBook(ActionEvent action) throws Exception {
 		Object source = action.getSource();
 		AlertBox alert = new AlertBox();
+
+		logger.info("@MyController handleBook()" + MainController.getCurrentView());
+		this.currentView = MainController.getCurrentView();
 		
-		if(((currentView==ViewType.BOOK_DETAIL && source!=bookCreate) || MainController.getCurrentView()== ViewType.BOOK_DETAIL)) {
+		//if(((currentView==ViewType.BOOK_DETAIL && source!=bookCreate) || MainController.getCurrentView()== ViewType.BOOK_DETAIL)) {
+		if (MainController.getCurrentView() == ViewType.BOOK_DETAIL){
 			alert = AlertBox.display( true, "You are leaving Detail, Do you want to save your changes?");
 		}
 		if(alert.getReply().equals("yes")) {
+			//I.. Do not know what this thing is doing.
 				if(currentView==ViewType.BOOK_DETAIL) {
 					MainController.getBdc().onCreate();
 				}else {
 					MainController.getBdc().onUpdate();
 				}
 		}if(alert.getReply().equals("no")) {
+			//Rollback the pending transaction and then change the view (last part done automatically)
 			try {
 				MainController.getBookGateway().rollbackPendingTransaction();
 			} catch (GatewayException e) {

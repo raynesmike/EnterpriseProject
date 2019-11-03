@@ -3,13 +3,11 @@ package javafx.controller;
 import java.io.IOException;
 import java.util.List;
 
+import javafx.Gateway.*;
+import javafx.scene.control.Alert;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javafx.Gateway.BookGateway;
-import javafx.Gateway.BookTableGatewayMySQL;
-import javafx.Gateway.PublisherGateway;
-import javafx.Gateway.PublisherTableGateway;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,7 +25,7 @@ public class MainController{
 
 	private static BookGateway bookGateway;
 	private static PublisherGateway publisherGateway;
-	private static ViewType currentView;
+	private static ViewType currentView = ViewType.NONE;
 	private static BookDetailController bdc;
 	private static Book book;
 
@@ -54,8 +52,12 @@ public class MainController{
 		List<Book> books;
 		List<Publisher> publishers;
 		AuditTrailEntry audit;
-		
+		AlertBox alert;
+
+
 		setCurrentView(viewType);
+		logger.debug("ViewType = " + getCurrentView());
+
 		if(viewType == ViewType.BOOK_LIST) {
 			books = bookGateway.getBooks();
 			
