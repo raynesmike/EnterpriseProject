@@ -20,7 +20,7 @@ public class Main extends Application {
 	public void init() throws Exception {
 		super.init();
 		MainController.initBookGateway();
-	}
+	} 
 
 	@Override
 	public void stop() throws Exception {

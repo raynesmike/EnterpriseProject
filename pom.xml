@@ -13,6 +13,7 @@
     
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        
         <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
 		<maven-shade-plugin.version>2.4.3</maven-shade-plugin.version>
 		<maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
@@ -33,6 +34,7 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
     <dependencies>
     
         <dependency>
@@ -105,8 +107,11 @@
             <artifactId>javafx-fxml</artifactId>
             <version>11</version>
         </dependency>
-        
-        
+
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-core</artifactId>
+        </dependency>
 
     </dependencies>
 
@@ -204,12 +209,27 @@
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>libs/</classpathPrefix>
                             <mainClass>
-                                javafx.NewMain
+                                webservice.AbstractMain
                             </mainClass>
                         </manifest>
                     </archive>
                 </configuration>
             </plugin>
+
+            <!--
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${exec-maven-plugin.version}</version>
+                <configuration>
+                    <mainClass>io.vertx.core.Launcher</mainClass>
+                    <arguments>
+                        <argument>run</argument>
+                        <argument>${main.verticle}</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
+            -->
 
         </plugins>
     </build>
