@@ -1,13 +1,22 @@
 package javafx;
 
+import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
-public class testVertx {
+public class TestVerticle extends AbstractVerticle {
+	private static final Logger logger = LogManager.getLogger();
+
+	// Local variables
+	private Vertx vertx;
+
 
 	public static void main(String[] args) {
 	
