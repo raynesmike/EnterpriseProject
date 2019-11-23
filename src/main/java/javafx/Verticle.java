@@ -180,6 +180,11 @@ public class Verticle {
 		router.get("/").handler(this::indexHandler);
 		router.get("/book/:id").handler(this::fetchBook);
 
+		router.get("/login").handler(this::login);
+		router.get("/reports/bookdetail").handler(this::reports);
+
+
+
 		//router.get("/wiki/:page").handler(this::pageRenderingHandler);
 		//router.post().handler(BodyHandler.create());
 		//router.post("/save").handler(this::pageUpdateHandler);
@@ -202,6 +207,8 @@ public class Verticle {
 
 		return promise.future();
 	}
+
+	
 	private void fetchBook(RoutingContext context) {
 		StringBuilder output = new StringBuilder();
 		
@@ -246,6 +253,72 @@ public class Verticle {
 				});
 			}
 		});		
+	}
+	
+	private void login(RoutingContext context) {
+		StringBuilder output = new StringBuilder();
+		
+		context.response().putHeader("Content-Type", "text/json");
+			String userName = context.request().getParam("username");
+			String userPass = context.request().getParam("password");
+			
+			dbClient.getConnection(ar -> {
+				if(ar.failed()) {
+					logger.error("Could not open a database connection to get User Login info", ar.cause());
+				} else {
+					logger.info("dbm connection success, now getting Username " + userName );
+					
+					SQLConnection connection = ar.result();
+					JsonArray params = new JsonArray().add(userName);
+					connection.queryWithParams("SELECT * FROM User WHERE username = ?"
+							, params
+							, result -> {
+								connection.close();
+							
+						if(result.failed()) {
+							logger.error("Username doesn't Exist", result.cause());
+						}else {
+							List<JsonArray> rows = result.result().getResults();
+							if(rows.size() < 1) {
+								
+							} else {
+								JsonObject bookJson = new JsonObject();
+								bookJson.put("id", rows.get(0).getInteger(0));
+								bookJson.put("username", rows.get(0).getString(1));
+								bookJson.put("password_hash", rows.get(0).getString(1));
+								output.append(bookJson.toString());
+							}
+						}
+						context.response().end(output.toString());
+					});
+				}
+			});
+	}
+	private void reports(RoutingContext context) {
+//		HttpServer httpServer = vertx.createHttpServer();
+//		
+//		Router router = Router.router(vertx);
+
+//		Route handler2 = router
+//		.get("/reports/bookdetail")
+//		.handler(routingContext -> {
+//			System.out.println("Came to say hello");
+//			HttpServerResponse response = routingContext.response();
+//			response.setChunked(true);
+//			response.write("Hello Michael");
+//			response.putHeader("Content-Type", "application/vnd.ms-excel");
+////			response.putHeader("Content-Disposition", "attachment; filename=book_report.xls");
+//			//text/json
+////			response.putHeader("content-type", "text/plain");
+//			
+//			//response.end("Hello World");
+//			response.end();
+//		});
+//
+//
+//httpServer
+//			.requestHandler(router::accept)
+//			.listen(8888);
 	}
 	public void garbage() {
 		dbClient.getConnection(ar -> {
