@@ -259,7 +259,6 @@ public class Verticle {
 		StringBuilder output = new StringBuilder();
 		
 		context.response().putHeader("Content-Type", "text/json");
-//		HttpServerResponse response = context.response();
 		
 			String userName = context.request().getParam("username");
 			String userPass = context.request().getParam("password");
@@ -286,29 +285,26 @@ public class Verticle {
 								
 								// CREATING SESSION
 								int rowId = userRows.get(0).getInteger(0);
-								String sha2 = "SHA2( 1234 , 256)";
+								String sha2 = "SHA2( CONCAT( NOW(), ‘my secret value’ ) , 256)";
 								SimpleDateFormat formatter  = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 								Date date = Calendar.getInstance().getTime();
 								java.sql.Date date_added = new java.sql.Date(date.getTime());
 								
-								logger.info("Created Session " + rowId );
+								
 								
 								String createSessionQuery = "INSERT INTO session "
 										+ "(user_id, token, expiration) "
-										+ "values(?, ?, ?)";
+										+ "values(" + rowId + ", " + sha2 + " , " + date + ")";
 								JsonArray params2 = new JsonArray().add(rowId).add(sha2).add(date.getTime());
-								connection.queryWithParams(createSessionQuery
-										, params2
-										, sessionResult -> { 
-											connection.close();
-									
-									if(sessionResult.failed()) {
-										logger.error("Failed to create Session ");
-										
+								connection.update(createSessionQuery, sessionResult -> { 
+									int newId = sessionResult.result().getKeys().getInteger(0);
+											
+									if(newId==0) {
+										logger.error("Failed Session " + newId );
 									}else {
-										List<JsonArray> sessionRows = sessionResult.result().getResults();
-										System.out.println(sessionRows.get(0).getString(1));
+										logger.info("Created Session " + newId );	
 									}
+									
 								});
 		
 								JsonObject bookJson = new JsonObject();
