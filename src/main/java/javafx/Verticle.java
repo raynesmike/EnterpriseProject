@@ -1,5 +1,9 @@
 package javafx;
 
+import java.sql.PreparedStatement;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -9,6 +13,7 @@ import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServer;
+import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.asyncsql.MySQLClient;
@@ -19,17 +24,10 @@ import io.vertx.ext.web.RoutingContext;
 
 public class Verticle {
 	private static final Logger logger = LogManager.getLogger();
-	private static final String SQL_CREATE_PAGES_TABLE = "create table if not exists Pages (Id integer identity primary key, Name varchar(255) unique, Content clob)";
-	private static final String SQL_GET_PAGE = "select Id, Content from Pages where Name = ?";
-	private static final String SQL_CREATE_PAGE = "insert into Pages values (NULL, ?, ?)";
-	private static final String SQL_SAVE_PAGE = "update Pages set Content = ? where Id = ?";
-	private static final String SQL_ALL_PAGES = "select Name from Pages";
-	private static final String SQL_DELETE_PAGE = "delete from Pages where Id = ?";
-	
+
 	private SQLClient dbClient;
-	private static Vertx vertx;
+	private Vertx vertx;
 	public void stop(Promise<Void> stopPromise) throws Exception {
-//		super.stop(stopPromise);
 
 		logger.info("Stopping verticle...");
 
@@ -111,6 +109,46 @@ public class Verticle {
 		return promise.future();
 	}
 	
+
+	private Future<Void> startHttpServer() {
+		logger.info("Starting http server...");
+
+		Promise<Void> promise = Promise.promise();
+		HttpServer server = vertx.createHttpServer();
+
+		Router router = Router.router(vertx);
+		router.get("/").handler(this::indexHandler);
+		router.get("/book/:id").handler(this::fetchBook);
+
+		router.get("/login").handler(this::login);
+		router.get("/reports/bookdetail").handler(this::reports);
+
+
+
+		//router.get("/wiki/:page").handler(this::pageRenderingHandler);
+		//router.post().handler(BodyHandler.create());
+		//router.post("/save").handler(this::pageUpdateHandler);
+		//router.post("/create").handler(this::pageCreateHandler);
+		//router.post("/delete").handler(this::pageDeletionHandler);
+
+		//templateEngine = FreeMarkerTemplateEngine.create(vertx);
+
+		server
+		.requestHandler(router)
+		.listen(8888, ar -> {
+			if (ar.succeeded()) {
+				logger.info("HTTP server running on port 8888");
+				promise.complete();
+			} else {
+				logger.error("Could not start a HTTP server", ar.cause());
+				promise.fail(ar.cause());
+			}
+		});
+
+		return promise.future();
+	}
+
+	
 	private void indexHandler(RoutingContext context) {
 		//context.put("title", "Wiki home");
 		//context.put("pages", "help");
@@ -170,44 +208,6 @@ public class Verticle {
 		});
 	}
 	
-	private Future<Void> startHttpServer() {
-		logger.info("Starting http server...");
-
-		Promise<Void> promise = Promise.promise();
-		HttpServer server = vertx.createHttpServer();
-
-		Router router = Router.router(vertx);
-		router.get("/").handler(this::indexHandler);
-		router.get("/book/:id").handler(this::fetchBook);
-
-		router.get("/login").handler(this::login);
-		router.get("/reports/bookdetail").handler(this::reports);
-
-
-
-		//router.get("/wiki/:page").handler(this::pageRenderingHandler);
-		//router.post().handler(BodyHandler.create());
-		//router.post("/save").handler(this::pageUpdateHandler);
-		//router.post("/create").handler(this::pageCreateHandler);
-		//router.post("/delete").handler(this::pageDeletionHandler);
-
-		//templateEngine = FreeMarkerTemplateEngine.create(vertx);
-
-		server
-		.requestHandler(router)
-		.listen(8888, ar -> {
-			if (ar.succeeded()) {
-				logger.info("HTTP server running on port 8888");
-				promise.complete();
-			} else {
-				logger.error("Could not start a HTTP server", ar.cause());
-				promise.fail(ar.cause());
-			}
-		});
-
-		return promise.future();
-	}
-
 	
 	private void fetchBook(RoutingContext context) {
 		StringBuilder output = new StringBuilder();
@@ -259,9 +259,10 @@ public class Verticle {
 		StringBuilder output = new StringBuilder();
 		
 		context.response().putHeader("Content-Type", "text/json");
+//		HttpServerResponse response = context.response();
+		
 			String userName = context.request().getParam("username");
 			String userPass = context.request().getParam("password");
-			
 			dbClient.getConnection(ar -> {
 				if(ar.failed()) {
 					logger.error("Could not open a database connection to get User Login info", ar.cause());
@@ -269,8 +270,8 @@ public class Verticle {
 					logger.info("dbm connection success, now getting Username " + userName );
 					
 					SQLConnection connection = ar.result();
-					JsonArray params = new JsonArray().add(userName);
-					connection.queryWithParams("SELECT * FROM User WHERE username = ?"
+					JsonArray params = new JsonArray().add(userName).add(userPass);
+					connection.queryWithParams("SELECT * FROM User WHERE username = ? and password_hash in (select sha2(?, 256))"
 							, params
 							, result -> {
 								connection.close();
@@ -278,14 +279,41 @@ public class Verticle {
 						if(result.failed()) {
 							logger.error("Username doesn't Exist", result.cause());
 						}else {
-							List<JsonArray> rows = result.result().getResults();
-							if(rows.size() < 1) {
-								
+							List<JsonArray> userRows = result.result().getResults();
+							if(userRows.size() < 1) {
+								context.response().setStatusCode(401);
 							} else {
+								
+								// CREATING SESSION
+								int rowId = userRows.get(0).getInteger(0);
+								String sha2 = "SHA2( 1234 , 256)";
+								SimpleDateFormat formatter  = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+								Date date = Calendar.getInstance().getTime();
+								java.sql.Date date_added = new java.sql.Date(date.getTime());
+								
+								logger.info("Created Session " + rowId );
+								
+								String createSessionQuery = "INSERT INTO session "
+										+ "(user_id, token, expiration) "
+										+ "values(?, ?, ?)";
+								JsonArray params2 = new JsonArray().add(rowId).add(sha2).add(date.getTime());
+								connection.queryWithParams(createSessionQuery
+										, params2
+										, sessionResult -> { 
+											connection.close();
+									
+									if(sessionResult.failed()) {
+										logger.error("Failed to create Session ");
+										
+									}else {
+										List<JsonArray> sessionRows = sessionResult.result().getResults();
+										System.out.println(sessionRows.get(0).getString(1));
+									}
+								});
+		
 								JsonObject bookJson = new JsonObject();
-								bookJson.put("id", rows.get(0).getInteger(0));
-								bookJson.put("username", rows.get(0).getString(1));
-								bookJson.put("password_hash", rows.get(0).getString(1));
+								bookJson.put("response", "ok");
+								bookJson.put("session token", userRows.get(0).getString(1));
 								output.append(bookJson.toString());
 							}
 						}

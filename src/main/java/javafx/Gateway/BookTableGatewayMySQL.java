@@ -135,7 +135,7 @@ public class BookTableGatewayMySQL implements BookGateway {
 				returnKey = rs.getInt(1);
 				logger.debug("Audit inserted and returned key: " + returnKey);
 			}
-			
+			 
 		} catch(SQLException e) {
 			//e.printStackTrace();
 			//TODO MAKE GATEWAYEXCEPTION WORK
