@@ -266,7 +266,7 @@ public class Verticle {
 				if(ar.failed()) {
 					logger.error("Could not open a database connection to get User Login info", ar.cause());
 				} else {
-					logger.info("dbm connection success, now getting Username " + userName );
+					logger.info("DBM connection success, now getting Username " + userName );
 					
 					SQLConnection connection = ar.result();
 					JsonArray params = new JsonArray().add(userName).add(userPass);
@@ -282,21 +282,25 @@ public class Verticle {
 							if(userRows.size() < 1) {
 								context.response().setStatusCode(401);
 							} else {
-								
+
+								logger.info("Found " + userName );
 								// CREATING SESSION
 								int rowId = userRows.get(0).getInteger(0);
-								String sha2 = "SHA2( CONCAT( NOW(), ‘my secret value’ ) , 256)";
+								String sha2 = " SHA2( CONCAT( NOW(), 'my secret value' ) , 256)";
 								SimpleDateFormat formatter  = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 								Date date = Calendar.getInstance().getTime();
 								java.sql.Date date_added = new java.sql.Date(date.getTime());
 								
 								
-								
-								String createSessionQuery = "INSERT INTO session "
-										+ "(user_id, token, expiration) "
-										+ "values(" + rowId + ", " + sha2 + " , " + date + ")";
+
+								logger.error("Creating Session " );
+//								String createSessionQuery = "INSERT INTO session "
+//										+ "(user_id) "
+//										+ "values(" + 1 + ")";
 								JsonArray params2 = new JsonArray().add(rowId).add(sha2).add(date.getTime());
-								connection.update(createSessionQuery, sessionResult -> { 
+//								INSERT INTO session (user_id, token, expiration) select '1', SHA2('String', 256), now()
+								connection.update("INSERT INTO session (user_id, token, expiration) select " + rowId 
+													+ ", SHA2( CONCAT( NOW(), 'my secret value' ) , 256), NOW()", sessionResult -> { 
 									int newId = sessionResult.result().getKeys().getInteger(0);
 											
 									if(newId==0) {
@@ -306,7 +310,8 @@ public class Verticle {
 									}
 									
 								});
-		
+
+								logger.info("Printing Json " );
 								JsonObject bookJson = new JsonObject();
 								bookJson.put("response", "ok");
 								bookJson.put("session token", userRows.get(0).getString(1));
@@ -317,6 +322,24 @@ public class Verticle {
 					});
 				}
 			});
+	}
+
+	public void garbage() {
+		dbClient.getConnection(ar -> {
+			if(ar.succeeded()) {
+				SQLConnection connection = ar.result();
+				JsonArray params = new JsonArray().add(1);
+				connection.queryWithParams("select * from stuff where id = ?", params, fetchResult -> {
+					List<JsonObject> rows = fetchResult.result().getRows();
+					for(JsonObject row : rows) {
+						int rowId = row.getInteger("id");
+						connection.update("insert into some_table (row_id) values ( " + rowId + ") ", insertResult -> {
+							int newId = insertResult.result().getKeys().getInteger(0);
+						});
+					}
+				});
+			}
+		});
 	}
 	private void reports(RoutingContext context) {
 //		HttpServer httpServer = vertx.createHttpServer();
@@ -343,23 +366,6 @@ public class Verticle {
 //httpServer
 //			.requestHandler(router::accept)
 //			.listen(8888);
-	}
-	public void garbage() {
-		dbClient.getConnection(ar -> {
-			if(ar.succeeded()) {
-				SQLConnection connection = ar.result();
-				JsonArray params = new JsonArray().add(1);
-				connection.queryWithParams("select * from stuff where id = ?", params, fetchResult -> {
-					List<JsonObject> rows = fetchResult.result().getRows();
-					for(JsonObject row : rows) {
-						int rowId = row.getInteger("id");
-						connection.update("insert into some_table (row_id) values ( " + rowId + ") ", insertResult -> {
-							int newId = insertResult.result().getKeys().getInteger(0);
-						});
-					}
-				});
-			}
-		});
 	}
 
 }
