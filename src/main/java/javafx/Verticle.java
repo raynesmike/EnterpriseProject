@@ -1,5 +1,8 @@
 package javafx;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -8,6 +11,13 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.Row;
 
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
@@ -302,7 +312,7 @@ public class Verticle {
 					}else {
 					
 						List<JsonArray> allowed = allowedResult.result().getResults();
-						logger.info("CHECKING STATUS " + allowed.get(0).getInteger(1));
+//						logger.info("CHECKING STATUS " + allowed.get(0).getInteger(1));
 						if(allowed.size() < 1) {
 							context.response().setStatusCode(401);
 							context.response().end("User is Not Allowed");
@@ -362,5 +372,129 @@ public class Verticle {
 		});
 	}
 
+	public void createExcel() {
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		HSSFSheet sheet = workbook.createSheet("Pets");
+
+		//title row
+		//create a title font
+		HSSFFont titleFont = workbook.createFont();
+		titleFont.setFontName("Courier New");
+		titleFont.setFontHeightInPoints((short) 24);
+		titleFont.setBold(true);
+		HSSFCellStyle titleStyle = workbook.createCellStyle();
+		titleStyle.setFont(titleFont);
+		
+		//sheet.setColumnWidth(0, 5000);
+		
+		Row row = sheet.createRow(0);
+		Cell cell = row.createCell(0);
+		cell.setCellValue("Pet Sitters Anonymous, Inc.");
+		cell.setCellStyle(titleStyle);
+		
+		//row indexes are base 0 of course
+		//let's put a space between title and header rows, and start header and data on row 2
+		int rowNum = 2;
+
+		//set default alignment of Age column to be centered
+		HSSFCellStyle centerStyle = workbook.createCellStyle();
+		centerStyle.setAlignment(HorizontalAlignment.CENTER);
+		sheet.setDefaultColumnStyle(2, centerStyle);
+		
+		//create a bold font to use for header row and summary row
+		HSSFFont font = workbook.createFont();
+		font.setBold(true);
+		HSSFCellStyle boldStyle = workbook.createCellStyle();
+		boldStyle.setFont(font);
+		//create a bold + centered font to use for age header and average
+		//surely there is a better way to apply 2 different styles to 1 cell???
+		HSSFCellStyle boldCenterStyle = workbook.createCellStyle();
+		boldCenterStyle.cloneStyleFrom(boldStyle);
+		boldCenterStyle.setAlignment(HorizontalAlignment.CENTER);
+
+		//create header row
+		row = sheet.createRow(rowNum++);
+		//add cells 0 to 3
+		int cellNum = 0;
+		cell = row.createCell(cellNum++);
+		cell.setCellValue("Pet Name");
+		cell.setCellStyle(boldStyle);
+
+		cell = row.createCell(cellNum++);
+		cell.setCellValue("Pet Type");
+		cell.setCellStyle(boldStyle);
+		cell = row.createCell(cellNum++);
+		cell.setCellValue("Age");
+		cell.setCellStyle(boldCenterStyle);
+		cell = row.createCell(cellNum++);
+		cell.setCellValue("Gender");
+		cell.setCellStyle(boldStyle);
+
+		//row 1
+		row = sheet.createRow(rowNum++);
+		//add cells 0 to 3
+		cellNum = 0;
+		cell = row.createCell(cellNum++);
+		cell.setCellValue("El Grande");
+		cell = row.createCell(cellNum++);
+		cell.setCellValue("Dog");
+		cell = row.createCell(cellNum++);
+		cell.setCellValue(5);
+		cell = row.createCell(cellNum++);
+		cell.setCellValue("Male");
+
+		//row 2
+		row = sheet.createRow(rowNum++);
+		//add cells 0 to 3
+		cellNum = 0;
+		cell = row.createCell(cellNum++);
+		cell.setCellValue("Sweetie");
+		cell = row.createCell(cellNum++);
+		cell.setCellValue("Dog");
+		cell = row.createCell(cellNum++);
+		cell.setCellValue("Unknown");
+		cell = row.createCell(cellNum++);
+		cell.setCellValue("Female");
+		
+		//row 3
+		row = sheet.createRow(rowNum++);
+		//add cells 0 to 3
+		cellNum = 0;
+		cell = row.createCell(cellNum++);
+		cell.setCellValue("Psycho");
+		cell = row.createCell(cellNum++);
+		cell.setCellValue("Cat");
+		cell = row.createCell(cellNum++);
+		cell.setCellValue(7);
+		cell = row.createCell(cellNum++);
+		cell.setCellValue("Male");
+		
+		//summary info
+		//skip a row and add an average age formula
+		row = sheet.createRow(6);
+		cell = row.createCell(0);
+		cell.setCellValue("Average Age");
+		cell.setCellStyle(boldStyle);
+		cell = row.createCell(2);
+		
+		cell.setCellFormula("AVERAGE(C4:C" + rowNum + ")");
+		cell.setCellStyle(boldCenterStyle);
+		
+		sheet.autoSizeColumn(0);
+
+		//write to a file
+		try (FileOutputStream f = new FileOutputStream(new File("."))) {
+			workbook.write(f);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				workbook.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 
 }
