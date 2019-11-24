@@ -168,6 +168,7 @@ public class Verticle extends AbstractVerticle {
 				
 				SQLConnection connection = ar.result();
 				JsonArray params = new JsonArray().add(bookId);
+				
 				connection.queryWithParams("select id, title, summary from Book where id = ? order by id"
 						, params
 						, result -> {
@@ -299,19 +300,7 @@ public class Verticle extends AbstractVerticle {
 				logger.info("Checking if user is allowed and not expired");
 				
 				SQLConnection connection = ar.result();
-				// Get bearer Authorization heading.
-				String auth_header = context.request().getHeader("Authorization");
-				logger.debug(auth_header);
-				// Check if bearer token header exists
-				String auth_token = "";
-				logger.debug(auth_header.substring(0, 7));
-				if (auth_header.substring(0, 7).equals("Bearer ")){
-					//Trim
-					auth_token = auth_header.substring(7);
-				}
-				logger.debug(auth_token);
-				//JsonArray params = new JsonArray().add(testAllowed);
-				JsonArray params = new JsonArray().add(auth_token);
+				JsonArray params = new JsonArray().add(testAllowed);
 				
 				connection.queryWithParams(queryAllowed
 						, params
@@ -392,8 +381,12 @@ public class Verticle extends AbstractVerticle {
 	}
 
 	public void createExcel() {
+		
+//		select Book.title, Publisher.publisher_name, Book.year_published
+//		From Book, Publisher
+//		WHERE Book.publisher_id = Publisher.id
 		HSSFWorkbook workbook = new HSSFWorkbook();
-		HSSFSheet sheet = workbook.createSheet("Pets");
+		HSSFSheet sheet = workbook.createSheet("LETS COUNT THEM BOOK YEEEAAAH");
 
 		//title row
 		//create a title font
@@ -447,63 +440,46 @@ public class Verticle extends AbstractVerticle {
 		cell.setCellValue("Year Published");
 		cell.setCellStyle(boldCenterStyle);
 		
+		int bookCount=5;
+		int publisherCount=0;
+		int i;
+		String Publisher = "Not Unknown";
+		for(i = 0; i < bookCount; i++ ) {
+			row = sheet.createRow(rowNum++);
+			//add cells 0 to 3
+			cellNum = 0;
+			cell = row.createCell(cellNum++);
+			cell.setCellValue("El Grande" + i*i);
+			cell = row.createCell(cellNum++);
+			cell.setCellValue("Dog" +i);
+			cell = row.createCell(cellNum++);
+			cell.setCellValue(i);
+			
+			if(!("Unknown".equals(Publisher))) {
+				publisherCount++;
+			}
+			
+		}
 		//row 1
-		row = sheet.createRow(rowNum++);
-		//add cells 0 to 3
-		cellNum = 0;
-		cell = row.createCell(cellNum++);
-		cell.setCellValue("El Grande");
-		cell = row.createCell(cellNum++);
-		cell.setCellValue("Dog");
-		cell = row.createCell(cellNum++);
-		cell.setCellValue(5);
-		cell = row.createCell(cellNum++);
-		cell.setCellValue("Male");
-
-		//row 2
-		row = sheet.createRow(rowNum++);
-		//add cells 0 to 3
-		cellNum = 0;
-		cell = row.createCell(cellNum++);
-		cell.setCellValue("Sweetie");
-		cell = row.createCell(cellNum++);
-		cell.setCellValue("Dog");
-		cell = row.createCell(cellNum++);
-		cell.setCellValue("Unknown");
-		cell = row.createCell(cellNum++);
-		cell.setCellValue("Female");
-		
-		//row 3
-		row = sheet.createRow(rowNum++);
-		//add cells 0 to 3
-		cellNum = 0;
-		cell = row.createCell(cellNum++);
-		cell.setCellValue("Psycho");
-		cell = row.createCell(cellNum++);
-		cell.setCellValue("Cat");
-		cell = row.createCell(cellNum++);
-		cell.setCellValue(7);
-		cell = row.createCell(cellNum++);
-		cell.setCellValue("Male");
 		
 		//summary info
 		//skip a row and add an average age formula
-		row = sheet.createRow(6);
+		row = sheet.createRow(3 + i++);
 		cell = row.createCell(0);
 		cell.setCellValue("Total Publisher");
 		cell.setCellStyle(boldStyle);
 		cell = row.createCell(2);
 		
-		cell.setCellFormula("SUM(C4:C" + rowNum + ")");
+		cell.setCellFormula("" +publisherCount );
 		cell.setCellStyle(boldCenterStyle);
 		
-		row = sheet.createRow(7);
+		row = sheet.createRow(3 + i++);
 		cell = row.createCell(0);
 		cell.setCellValue("Total Books");
 		cell.setCellStyle(boldStyle);
 		cell = row.createCell(2);
 		
-		cell.setCellFormula("SUM(C4:C" + rowNum + ")");
+		cell.setCellFormula("" + bookCount);
 		cell.setCellStyle(boldCenterStyle);
 		
 		sheet.autoSizeColumn(0);
