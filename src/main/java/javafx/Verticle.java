@@ -299,7 +299,19 @@ public class Verticle extends AbstractVerticle {
 				logger.info("Checking if user is allowed and not expired");
 				
 				SQLConnection connection = ar.result();
-				JsonArray params = new JsonArray().add(testAllowed);
+				// Get bearer Authorization heading.
+				String auth_header = context.request().getHeader("Authorization");
+				logger.debug(auth_header);
+				// Check if bearer token header exists
+				String auth_token = "";
+				logger.debug(auth_header.substring(0, 7));
+				if (auth_header.substring(0, 7).equals("Bearer ")){
+					//Trim
+					auth_token = auth_header.substring(7);
+				}
+				logger.debug(auth_token);
+				//JsonArray params = new JsonArray().add(testAllowed);
+				JsonArray params = new JsonArray().add(auth_token);
 				
 				connection.queryWithParams(queryAllowed
 						, params
