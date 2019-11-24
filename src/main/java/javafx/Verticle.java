@@ -267,7 +267,7 @@ public class Verticle {
 				if(ar.failed()) {
 					logger.error("Could not open a database connection to get User Login info", ar.cause());
 				} else {
-					logger.info("DBM connection success, now getting Username " + userName );
+					logger.info("DBM connection success, now looking for Username: " + userName );
 					
 					SQLConnection connection = ar.result();
 					JsonArray params = new JsonArray().add(userName).add(userPass);
@@ -277,24 +277,20 @@ public class Verticle {
 								connection.close();
 							
 						if(result.failed()) {
-							logger.error("Username doesn't Exist", result.cause());
+							context.response().setStatusCode(401);
 						}else {
-							List<JsonArray> userRows = result.result().getResults();
 
+							List<JsonArray> userRows = result.result().getResults();
 							JsonObject bookJson = new JsonObject();
 							if(userRows.size() < 1) {
 								context.response().setStatusCode(401);
+								context.response().end("Login Error");
 							} else {
-
 								logger.info("Found " + userName );
 								// CREATING SESSION
 								int rowId = userRows.get(0).getInteger(0);
 								String sha2 = " SHA2( CONCAT( NOW(), 'my secret value' ) , 256)";
-								SimpleDateFormat formatter  = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-								Date date = Calendar.getInstance().getTime();
-								java.sql.Date date_added = new java.sql.Date(date.getTime());
-								
-								
+							
 								logger.info("Creating Session " );
 								JsonArray params2 = new JsonArray();
 								connection.update("INSERT INTO session (user_id, token, expiration) select " + rowId 
@@ -325,9 +321,6 @@ public class Verticle {
 												}
 										});
 								});
-
-								logger.info("Printing Json " );
-								
 							}
 						}
 					});
