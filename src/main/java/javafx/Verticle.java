@@ -27,6 +27,7 @@ public class Verticle {
 
 	private SQLClient dbClient;
 	private Vertx vertx;
+	private String sessionKey;
 	public void stop(Promise<Void> stopPromise) throws Exception {
 
 		logger.info("Stopping verticle...");
@@ -279,6 +280,8 @@ public class Verticle {
 							logger.error("Username doesn't Exist", result.cause());
 						}else {
 							List<JsonArray> userRows = result.result().getResults();
+
+							JsonObject bookJson = new JsonObject();
 							if(userRows.size() < 1) {
 								context.response().setStatusCode(401);
 							} else {
@@ -292,33 +295,41 @@ public class Verticle {
 								java.sql.Date date_added = new java.sql.Date(date.getTime());
 								
 								
-
-								logger.error("Creating Session " );
-//								String createSessionQuery = "INSERT INTO session "
-//										+ "(user_id) "
-//										+ "values(" + 1 + ")";
-								JsonArray params2 = new JsonArray().add(rowId).add(sha2).add(date.getTime());
-//								INSERT INTO session (user_id, token, expiration) select '1', SHA2('String', 256), now()
+								logger.info("Creating Session " );
+								JsonArray params2 = new JsonArray();
 								connection.update("INSERT INTO session (user_id, token, expiration) select " + rowId 
-													+ ", SHA2( CONCAT( NOW(), 'my secret value' ) , 256), NOW()", sessionResult -> { 
-									int newId = sessionResult.result().getKeys().getInteger(0);
-											
-									if(newId==0) {
-										logger.error("Failed Session " + newId );
-									}else {
-										logger.info("Created Session " + newId );	
-									}
-									
+													+ ", SHA2( CONCAT( NOW(), 'my secret value' ) , 256), CURRENT_TIMESTAMP + interval '1' minute", sessionCreate -> { 
+													connection.close();
+										
+										if(sessionCreate.failed()) {
+											logger.error("Failed Create Session ");
+										}else {
+											logger.info("Success Create Session");
+											params2.add(sessionCreate.result().getKeys().getInteger(0));
+										}
+										logger.info("Getting Session " );
+										
+										connection.queryWithParams("SELECT token FROM session WHERE id = ?", params2, sessionResult -> { 
+															connection.close();
+												
+												if(sessionResult.failed()) {
+													logger.error("SELECT Session Failed ");
+												}else {
+													logger.info("SELECT Session Success ");
+													List<JsonObject> sessionRows = sessionResult.result().getRows();
+													bookJson.put("response", "ok");
+													bookJson.put("session token", sessionRows.get(0).getValue("token"));
+
+													output.append(bookJson.toString());
+													context.response().end(output.toString());
+												}
+										});
 								});
 
 								logger.info("Printing Json " );
-								JsonObject bookJson = new JsonObject();
-								bookJson.put("response", "ok");
-								bookJson.put("session token", userRows.get(0).getString(1));
-								output.append(bookJson.toString());
+								
 							}
 						}
-						context.response().end(output.toString());
 					});
 				}
 			});
