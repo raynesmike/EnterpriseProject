@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import io.vertx.core.AbstractVerticle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,7 +23,7 @@ import io.vertx.ext.sql.SQLConnection;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 
-public class Verticle {
+public class Verticle extends AbstractVerticle {
 	private static final Logger logger = LogManager.getLogger();
 
 	private SQLClient dbClient;
@@ -273,7 +274,7 @@ public class Verticle {
 //		permission.permission = 'book report' and session.expiration >now() and permission.allowed = 1
 
 		String queryAllowed = "SELECT permission.allowed FROM permission inner join session on permission.user_id = session.user_id "
-				+ "WHERE session.token = '?' and "
+				+ "WHERE session.token = ? and "
 				+ "permission.permission = 'book report' and session.expiration >now() and permission.allowed = 1";
 		
 		context.response().putHeader("Content-Type", "text/html");
@@ -302,13 +303,15 @@ public class Verticle {
 					}else {
 					
 						List<JsonArray> allowed = allowedResult.result().getResults();
-						logger.info("CHECKING STATUS " + allowed.get(0).getInteger(1));
+						logger.debug(allowed);
+						//logger.info("CHECKING STATUS " + allowed.get(0).getInteger(1));
 						if(allowed.size() < 1) {
 							context.response().setStatusCode(401);
 							context.response().end("User is Not Allowed");
 						} else {
 							logger.info("User is Allowed ");
 							System.out.println(allowedResult.result().getResults().toString());
+							context.response().setStatusCode(200);
 							context.response().end("LOGIN SUCCESS");
 						}
 					}
