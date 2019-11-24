@@ -27,7 +27,7 @@ public class Verticle {
 
 	private SQLClient dbClient;
 	private Vertx vertx;
-	private String sessionKey;
+	private String currentSessionKey;
 	public void stop(Promise<Void> stopPromise) throws Exception {
 
 		logger.info("Stopping verticle...");
@@ -49,21 +49,6 @@ public class Verticle {
 				startPromise.fail(ar.cause());
 			}
 		});
-
-		/*
-		vertx.createHttpServer().requestHandler(req -> {
-			req.response()
-			.putHeader("content-type", "text/plain")
-			.end("Hello from Vert.x!");
-		}).listen(8888, http -> {
-			if(http.succeeded()) {
-				startPromise.complete();
-				System.out.println("HTTP server started on port 8888");
-			} else {
-				startPromise.fail(http.cause());
-			}
-		});
-		 */
 	}
 
 	private Future<Void> prepareDatabase() {
@@ -79,33 +64,6 @@ public class Verticle {
 				.put("database", "ouo655");
 		//SQLClient mySQLClient 
 		dbClient = MySQLClient.createShared(vertx, mySQLClientConfig);
-
-		/*
-		dbClient = JDBCClient.createShared(vertx, new JsonObject()  (1)
-				.put("url", "jdbc:hsqldb:file:db/wiki")   (2)
-				.put("driver_class", "org.hsqldb.jdbcDriver")   (3)
-				.put("max_pool_size", 30));   (4)
-
-				dbClient.getConnection(ar -> {
-					if (ar.failed()) {
-						logger.error("Could not open a database connection", ar.cause());
-						promise.fail(ar.cause());
-					} else {
-
-						SQLConnection connection = ar.result();
-						connection.execute(SQL_CREATE_PAGES_TABLE, create -> {
-							connection.close();   (8)
-							if (create.failed()) {
-								LOGGER.error("Database preparation error", create.cause());
-								promise.fail(create.cause());
-							} else {
-								promise.complete();  (9)
-							}
-						});
-
-					}
-				});
-		 */
 		promise.complete();
 		return promise.future();
 	}
@@ -123,17 +81,7 @@ public class Verticle {
 
 		router.get("/login").handler(this::login);
 		router.get("/reports/bookdetail").handler(this::reports);
-
-
-
-		//router.get("/wiki/:page").handler(this::pageRenderingHandler);
-		//router.post().handler(BodyHandler.create());
-		//router.post("/save").handler(this::pageUpdateHandler);
-		//router.post("/create").handler(this::pageCreateHandler);
-		//router.post("/delete").handler(this::pageDeletionHandler);
-
-		//templateEngine = FreeMarkerTemplateEngine.create(vertx);
-
+		
 		server
 		.requestHandler(router)
 		.listen(8888, ar -> {
@@ -151,15 +99,7 @@ public class Verticle {
 
 	
 	private void indexHandler(RoutingContext context) {
-		//context.put("title", "Wiki home");
-		//context.put("pages", "help");
-		//context.request().getHeader("Authorization");
-		
 		context.response().putHeader("Content-Type", "text/html");
-		//context.response().end("<h1>Hello world</h1>");
-		//if(true) {
-		//	return;
-		//}
 		StringBuilder output = new StringBuilder();
 		
 		dbClient.getConnection(ar -> {
@@ -182,16 +122,6 @@ public class Verticle {
 					} else {
 						// promise.complete();
 						List<JsonArray> rows = result.result().getResults();
-							
-						/*
-								.getResults()
-								.stream()
-								.map(json -> json.getString(0))
-								.sorted()
-								.collect(Collectors.toList());
-								*/
-						//output.append((new JsonObject().put("rows", new JsonArray(rows)).toString()));
-						
 						logger.info("Iterating over rows of length " + rows.size() + "...");
 
 						output.append("<table>");
@@ -294,7 +224,7 @@ public class Verticle {
 								logger.info("Creating Session " );
 								JsonArray params2 = new JsonArray();
 								connection.update("INSERT INTO session (user_id, token, expiration) select " + rowId 
-													+ ", SHA2( CONCAT( NOW(), 'my secret value' ) , 256), CURRENT_TIMESTAMP + interval '1' minute", sessionCreate -> { 
+													+ ", SHA2( CONCAT( NOW(), 'my secret value' ) , 256), CURRENT_TIMESTAMP + interval '100' minute", sessionCreate -> { 
 													connection.close();
 										
 										if(sessionCreate.failed()) {
@@ -304,6 +234,8 @@ public class Verticle {
 											params2.add(sessionCreate.result().getKeys().getInteger(0));
 										}
 										logger.info("Getting Session " );
+										
+//										
 										
 										connection.queryWithParams("SELECT token FROM session WHERE id = ?", params2, sessionResult -> { 
 															connection.close();
@@ -315,7 +247,8 @@ public class Verticle {
 													List<JsonObject> sessionRows = sessionResult.result().getRows();
 													bookJson.put("response", "ok");
 													bookJson.put("session token", sessionRows.get(0).getValue("token"));
-
+													currentSessionKey = sessionRows.get(0).getValue("token").toString();
+													
 													output.append(bookJson.toString());
 													context.response().end(output.toString());
 												}
@@ -326,26 +259,60 @@ public class Verticle {
 					});
 				}
 			});
+			
 	}
-
-	public void garbage() {
+	
+	private void reports(RoutingContext context) {
+//		System.out.println(currentSessionKey + "@@@@@@@@");
+		
+		String testAllowed = "a12724dadb3f5bfca81d0176f82c16e5f965be36ac4c88faf933b9ae4ae3fe18"; //Bob is allowed and not expired session
+		String testNotAllowed = "5a0435a71c8a2db0a59309acc3b4d1c0994ed4d5b65ca336abf74697fabd008c"; // sue is not allowed even with session
+		String queryAllowed = "SELECT permission.allowed FROM permission inner join session on permission.user_id = session.user_id "
+				+ "WHERE session.token = '?' and "
+				+ "permission.permission = 'book report' and session.expiration >now() and permission.allowed = 1";
+		
+		context.response().putHeader("Content-Type", "text/html");
+		StringBuilder output = new StringBuilder();
+		
 		dbClient.getConnection(ar -> {
-			if(ar.succeeded()) {
+			if(ar.failed()) {
+				logger.error("Could not open a database connection", ar.cause());
+			} else {
+				
+				logger.info("Checking if user is allowed and not expired");
+				
 				SQLConnection connection = ar.result();
-				JsonArray params = new JsonArray().add(1);
-				connection.queryWithParams("select * from stuff where id = ?", params, fetchResult -> {
-					List<JsonObject> rows = fetchResult.result().getRows();
-					for(JsonObject row : rows) {
-						int rowId = row.getInteger("id");
-						connection.update("insert into some_table (row_id) values ( " + rowId + ") ", insertResult -> {
-							int newId = insertResult.result().getKeys().getInteger(0);
-						});
+				JsonArray params = new JsonArray().add(testNotAllowed);
+				connection.queryWithParams(queryAllowed
+						, params
+						, allowedResult -> {
+							connection.close();
+					if(allowedResult.failed()) {
+						logger.error("Error: Can't Read Allowed Allowed");
+						context.response().setStatusCode(401);
+						context.response().end("Login Error");
+						
+					}else {
+					
+						List<JsonArray> allowed = allowedResult.result().getResults();
+						if(allowed.size() < 1) {
+							logger.info("User is Not Allowed ");
+							context.response().end("User is Not Allowed");
+						} else {
+							logger.info("User is Allowed ");
+							System.out.println(allowedResult.result().getResults().toString());
+							context.response().end("LOGIN SUCCESS");
+						}
 					}
 				});
+				
+				
+				
+			
+
 			}
 		});
-	}
-	private void reports(RoutingContext context) {
+//		indexHandler(context);
 //		HttpServer httpServer = vertx.createHttpServer();
 //		
 //		Router router = Router.router(vertx);
@@ -371,5 +338,24 @@ public class Verticle {
 //			.requestHandler(router::accept)
 //			.listen(8888);
 	}
+
+	public void garbage() {
+		dbClient.getConnection(ar -> {
+			if(ar.succeeded()) {
+				SQLConnection connection = ar.result();
+				JsonArray params = new JsonArray().add(1);
+				connection.queryWithParams("select * from stuff where id = ?", params, fetchResult -> {
+					List<JsonObject> rows = fetchResult.result().getRows();
+					for(JsonObject row : rows) {
+						int rowId = row.getInteger("id");
+						connection.update("insert into some_table (row_id) values ( " + rowId + ") ", insertResult -> {
+							int newId = insertResult.result().getKeys().getInteger(0);
+						});
+					}
+				});
+			}
+		});
+	}
+
 
 }
