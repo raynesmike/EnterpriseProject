@@ -235,8 +235,6 @@ public class Verticle {
 										}
 										logger.info("Getting Session " );
 										
-//										
-										
 										connection.queryWithParams("SELECT token FROM session WHERE id = ?", params2, sessionResult -> { 
 															connection.close();
 												
@@ -265,8 +263,15 @@ public class Verticle {
 	private void reports(RoutingContext context) {
 //		System.out.println(currentSessionKey + "@@@@@@@@");
 		
-		String testAllowed = "a12724dadb3f5bfca81d0176f82c16e5f965be36ac4c88faf933b9ae4ae3fe18"; //Bob is allowed and not expired session
-		String testNotAllowed = "5a0435a71c8a2db0a59309acc3b4d1c0994ed4d5b65ca336abf74697fabd008c"; // sue is not allowed even with session
+		String testAllowed = "f6ec20ec615f3030e227ce1d2a64bf40fc5d1871696bcff1a05af3c952d86dc8"; //Bob is allowed and not expired session
+		String testNotAllowed = "2629902373a6c284035a7cbe8d93fcd2313698ab63c8e97946c94d044db2f320"; // sue is not allowed even with session
+//		SELECT permission.allowed FROM permission inner join session on permission.user_id = session.user_id 
+//		WHERE session.token = 'f6ec20ec615f3030e227ce1d2a64bf40fc5d1871696bcff1a05af3c952d86dc8' and 
+//		permission.permission = 'book report' and session.expiration >now() and permission.allowed = 1
+//		SELECT permission.allowed FROM permission inner join session on permission.user_id = session.user_id 
+//		WHERE session.token = 'f6ec20ec615f3030e227ce1d2a64bf40fc5d1871696bcff1a05af3c952d86dc8' and 
+//		permission.permission = 'book report' and session.expiration >now() and permission.allowed = 1
+
 		String queryAllowed = "SELECT permission.allowed FROM permission inner join session on permission.user_id = session.user_id "
 				+ "WHERE session.token = '?' and "
 				+ "permission.permission = 'book report' and session.expiration >now() and permission.allowed = 1";
@@ -282,11 +287,13 @@ public class Verticle {
 				logger.info("Checking if user is allowed and not expired");
 				
 				SQLConnection connection = ar.result();
-				JsonArray params = new JsonArray().add(testNotAllowed);
+				JsonArray params = new JsonArray().add(testAllowed);
+				
 				connection.queryWithParams(queryAllowed
 						, params
 						, allowedResult -> {
 							connection.close();
+							
 					if(allowedResult.failed()) {
 						logger.error("Error: Can't Read Allowed Allowed");
 						context.response().setStatusCode(401);
@@ -295,8 +302,9 @@ public class Verticle {
 					}else {
 					
 						List<JsonArray> allowed = allowedResult.result().getResults();
+						logger.info("CHECKING STATUS " + allowed.get(0).getInteger(1));
 						if(allowed.size() < 1) {
-							logger.info("User is Not Allowed ");
+							context.response().setStatusCode(401);
 							context.response().end("User is Not Allowed");
 						} else {
 							logger.info("User is Allowed ");
@@ -305,9 +313,6 @@ public class Verticle {
 						}
 					}
 				});
-				
-				
-				
 			
 
 			}
