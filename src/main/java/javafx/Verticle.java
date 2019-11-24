@@ -35,6 +35,7 @@ import io.vertx.ext.web.RoutingContext;
 
 public class Verticle extends AbstractVerticle {
 	private static final Logger logger = LogManager.getLogger();
+	private static final String DEST_FILE_PATH = "excel.xls";
 
 	private SQLClient dbClient;
 	private Vertx vertx;
@@ -395,7 +396,7 @@ public class Verticle extends AbstractVerticle {
 		
 		Row row = sheet.createRow(0);
 		Cell cell = row.createCell(0);
-		cell.setCellValue("Pet Sitters Anonymous, Inc.");
+		cell.setCellValue("Publishers & Books");
 		cell.setCellStyle(titleStyle);
 		
 		//row indexes are base 0 of course
@@ -423,19 +424,17 @@ public class Verticle extends AbstractVerticle {
 		//add cells 0 to 3
 		int cellNum = 0;
 		cell = row.createCell(cellNum++);
-		cell.setCellValue("Pet Name");
+		cell.setCellValue("Book Title");
 		cell.setCellStyle(boldStyle);
 
 		cell = row.createCell(cellNum++);
-		cell.setCellValue("Pet Type");
+		cell.setCellValue("Publisher");
 		cell.setCellStyle(boldStyle);
+		
 		cell = row.createCell(cellNum++);
-		cell.setCellValue("Age");
+		cell.setCellValue("Year Published");
 		cell.setCellStyle(boldCenterStyle);
-		cell = row.createCell(cellNum++);
-		cell.setCellValue("Gender");
-		cell.setCellStyle(boldStyle);
-
+		
 		//row 1
 		row = sheet.createRow(rowNum++);
 		//add cells 0 to 3
@@ -479,17 +478,26 @@ public class Verticle extends AbstractVerticle {
 		//skip a row and add an average age formula
 		row = sheet.createRow(6);
 		cell = row.createCell(0);
-		cell.setCellValue("Average Age");
+		cell.setCellValue("Total Publisher");
 		cell.setCellStyle(boldStyle);
 		cell = row.createCell(2);
 		
-		cell.setCellFormula("AVERAGE(C4:C" + rowNum + ")");
+		cell.setCellFormula("SUM(C4:C" + rowNum + ")");
+		cell.setCellStyle(boldCenterStyle);
+		
+		row = sheet.createRow(7);
+		cell = row.createCell(0);
+		cell.setCellValue("Total Books");
+		cell.setCellStyle(boldStyle);
+		cell = row.createCell(2);
+		
+		cell.setCellFormula("SUM(C4:C" + rowNum + ")");
 		cell.setCellStyle(boldCenterStyle);
 		
 		sheet.autoSizeColumn(0);
 
 		//write to a file
-		try (FileOutputStream f = new FileOutputStream(new File("."))) {
+		try (FileOutputStream f = new FileOutputStream(new File(DEST_FILE_PATH))) {
 			workbook.write(f);
 		} catch (IOException e) {
 			e.printStackTrace();
