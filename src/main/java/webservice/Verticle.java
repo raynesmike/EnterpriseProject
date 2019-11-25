@@ -1,4 +1,4 @@
-package javafx;
+package webservice;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -242,7 +242,7 @@ public class Verticle extends AbstractVerticle {
 								logger.info("Creating Session " );
 								JsonArray params2 = new JsonArray();
 								connection.update("INSERT INTO session (user_id, token, expiration) select " + rowId 
-													+ ", SHA2( CONCAT( NOW(), 'my secret value' ) , 256), CURRENT_TIMESTAMP + interval '100' minute", sessionCreate -> { 
+													+ ", SHA2( CONCAT( NOW(), 'my secret value' ) , 256), CURRENT_TIMESTAMP + interval '1' minute", sessionCreate -> {
 													connection.close();
 										
 										if(sessionCreate.failed()) {
@@ -279,7 +279,6 @@ public class Verticle extends AbstractVerticle {
 	}
 	
 	private void reports(RoutingContext context) {
-//		System.out.println(currentSessionKey + "@@@@@@@@");
 		
 		String testAllowed = "16c3bb6f425a2e0b0d54876cd52399884ec7170892699ae1fd707d3ecf2fd7b9"; //Bob is allowed and not expired session
 		String testNotAllowed = "2629902373a6c284035a7cbe8d93fcd2313698ab63c8e97946c94d044db2f320"; // sue is not allowed even with session
@@ -356,12 +355,6 @@ public class Verticle extends AbstractVerticle {
 									List<JsonArray> rows = result.result().getResults();
 									logger.info("Iterating over rows of length " + rows.size() + "...");
 
-//									output.append("<table>");
-//									for(JsonArray row : rows) {
-//										output.append("<tr><td>" + row.getString(0) + row.getString(1) + row.getInteger(2) + "</td></tr>");
-//										//logger.info(row.toString());
-//									}
-//									output.append("</table>");
 									createExcel(rows);
 								}
 								
@@ -371,8 +364,6 @@ public class Verticle extends AbstractVerticle {
                                 context.response().sendFile(DEST_FILE_PATH);
 
 							});
-							
-//							
 						}
 					}
 				});
