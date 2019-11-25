@@ -218,7 +218,8 @@ public class Verticle extends AbstractVerticle {
 					
 					SQLConnection connection = ar.result();
 					JsonArray params = new JsonArray().add(userName).add(userPass);
-					connection.queryWithParams("SELECT * FROM User WHERE username = ? and password_hash in (select sha2(?, 256))"
+					//connection.queryWithParams("SELECT * FROM User WHERE username = ? and password_hash in (select sha2(?, 256))"
+                    connection.queryWithParams("SELECT * FROM User WHERE username = ? and password_hash = ?"
 							, params
 							, result -> {
 								connection.close();
@@ -314,8 +315,8 @@ public class Verticle extends AbstractVerticle {
 					}
 				}
 				logger.debug(auth_token);
+				JsonArray params = new JsonArray().add(auth_token);
 				//JsonArray params = new JsonArray().add(testAllowed);
-				JsonArray params = new JsonArray().add(testAllowed);
 
 				
 				connection.queryWithParams(queryAllowed
@@ -364,7 +365,10 @@ public class Verticle extends AbstractVerticle {
 									createExcel(rows);
 								}
 								
-								context.response().end(output.toString());
+								//context.response().end(output.toString());
+                                context.response().putHeader("Content-Type", "application/vnd.ms-excel");
+                                context.response().putHeader("Content-Disposition", "attachment; filename=" + DEST_FILE_PATH);
+                                context.response().sendFile(DEST_FILE_PATH);
 
 							});
 							
