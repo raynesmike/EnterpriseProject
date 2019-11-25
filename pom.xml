@@ -21,6 +21,7 @@
 
 		<vertx.version>3.8.1</vertx.version>
 		<junit-jupiter.version>5.4.0</junit-jupiter.version>
+		<main.verticle>javafx.TestVerticle</main.verticle>
     </properties>
 	
 	<dependencyManagement>
@@ -221,7 +222,7 @@
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>libs/</classpathPrefix>
                             <mainClass>
-                                webservice.AbstractMain
+                                javafx.TestVerticle
                             </mainClass>
                         </manifest>
                     </archive>
