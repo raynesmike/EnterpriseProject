@@ -52,6 +52,8 @@ public class Verticle extends AbstractVerticle {
 	public void start(Promise<Void> startPromise) throws Exception {
 		logger.info("Starting verticle...");
 		vertx = Vertx.vertx();
+		RoutingContext context = null;
+		
 
 		Future<Void> steps = prepareDatabase().compose(v -> startHttpServer());
 		steps.setHandler(ar -> { 
@@ -278,12 +280,6 @@ public class Verticle extends AbstractVerticle {
 		
 		String testAllowed = "f6ec20ec615f3030e227ce1d2a64bf40fc5d1871696bcff1a05af3c952d86dc8"; //Bob is allowed and not expired session
 		String testNotAllowed = "2629902373a6c284035a7cbe8d93fcd2313698ab63c8e97946c94d044db2f320"; // sue is not allowed even with session
-//		SELECT permission.allowed FROM permission inner join session on permission.user_id = session.user_id 
-//		WHERE session.token = 'f6ec20ec615f3030e227ce1d2a64bf40fc5d1871696bcff1a05af3c952d86dc8' and 
-//		permission.permission = 'book report' and session.expiration >now() and permission.allowed = 1
-//		SELECT permission.allowed FROM permission inner join session on permission.user_id = session.user_id 
-//		WHERE session.token = 'f6ec20ec615f3030e227ce1d2a64bf40fc5d1871696bcff1a05af3c952d86dc8' and 
-//		permission.permission = 'book report' and session.expiration >now() and permission.allowed = 1
 
 		String queryAllowed = "SELECT permission.allowed FROM permission inner join session on permission.user_id = session.user_id "
 				+ "WHERE session.token = ? and "
@@ -300,7 +296,7 @@ public class Verticle extends AbstractVerticle {
 				logger.info("Checking if user is allowed and not expired");
 				
 				SQLConnection connection = ar.result();
-				JsonArray params = new JsonArray().add(testAllowed);
+				JsonArray params = new JsonArray().add("df3e90a202d54cb114ad0bdee9d425f0451fa68dd9bbddafad009b30d046b35b");
 				
 				connection.queryWithParams(queryAllowed
 						, params
@@ -325,9 +321,34 @@ public class Verticle extends AbstractVerticle {
 							context.response().end("User is Not Allowed");
 						} else {
 							logger.info("User is Allowed ");
-							System.out.println(allowedResult.result().getResults().toString());
-							context.response().setStatusCode(200);
-							context.response().end("LOGIN SUCCESS");
+							
+							connection.query("SELECT Book.title, Publisher.publisher_name, Book.year_published "
+									+ "FROM Book, Publisher "
+									+ "WHERE Book.publisher_id = Publisher.id order by publisher_name", result -> {
+								connection.close();
+								
+								if(result.failed()) {
+									logger.error("Database preparation error", result.cause());
+									// promise.fail(create.cause());
+								} else {
+									// promise.complete();
+									List<JsonArray> rows = result.result().getResults();
+									logger.info("Iterating over rows of length " + rows.size() + "...");
+
+//									output.append("<table>");
+//									for(JsonArray row : rows) {
+//										output.append("<tr><td>" + row.getString(0) + row.getString(1) + row.getInteger(2) + "</td></tr>");
+//										//logger.info(row.toString());
+//									}
+//									output.append("</table>");
+									createExcel(rows);
+								}
+								
+								context.response().end(output.toString());
+
+							});
+							
+//							
 						}
 					}
 				});
@@ -335,56 +356,11 @@ public class Verticle extends AbstractVerticle {
 
 			}
 		});
-//		indexHandler(context);
-//		HttpServer httpServer = vertx.createHttpServer();
-//		
-//		Router router = Router.router(vertx);
-
-//		Route handler2 = router
-//		.get("/reports/bookdetail")
-//		.handler(routingContext -> {
-//			System.out.println("Came to say hello");
-//			HttpServerResponse response = routingContext.response();
-//			response.setChunked(true);
-//			response.write("Hello Michael");
-//			response.putHeader("Content-Type", "application/vnd.ms-excel");
-////			response.putHeader("Content-Disposition", "attachment; filename=book_report.xls");
-//			//text/json
-////			response.putHeader("content-type", "text/plain");
-//			
-//			//response.end("Hello World");
-//			response.end();
-//		});
-//
-//
-//httpServer
-//			.requestHandler(router::accept)
-//			.listen(8888);
-	}
-
-	public void garbage() {
-		dbClient.getConnection(ar -> {
-			if(ar.succeeded()) {
-				SQLConnection connection = ar.result();
-				JsonArray params = new JsonArray().add(1);
-				connection.queryWithParams("select * from stuff where id = ?", params, fetchResult -> {
-					List<JsonObject> rows = fetchResult.result().getRows();
-					for(JsonObject row : rows) {
-						int rowId = row.getInteger("id");
-						connection.update("insert into some_table (row_id) values ( " + rowId + ") ", insertResult -> {
-							int newId = insertResult.result().getKeys().getInteger(0);
-						});
-					}
-				});
-			}
-		});
-	}
-
-	public void createExcel() {
 		
-//		select Book.title, Publisher.publisher_name, Book.year_published
-//		From Book, Publisher
-//		WHERE Book.publisher_id = Publisher.id
+	}
+
+	public void createExcel(List<JsonArray> rows) {
+//		
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet = workbook.createSheet("LETS COUNT THEM BOOK YEEEAAAH");
 
@@ -440,32 +416,32 @@ public class Verticle extends AbstractVerticle {
 		cell.setCellValue("Year Published");
 		cell.setCellStyle(boldCenterStyle);
 		
-		int bookCount=5;
+		int bookCount=0;
 		int publisherCount=0;
-		int i;
-		String Publisher = "Not Unknown";
-		for(i = 0; i < bookCount; i++ ) {
+		int i=0;
+		
+		for(JsonArray book : rows) {
 			row = sheet.createRow(rowNum++);
-			//add cells 0 to 3
 			cellNum = 0;
 			cell = row.createCell(cellNum++);
-			cell.setCellValue("El Grande" + i*i);
+			cell.setCellValue(book.getString(0));
 			cell = row.createCell(cellNum++);
-			cell.setCellValue("Dog" +i);
+			cell.setCellValue(book.getString(1));
 			cell = row.createCell(cellNum++);
-			cell.setCellValue(i);
+			cell.setCellValue(book.getInteger(2));
 			
-			if(!("Unknown".equals(Publisher))) {
+			if(!("Unknown".equals(book.getString(1)))) {
 				publisherCount++;
 			}
+			i++;
+			bookCount++;
+		}
+		
+		for(i = 0; i < bookCount; i++ ) {
 			
 		}
-		//row 1
-		
-		//summary info
-		//skip a row and add an average age formula
-		row = sheet.createRow(3 + i++);
-		cell = row.createCell(0);
+		row = sheet.createRow(4 + i++);
+		cell = row.createCell(0);;
 		cell.setCellValue("Total Publisher");
 		cell.setCellStyle(boldStyle);
 		cell = row.createCell(2);
@@ -473,7 +449,7 @@ public class Verticle extends AbstractVerticle {
 		cell.setCellFormula("" +publisherCount );
 		cell.setCellStyle(boldCenterStyle);
 		
-		row = sheet.createRow(3 + i++);
+		row = sheet.createRow(4 + i++);
 		cell = row.createCell(0);
 		cell.setCellValue("Total Books");
 		cell.setCellStyle(boldStyle);
