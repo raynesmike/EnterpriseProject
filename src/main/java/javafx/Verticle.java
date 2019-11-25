@@ -40,6 +40,8 @@ public class Verticle extends AbstractVerticle {
 	private SQLClient dbClient;
 	private Vertx vertx;
 	private String currentSessionKey;
+
+	@Override
 	public void stop(Promise<Void> stopPromise) throws Exception {
 
 		logger.info("Stopping verticle...");
@@ -48,7 +50,7 @@ public class Verticle extends AbstractVerticle {
 
 		stopPromise.complete();
 	}
-	
+	@Override
 	public void start(Promise<Void> startPromise) throws Exception {
 		logger.info("Starting verticle...");
 		vertx = Vertx.vertx();
@@ -168,7 +170,7 @@ public class Verticle extends AbstractVerticle {
 				
 				SQLConnection connection = ar.result();
 				JsonArray params = new JsonArray().add(bookId);
-				
+
 				connection.queryWithParams("select id, title, summary from Book where id = ? order by id"
 						, params
 						, result -> {
@@ -300,7 +302,23 @@ public class Verticle extends AbstractVerticle {
 				logger.info("Checking if user is allowed and not expired");
 				
 				SQLConnection connection = ar.result();
-				JsonArray params = new JsonArray().add(testAllowed);
+				// Get bearer Authorization heading.
+				String auth_header = context.request().getHeader("Authorization");
+				String auth_token = "";
+				if (auth_header != null) {
+					logger.debug(auth_header);
+					// Check if bearer token header exists
+					logger.debug(auth_header.substring(0, 7));
+					if (auth_header.substring(0, 7).equals("Bearer ")) {
+						//Trim
+						auth_token = auth_header.substring(7);
+					} else {
+						logger.warn("Authorization token did not parse (no 'bearer ' in the beginning of the field)");
+					}
+				}
+				logger.debug(auth_token);
+				//JsonArray params = new JsonArray().add(testAllowed);
+				JsonArray params = new JsonArray().add(auth_token);
 				
 				connection.queryWithParams(queryAllowed
 						, params
@@ -381,7 +399,7 @@ public class Verticle extends AbstractVerticle {
 	}
 
 	public void createExcel() {
-		
+
 //		select Book.title, Publisher.publisher_name, Book.year_published
 //		From Book, Publisher
 //		WHERE Book.publisher_id = Publisher.id
@@ -454,11 +472,11 @@ public class Verticle extends AbstractVerticle {
 			cell.setCellValue("Dog" +i);
 			cell = row.createCell(cellNum++);
 			cell.setCellValue(i);
-			
+
 			if(!("Unknown".equals(Publisher))) {
 				publisherCount++;
 			}
-			
+
 		}
 		//row 1
 		
