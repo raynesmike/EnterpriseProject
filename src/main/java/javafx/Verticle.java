@@ -280,7 +280,7 @@ public class Verticle extends AbstractVerticle {
 	private void reports(RoutingContext context) {
 //		System.out.println(currentSessionKey + "@@@@@@@@");
 		
-		String testAllowed = "f6ec20ec615f3030e227ce1d2a64bf40fc5d1871696bcff1a05af3c952d86dc8"; //Bob is allowed and not expired session
+		String testAllowed = "16c3bb6f425a2e0b0d54876cd52399884ec7170892699ae1fd707d3ecf2fd7b9"; //Bob is allowed and not expired session
 		String testNotAllowed = "2629902373a6c284035a7cbe8d93fcd2313698ab63c8e97946c94d044db2f320"; // sue is not allowed even with session
 
 		String queryAllowed = "SELECT permission.allowed FROM permission inner join session on permission.user_id = session.user_id "
@@ -299,7 +299,6 @@ public class Verticle extends AbstractVerticle {
 				
 				SQLConnection connection = ar.result();
 
-				JsonArray params = new JsonArray().add(currentSessionKey);
 				// Get bearer Authorization heading.
 				String auth_header = context.request().getHeader("Authorization");
 				String auth_token = "";
@@ -316,7 +315,7 @@ public class Verticle extends AbstractVerticle {
 				}
 				logger.debug(auth_token);
 				//JsonArray params = new JsonArray().add(testAllowed);
-				JsonArray params = new JsonArray().add(auth_token);
+				JsonArray params = new JsonArray().add(testAllowed);
 
 				
 				connection.queryWithParams(queryAllowed
