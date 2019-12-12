@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import webservice.TestVerticle;
 
 public class Main extends Application {
 	private static Logger logger = LogManager.getLogger();
@@ -35,11 +36,13 @@ public class Main extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		logger.info("@Main start()");
+		
 		//init the view
 		FXMLLoader loader = new FXMLLoader(this.getClass().getResource("view/main_view.fxml"));
 		
 		//init the controller 
 		MyController controller = new MyController();
+
 		
 		//assign to loader
 		loader.setController(controller);
@@ -55,9 +58,9 @@ public class Main extends Application {
 		logger.debug("HERE");
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		logger.info("@Main Starts Here()");
-		
+		TestVerticle.main(args);
 		launch(args);
 	}
 

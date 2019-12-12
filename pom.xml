@@ -125,6 +125,18 @@
 			<artifactId>itextpdf</artifactId>
 			<version>5.5.13.1</version>
 		</dependency>
+		
+				<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.10</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>4.1.0</version>
+		</dependency>
 
     </dependencies>
 
