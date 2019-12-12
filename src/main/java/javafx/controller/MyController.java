@@ -96,6 +96,7 @@ public class MyController implements Initializable{
 		if(source == reportsBookDetail) {
 			logger.info("reporting BOOK");
 			Login.report(MainController.getSessionToken());
+			return;
 		}
 
 	}

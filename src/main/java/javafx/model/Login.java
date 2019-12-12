@@ -32,25 +32,25 @@ public class Login {
 	public static String token;
 
 	private static Login instance = null;
-	
+
 	public static Login getInstance() {
-		if(instance == null)
+		if (instance == null)
 			instance = new Login();
 		return instance;
 	}
-	
+
 	public boolean login(String user, String password) {
-		
+
 		String hashPw = sha256(password);
 		logger.info("hashPw: " + hashPw);
-		String link = String.format("http://localhost:8888/login?username=%s&password=%s", user, hashPw); 
+		String link = String.format("http://localhost:8888/login?username=%s&password=%s", user, hashPw);
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		HttpGet httpGet = new HttpGet(link);
-		
+
 		try {
 			CloseableHttpResponse response = httpclient.execute(httpGet);
-			
-			if(response.getStatusLine().getStatusCode() == 401) {
+
+			if (response.getStatusLine().getStatusCode() == 401) {
 				return false;
 			}
 			String result = EntityUtils.toString(response.getEntity());
@@ -61,24 +61,24 @@ public class Login {
 
 			// This is bad, but whatever.
 			// Checks if "response" section is "ok", returns false otherwise.
-			String resToken = arr[1].substring(0,2);
+			String resToken = arr[1].substring(0, 2);
 			logger.debug(resToken);
-			
+
 			token = arr[2].substring(0, arr[2].length() - 2);
-			
+
 			logger.info("Token:" + token);
 
 			// Store the session token in MainController, since it's a singleton.
 			MainController.setSessionToken(token);
-			
+
 			response.close();
 			httpclient.close();
-					
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
-		
+		}
+
 		return true;
 	}
 
@@ -86,28 +86,32 @@ public class Login {
 		String url = String.format("http://localhost:8888/reports/bookdetail");
 		CloseableHttpClient hClients = HttpClients.createDefault();
 		HttpGet httpget = new HttpGet(url);
-		
+
 		httpget.setHeader("Authorization", "Bearer " + token);
 
+		logger.debug(token);
 		try {
 			CloseableHttpResponse res = hClients.execute(httpget);
 
-			if(res.getStatusLine().getStatusCode() == 401) {
+			if (res.getStatusLine().getStatusCode() == 401) {
 				LoginDialog.errorLogin();
 				return false;
 			}
+			String value = res.getFirstHeader("Content-Disposition").getValue();
+			String filename = value.substring(value.lastIndexOf('=')+1);
 			FileChooser fc = new FileChooser();
+			fc.setInitialFileName(filename);
 			fc.setTitle("Save File");
 			File file = fc.showSaveDialog(null);
 
 
-			if(file != null) {
-			  	String value = res.getFirstHeader("Content-Disposition").getValue();
-			    String fileName = file.getAbsolutePath();
+			if (file != null) {
 
-			    FileOutputStream output = new FileOutputStream(fileName);
-			    res.getEntity().writeTo(output);
-			    output.close();
+				String fileName = file.getAbsolutePath();
+
+				FileOutputStream output = new FileOutputStream(fileName);
+				res.getEntity().writeTo(output);
+				output.close();
 			}
 
 			res.close();
@@ -120,55 +124,40 @@ public class Login {
 		return true;
 	}
 
-    /*
+	/*
     Shamelessly ripped from demo code
     Since this is the only class that needs to compute a hash,
     it will stay here for now.
      */
-    final protected static char[] hexArray = "0123456789abcdef".toCharArray();
-    public static String bytesToHex(byte[] bytes) {
-        char[] hexChars = new char[bytes.length * 2];
-        int v;
-        for ( int j = 0; j < bytes.length; j++ ) {
-            v = bytes[j] & 0xFF;
-            hexChars[j * 2] = hexArray[v >>> 4];
-            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
-        }
-        return new String(hexChars);
-    }
+	final protected static char[] hexArray = "0123456789abcdef".toCharArray();
 
-    public static String sha256(String msg) {
-        //calc and return sha 256 digest of message
-        if(msg == null || msg.length() < 1)
-            return null;
-        String h = null;
+	public static String bytesToHex(byte[] bytes) {
+		char[] hexChars = new char[bytes.length * 2];
+		int v;
+		for (int j = 0; j < bytes.length; j++) {
+			v = bytes[j] & 0xFF;
+			hexChars[j * 2] = hexArray[v >>> 4];
+			hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+		}
+		return new String(hexChars);
+	}
 
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            md.update(msg.getBytes(Charset.forName("UTF-8")));
-            byte[] hash = md.digest();
+	public static String sha256(String msg) {
+		//calc and return sha 256 digest of message
+		if (msg == null || msg.length() < 1)
+			return null;
+		String h = null;
 
-            h = bytesToHex(hash);
+		try {
+			MessageDigest md = MessageDigest.getInstance("SHA-256");
+			md.update(msg.getBytes(Charset.forName("UTF-8")));
+			byte[] hash = md.digest();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return h;
-    }
-//	
-//	public String getHash() {
-//		return hash;
-//	}
-//
-//	public void setHash(String hash) {
-//		this.hash = hash;
-//	}
-//
-//	public String getToken() {
-//		return token;
-//	}
-//
-//	public void setToken(String token) {
-//		this.token = token;
-//	}
+			h = bytesToHex(hash);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return h;
+	}
 }
