@@ -76,12 +76,7 @@ public class LoginDialog {
 			result = dialog.showAndWait();
 	           try {	   
 				if(login.login(result.get().getKey(), result.get().getValue()) == false) {
-					Alert alert = new Alert(AlertType.WARNING);
-		    		ButtonType OK = new ButtonType("OK");
-		    		alert.getButtonTypes().clear();
-		    		alert.getButtonTypes().setAll(OK);
-		    		alert.setContentText("401 UNAUTHORIZED");
-		    		Optional<ButtonType> show = alert.showAndWait();
+					errorLogin();
 
 				}else {
 					System.out.println(Login.token);
@@ -98,6 +93,15 @@ public class LoginDialog {
 	
 		return result.get();
 		
+	}
+	
+	public static void errorLogin() {
+		Alert alert = new Alert(AlertType.WARNING);
+		ButtonType OK = new ButtonType("OK");
+		alert.getButtonTypes().clear();
+		alert.getButtonTypes().setAll(OK);
+		alert.setContentText("401 UNAUTHORIZED");
+		Optional<ButtonType> show = alert.showAndWait();
 	}
 	
 	

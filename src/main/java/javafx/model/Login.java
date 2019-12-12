@@ -19,6 +19,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
+import javafx.auth.LoginDialog;
 import javafx.controller.MainController;
 import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
@@ -39,7 +40,7 @@ public class Login {
 	}
 	
 	public boolean login(String user, String password) {
-		//String hashPw = crypt(password);
+		
 		String hashPw = sha256(password);
 		logger.info("hashPw: " + hashPw);
 		String link = String.format("http://localhost:8888/login?username=%s&password=%s", user, hashPw); 
@@ -85,13 +86,14 @@ public class Login {
 		String url = String.format("http://localhost:8888/reports/bookdetail");
 		CloseableHttpClient hClients = HttpClients.createDefault();
 		HttpGet httpget = new HttpGet(url);
-		//CloseableHttpResponse response = null;
+		
 		httpget.setHeader("Authorization", "Bearer " + token);
 
 		try {
 			CloseableHttpResponse res = hClients.execute(httpget);
 
 			if(res.getStatusLine().getStatusCode() == 401) {
+				LoginDialog.errorLogin();
 				return false;
 			}
 			FileChooser fc = new FileChooser();
@@ -116,27 +118,6 @@ public class Login {
 			e.printStackTrace();
 		}
 		return true;
-	}
-	
-	public String crypt(String password) {
-		try {
-			MessageDigest sha = MessageDigest.getInstance("SHA-256");
-			byte[] bytes = sha.digest(password.getBytes(StandardCharsets.UTF_8));
-			BigInteger num = new BigInteger(1, bytes);  
-	  
-	        StringBuilder hexCrypt = new StringBuilder(num.toString(16));  
-	  
-	        while (hexCrypt.length() < 64) {  
-	            hexCrypt.insert(0, '0');  
-	        }  
-	  
-	        return hexCrypt.toString();  
-	        
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return "Error";
-		}		
 	}
 
     /*

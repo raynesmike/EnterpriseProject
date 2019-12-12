@@ -116,6 +116,7 @@ public class MyController implements Initializable{
 		String pwHash = Sha.sha256(pw);
 		
 		logger.info("sha25 Password: " + pwHash);
+		
 	}
 	
 
