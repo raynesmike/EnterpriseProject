@@ -32,6 +32,9 @@ public class MainController{
 	private static BookDetailController bdc;
 	private static Book book;
 
+	// HTTP Session token
+	private static String session_token;
+
 	private MainController() {
 	}
 	
@@ -187,7 +190,20 @@ public class MainController{
 		MainController.bdc = bdc;
 		return bdc;
 	}
-	
+
+	/**
+	 * Sets the session token for HTTP requests
+	 * @param token - token string usually retrieved from login info
+	 */
+	public static void setSessionToken(String token){
+		session_token = token;
+	}
+
+	/**
+	 * Get the session token for HTTP requests
+	 * @return - Session token string
+	 */
+	public static String getSessionToken(){ return session_token;}
 	
 
 }

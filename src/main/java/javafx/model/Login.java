@@ -20,8 +20,11 @@ import org.apache.http.util.EntityUtils;
 
 import javafx.controller.MainController;
 import javafx.stage.FileChooser;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Login {
+	private static Logger logger = LogManager.getLogger();
 
 	public String hash;
 	public static String token;
@@ -51,10 +54,21 @@ public class Login {
 			String result = EntityUtils.toString(response.getEntity());
 			
 			String arr[] = result.split(":\"");
+			for (String i : arr) {
+				logger.debug(i);
+			}
+
+			// This is bad, but whatever.
+			// Checks if "response" section is "ok", returns false otherwise.
+			String responseToken = arr[1].substring(0,2);
+			logger.debug(responseToken);
 			
 			token = arr[2].substring(0, arr[2].length() - 2);
 			
 			System.out.println("token = " + token);
+
+			// Store the session token in MainController, since it's a singleton.
+			MainController.setSessionToken(token);
 			
 			
 			response.close();
