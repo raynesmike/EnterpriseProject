@@ -18,7 +18,7 @@
           <Menu mnemonicParsing="false" text="Reports">
             <items>
               <MenuItem mnemonicParsing="false" text="About" />
-                  <MenuItem fx:id="reportsBookDetail" mnemonicParsing="false" text="Book Detail" />
+                  <MenuItem fx:id="reportsBookDetail" mnemonicParsing="false" onAction="#handleBook" text="Book Detail" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Quit">

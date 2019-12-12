@@ -52,9 +52,9 @@ public class Login {
 			}
 			String result = EntityUtils.toString(response.getEntity());
 			String arr[] = result.split(":\"");
-			for (String i : arr) {
-				logger.debug(i);
-			}
+//			for (String i : arr) {
+//				logger.debug(i);
+//			}
 
 			// This is bad, but whatever.
 			// Checks if "response" section is "ok", returns false otherwise.
@@ -79,43 +79,43 @@ public class Login {
 		return true;
 	}
 	
-//	public static boolean report(String token) {
-//		String url = String.format("http://localhost:8888/reports/bookdetail"); 
-//		CloseableHttpClient hClients = HttpClients.createDefault();
-//		HttpGet httpget = new HttpGet(url);
-//		//CloseableHttpResponse response = null;
-//		httpget.setHeader("Authorization", "Bearer " + token);
-//		
-//		try {
-//			CloseableHttpResponse res = hClients.execute(httpget);
-//			
-//			if(res.getStatusLine().getStatusCode() == 401) {
-//				return false;
-//			}
-//			FileChooser fc = new FileChooser();
-//			fc.setTitle("Save File");
-//			File file = fc.showSaveDialog(null);
-//			
-//		
-//			if(file != null) {
-//			  	String value = res.getFirstHeader("Content-Disposition").getValue();
-//			    String fileName = file.getAbsolutePath();
-//			    
-//			    FileOutputStream output = new FileOutputStream(fileName);
-//			    res.getEntity().writeTo(output);
-//			    output.close();
-//			}
-//			
-//			res.close();
-//			hClients.close();
-//			
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		return true;
-//	}
-//	
+	public static boolean report(String token) {
+		String url = String.format("http://localhost:8888/reports/bookdetail"); 
+		CloseableHttpClient hClients = HttpClients.createDefault();
+		HttpGet httpget = new HttpGet(url);
+		//CloseableHttpResponse response = null;
+		httpget.setHeader("Authorization", "Bearer " + token);
+		
+		try {
+			CloseableHttpResponse res = hClients.execute(httpget);
+			
+			if(res.getStatusLine().getStatusCode() == 401) {
+				return false;
+			}
+			FileChooser fc = new FileChooser();
+			fc.setTitle("Save File");
+			File file = fc.showSaveDialog(null);
+			
+		
+			if(file != null) {
+			  	String value = res.getFirstHeader("Content-Disposition").getValue();
+			    String fileName = file.getAbsolutePath();
+			    
+			    FileOutputStream output = new FileOutputStream(fileName);
+			    res.getEntity().writeTo(output);
+			    output.close();
+			}
+			
+			res.close();
+			hClients.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return true;
+	}
+	
 	public String crypt(String password) {
 		try {
 			MessageDigest sha = MessageDigest.getInstance("SHA-256");
