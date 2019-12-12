@@ -38,9 +38,9 @@ public class Login {
 	}
 	
 	public boolean login(String user, String password) {
-		String crypt = crypt(password);
-		System.out.println("Crypt = " + crypt);
-		String link = String.format("http://localhost:8888/login?username=%s&password=%s", user, crypt); 
+		String hashPw = crypt(password);
+		logger.info("hashPw: " + hashPw);
+		String link = String.format("http://localhost:8888/login?username=%s&password=%s", user, hashPw); 
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		HttpGet httpGet = new HttpGet(link);
 		
@@ -50,9 +50,7 @@ public class Login {
 			if(response.getStatusLine().getStatusCode() == 401) {
 				return false;
 			}
-			
 			String result = EntityUtils.toString(response.getEntity());
-			
 			String arr[] = result.split(":\"");
 			for (String i : arr) {
 				logger.debug(i);
@@ -60,16 +58,15 @@ public class Login {
 
 			// This is bad, but whatever.
 			// Checks if "response" section is "ok", returns false otherwise.
-			String responseToken = arr[1].substring(0,2);
-			logger.debug(responseToken);
+			String resToken = arr[1].substring(0,2);
+			logger.debug(resToken);
 			
 			token = arr[2].substring(0, arr[2].length() - 2);
 			
-			System.out.println("token = " + token);
+			logger.info("Token:" + token);
 
 			// Store the session token in MainController, since it's a singleton.
 			MainController.setSessionToken(token);
-			
 			
 			response.close();
 			httpclient.close();
@@ -82,63 +79,56 @@ public class Login {
 		return true;
 	}
 	
-	public boolean report(String token) {
-		String link = String.format("http://localhost:8888/reports/bookdetail"); 
-		CloseableHttpClient httpclient = HttpClients.createDefault();
-		HttpGet httpget = new HttpGet(link);
-		//CloseableHttpResponse response = null;
-		httpget.setHeader("Authorization", "Bearer " + token);
-		
-		try {
-			CloseableHttpResponse response = httpclient.execute(httpget);
-			
-			if(response.getStatusLine().getStatusCode() == 401) {
-				return false;
-			}
-			
-			FileChooser fc = new FileChooser();
-			fc.setTitle("Save File");
-			File file = fc.showSaveDialog(null);
-			
-		
-			if(file != null) {
-			  	String value = response.getFirstHeader("Content-Disposition").getValue();
-			    String fileName = file.getAbsolutePath();
-			    
-			    FileOutputStream output = new FileOutputStream(fileName);
-			    response.getEntity().writeTo(output);
-			    output.close();
-			}
-			
-			response.close();
-			httpclient.close();
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return true;
-	}
-	
+//	public static boolean report(String token) {
+//		String url = String.format("http://localhost:8888/reports/bookdetail"); 
+//		CloseableHttpClient hClients = HttpClients.createDefault();
+//		HttpGet httpget = new HttpGet(url);
+//		//CloseableHttpResponse response = null;
+//		httpget.setHeader("Authorization", "Bearer " + token);
+//		
+//		try {
+//			CloseableHttpResponse res = hClients.execute(httpget);
+//			
+//			if(res.getStatusLine().getStatusCode() == 401) {
+//				return false;
+//			}
+//			FileChooser fc = new FileChooser();
+//			fc.setTitle("Save File");
+//			File file = fc.showSaveDialog(null);
+//			
+//		
+//			if(file != null) {
+//			  	String value = res.getFirstHeader("Content-Disposition").getValue();
+//			    String fileName = file.getAbsolutePath();
+//			    
+//			    FileOutputStream output = new FileOutputStream(fileName);
+//			    res.getEntity().writeTo(output);
+//			    output.close();
+//			}
+//			
+//			res.close();
+//			hClients.close();
+//			
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return true;
+//	}
+//	
 	public String crypt(String password) {
 		try {
 			MessageDigest sha = MessageDigest.getInstance("SHA-256");
-			
 			byte[] bytes = sha.digest(password.getBytes(StandardCharsets.UTF_8));
-			
-			// Convert byte array into signum representation  
-	        BigInteger number = new BigInteger(1, bytes);  
+			BigInteger num = new BigInteger(1, bytes);  
 	  
-	        // Convert message digest into hex value  
-	        StringBuilder hexString = new StringBuilder(number.toString(16));  
+	        StringBuilder hexCrypt = new StringBuilder(num.toString(16));  
 	  
-	        // Pad with leading zeros 
-	        while (hexString.length() < 64)  
-	        {  
-	            hexString.insert(0, '0');  
+	        while (hexCrypt.length() < 64) {  
+	            hexCrypt.insert(0, '0');  
 	        }  
 	  
-	        return hexString.toString();  
+	        return hexCrypt.toString();  
 	        
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
@@ -146,20 +136,20 @@ public class Login {
 			return "Error";
 		}		
 	}
-	
-	public String getHash() {
-		return hash;
-	}
-
-	public void setHash(String hash) {
-		this.hash = hash;
-	}
-
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
-	}
+//	
+//	public String getHash() {
+//		return hash;
+//	}
+//
+//	public void setHash(String hash) {
+//		this.hash = hash;
+//	}
+//
+//	public String getToken() {
+//		return token;
+//	}
+//
+//	public void setToken(String token) {
+//		this.token = token;
+//	}
 }

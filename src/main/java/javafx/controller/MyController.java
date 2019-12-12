@@ -93,9 +93,9 @@ public class MyController implements Initializable{
 			MainController.showView(ViewType.BOOK_LIST, null);
 			return;
 		}
-//		if(source == reportsBookDetail) {
-//			
-//		}
+		if(source == reportsBookDetail) {
+//			Login.report(MainController.getSessionToken());
+		}
 		
 		
 

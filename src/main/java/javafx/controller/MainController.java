@@ -38,43 +38,6 @@ public class MainController{
 	private MainController() {
 	}
 	
-	public void doLogin() {
-//		Pair<String, String> creds = LoginDialog.showLoginDialog();
-//		if(creds == null) {
-//			return;
-//		}
-//		
-//		String userName = creds.getKey();
-//		String pw = creds.getValue();
-//		
-//		logger.info("username: " + userName + "\nPassword: " + pw);
-//		
-//		String pwHash = Sha.sha256(pw);
-//		
-//		logger.info("sha25 Password: " + pwHash);
-		
-//		try {
-////			sessionId = auth.loginSha256(userName, pwHash);
-//			
-//			logger.info("sessionId : ");
-//			
-//		} catch (LoginException e) {
-//			Alert alert = new Alert(AlertType.WARNING);
-//			alert.getButtonTypes().clear();
-//			ButtonType buttonTypeOne = new ButtonType("OK");
-//			alert.getButtonTypes().setAll(buttonTypeOne);
-//			alert.setTitle("Login Failed");
-//			alert.setHeaderText("The username and password doesnt match the database ");
-//			alert.showAndWait();
-//			
-//			return;
-//		}
-		
-		
-		
-		
-	}
-	
 	public static void initBookGateway() {
 		//create gateways
 		try {
