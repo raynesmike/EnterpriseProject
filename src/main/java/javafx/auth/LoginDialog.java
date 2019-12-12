@@ -1,7 +1,11 @@
 package javafx.auth;
 
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -19,6 +23,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.util.Pair;
 
 public class LoginDialog {
+	private static Logger logger = LogManager.getLogger();
 	private static Login login;
 	
 	public static Pair<String, String> showLoginDialog(){
@@ -82,6 +87,9 @@ public class LoginDialog {
 					System.out.println(Login.token);
 					break;
 				}
+			} catch (NoSuchElementException e) {
+				logger.error("Empty Login");
+				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
