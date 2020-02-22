@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <ListView fx:id="bookListView" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="300.0" prefWidth="300.0" BorderPane.alignment="CENTER" />
+   </center>
+   <left>
+      <Button fx:id="buttonUpdate" mnemonicParsing="false" onAction="#handleListButton" text="Update" BorderPane.alignment="CENTER" />
+   </left>
+   <right>
+      <Button fx:id="buttonDelete" mnemonicParsing="false" onAction="#handleListButton" text="Delete" BorderPane.alignment="CENTER" />
+   </right>
+</BorderPane>

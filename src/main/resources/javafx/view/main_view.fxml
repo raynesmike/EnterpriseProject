@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="File" />
+          <Menu mnemonicParsing="false" text="Book">
+            <items>
+                  <MenuItem fx:id="bookCreate" mnemonicParsing="false" onAction="#handleBook" text="Add" />
+              <MenuItem fx:id="bookRead" mnemonicParsing="false" onAction="#handleBook" text="Read" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Reports">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+                  <MenuItem fx:id="reportsBookDetail" mnemonicParsing="false" onAction="#handleBook" text="Book Detail" />
+            </items>
+          </Menu>
+            <Menu mnemonicParsing="false" text="Quit">
+              <items>
+                <MenuItem fx:id="quitYes" mnemonicParsing="false" onAction="#handleBook" text="Yes" />
+                  <MenuItem mnemonicParsing="false" text="No" />
+              </items>
+            </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+</BorderPane>
